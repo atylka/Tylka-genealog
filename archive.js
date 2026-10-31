@@ -21,6 +21,8 @@
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
   if(loginToggle) loginToggle.addEventListener("click",()=>{loginPanel.hidden=!loginPanel.hidden;});
+  const addRecordButton=$("open-add-record");
+  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser)return;setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
@@ -125,7 +127,7 @@
   const uploadForm=$("upload-form");
   if(uploadForm)uploadForm.addEventListener("submit",async e=>{
     e.preventDefault();if(!client||!currentUser)return setMessage($("upload-message"),"Sign in to upload records.",true);
-    const title=$("record-title").value.trim(),category=$("record-category").value,description=$("record-description").value.trim(),location=$("record-location").value.trim(),file=$("record-file").files[0];
+    const title=$("record-title").value.trim(),category=$("record-category").value,notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"",notes].filter(Boolean).join(String.fromCharCode(10,10)),location=$("record-location").value.trim(),file=$("record-file").files[0];
     if(!title)return setMessage($("upload-message"),"Enter a record title.",true);
     if(file&&file.size>20*1024*1024)return setMessage($("upload-message"),"Files must be 20 MB or smaller.",true);
     if(file&&!["image/jpeg","image/png","image/webp","image/tiff","application/pdf"].includes(file.type))return setMessage($("upload-message"),"Allowed files: JPG, PNG, WEBP, TIFF, or PDF.",true);
@@ -134,7 +136,7 @@
       if(file){const safeName=file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);filePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+safeName;const {error}=await client.storage.from("family-archive").upload(filePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
       const {error}=await client.from("archive_records").insert({owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),title,category,description,location,file_path:filePath,file_name:file?.name||null,mime_type:file?.type||null,file_size:file?.size||null});
       if(error){if(filePath)await client.storage.from("family-archive").remove([filePath]);throw error;}
-      uploadForm.reset();setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();
+      uploadForm.reset();setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();setTimeout(()=>{closeModals();setMessage($("upload-message"),"");},700);
     }catch(error){setMessage($("upload-message"),error.message||"Upload failed.",true);}finally{button.disabled=false;}
   });
 
