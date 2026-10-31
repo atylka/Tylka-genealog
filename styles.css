@@ -1127,3 +1127,8 @@ button.small-button:active,
   border-color:var(--burgundy)!important;
   color:#fffaf6!important;
 }
+
+
+/* Keep the compact menu control out of the desktop header; show it only on mobile. */
+.site-header>.menu-toggle{display:none!important}
+@media(max-width:800px){.site-header>.menu-toggle{display:block!important}}
