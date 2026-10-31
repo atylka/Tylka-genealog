@@ -102,9 +102,9 @@
     setInterval(()=>{if(currentUser)refreshInbox().catch(()=>{});},30000);
   }
   function setOwner(user){
-    currentUser=user;$("owner-tools").hidden=!user;loginToggle.hidden=!!user;
-    $("archive-heading").textContent=user?"Your archive":"Browse records";
-    $("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
+    currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(loginToggle)loginToggle.hidden=!!user;
+    if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
+    if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if(user){loginPanel.hidden=true;refreshInbox().catch(()=>{});}
   }
   if(loginForm)loginForm.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;setMessage(loginMessage,"Signing in…");const {error}=await client.auth.signInWithPassword({email:$("login-email").value.trim(),password:$("login-password").value});setMessage(loginMessage,error?error.message:"Signed in.",!!error);});
@@ -116,7 +116,23 @@
     try{const result=await functionCall({action:"request",recordId:selectedRecord.id,name:$("visitor-name").value.trim()});localStorage.setItem(pendingKey,JSON.stringify({requestId:result.requestId,requestToken:result.requestToken}));setMessage($("request-message"),"Request sent. Keep this page open; a message will appear here when the owner responds.");button.textContent="Request sent";}
     catch(error){setMessage($("request-message"),error.message,true);button.disabled=false;}
   });
-  const folderContainer=document.querySelector(".archive-folders");
+
+  const uploadForm=$("upload-form");
+  if(uploadForm)uploadForm.addEventListener("submit",async e=>{
+    e.preventDefault();if(!client||!currentUser)return setMessage($("upload-message"),"Sign in to upload records.",true);
+    const title=$("record-title").value.trim(),category=$("record-category").value,description=$("record-description").value.trim(),location=$("record-location").value.trim(),file=$("record-file").files[0];
+    if(!title)return setMessage($("upload-message"),"Enter a record title.",true);
+    if(file&&file.size>20*1024*1024)return setMessage($("upload-message"),"Files must be 20 MB or smaller.",true);
+    if(file&&!["image/jpeg","image/png","image/webp","image/tiff","application/pdf"].includes(file.type))return setMessage($("upload-message"),"Allowed files: JPG, PNG, WEBP, TIFF, or PDF.",true);
+    const button=uploadForm.querySelector('button[type="submit"]');button.disabled=true;setMessage($("upload-message"),"Saving record…");let filePath=null;
+    try{
+      if(file){const safeName=file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);filePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+safeName;const {error}=await client.storage.from("family-archive").upload(filePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
+      const {error}=await client.from("archive_records").insert({owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),title,category,description,location,file_path:filePath,file_name:file?.name||null,mime_type:file?.type||null,file_size:file?.size||null});
+      if(error){if(filePath)await client.storage.from("family-archive").remove([filePath]);throw error;}
+      uploadForm.reset();setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();
+    }catch(error){setMessage($("upload-message"),error.message||"Upload failed.",true);}finally{button.disabled=false;}
+  });
+\n  const folderContainer=document.querySelector(".archive-folders");
   if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
   if(recordSearch)recordSearch.addEventListener("input",renderRecords);
   start();
