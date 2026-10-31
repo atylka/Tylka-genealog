@@ -1282,3 +1282,62 @@ body:after{animation:none!important}
 .site-modal{overscroll-behavior:contain}
 @media(hover:none){.archive-toolbar:hover,.upload-card:hover,.auth-card:hover,.chrono-filter-panel:hover,.chrono-year-column:hover,.record-card:hover,.ancestor-card:hover,.location-item:hover,.paper-card:hover{transform:none;filter:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal,.page-enter,.page-enter-active{opacity:1!important;transform:none!important;filter:none!important}}
+
+
+/* Final consistency polish: smooth, restrained interactions across every page. */
+:root{
+  --motion-ease:cubic-bezier(.22,.68,.24,1);
+  --motion-ease-out:cubic-bezier(.16,1,.3,1);
+  --motion-duration:360ms;
+}
+html{scroll-padding-top:2rem}
+body{overflow-wrap:break-word}
+h1,h2,h3,h4,p{ text-wrap:pretty }
+h1,h2,h3{ text-wrap:balance }
+a,button,input,select,textarea,[role="button"]{scroll-margin-block:1rem}
+a,button,.button,.small-button,.menu-toggle,.owner-sign-in-button,
+.archive-folder,.primary-nav a,.text-link,.wordmark,
+.record-card,.ancestor-card,.location-item,.paper-card,
+.upload-card,.auth-card,.chrono-filter-panel,.chrono-year-column,
+.archive-toolbar,.modal-card,.footer-mark{
+  transition-duration:var(--motion-duration)!important;
+  transition-timing-function:var(--motion-ease)!important;
+}
+button,.button,.small-button,.menu-toggle,.owner-sign-in-button,[role="button"]{
+  touch-action:manipulation;
+}
+button:active,.button:active,.small-button:active,.menu-toggle:active{
+  transform:translateY(1px) scale(.985);
+}
+img{height:auto}
+.record-thumbnail img,.ancestor-portrait{display:block}
+.site-header,.site-footer,.archive-toolbar,.chrono-filter-panel,.location-workspace{
+  min-width:0;
+}
+.primary-nav a,.primary-nav button,.wordmark,.text-link{
+  overflow-wrap:anywhere;
+}
+.modal-card,.record-detail-content,.face-crop-modal,.location-records-panel{
+  max-width:min(100%,100vw - 2rem);
+}
+input,select,textarea{max-width:100%;min-width:0}
+button:focus:not(:focus-visible),a:focus:not(:focus-visible){outline:none}
+@media(hover:hover) and (pointer:fine){
+  .primary-nav a:hover,.text-link:hover,.wordmark:hover{transition-duration:220ms!important}
+}
+@media(max-width:760px){
+  .site-header{gap:1rem}
+  .primary-nav{overscroll-behavior:contain}
+  .archive-page>h1,.ancestor-page .section-intro h1,.chrono-main>h1,main>h1,body>main h1{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
