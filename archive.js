@@ -163,7 +163,7 @@
         if (storageError) throw storageError;
       }
       const {error: insertError} = await client.from("archive_records").insert({
-        owner_id:currentUser.id,title,category,description,location,file_path:filePath,
+        owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),title,category,description,location,file_path:filePath,
         file_name:file?.name || null,mime_type:file?.type || null,file_size:file?.size || null
       });
       if (insertError) {
