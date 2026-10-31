@@ -132,3 +132,19 @@ html[data-theme="dark"] #banner-editor label{color:#e2b6ad}
 html[data-theme="dark"] #banner-editor input,html[data-theme="dark"] #banner-editor textarea{background:#211e1a;color:var(--ink);border-color:var(--line)}
 html[data-theme="dark"] .banner-edit-button{background:#302a23;color:#f1dcd4;border-color:#9c7777}
 html[data-theme="dark"] .archive-toolbar,html[data-theme="dark"] .records-heading{border-color:var(--line)}
+
+/* Custom banner photo, softened background, and selectable fade */
+.brand-banner{isolation:isolate;background:linear-gradient(120deg,rgba(56,13,26,.97),rgba(126,31,53,.94) 58%,rgba(151,62,70,.9)),radial-gradient(ellipse at 80% 15%,#c77b76,transparent 48%)}
+.brand-banner:before{z-index:0}
+.brand-banner:after{z-index:2}
+.brand-banner.has-background-image{background:#38202a}
+.brand-banner.has-background-image:before{inset:-20px;border:0;background-image:var(--banner-image);background-position:center;background-size:cover;filter:blur(20px);transform:scale(1.06);opacity:.95}
+.brand-banner.has-background-image:after{inset:0;border:0;background:linear-gradient(110deg,rgba(0,0,0,.72),rgba(0,0,0,.22))}
+.brand-banner.has-background-image[data-fade="white"]:after{background:linear-gradient(110deg,rgba(255,255,255,.82),rgba(255,255,255,.38))}
+.brand-banner.has-background-image[data-fade="none"]:after{background:transparent}
+.brand-banner.has-background-image[data-fade="white"] .brand-banner-kicker{color:#4b2029}
+.brand-banner.has-background-image[data-fade="white"] h1{color:#28191a;text-shadow:0 2px 12px rgba(255,255,255,.28)}
+.brand-banner.has-background-image[data-fade="white"] .brand-banner-inner>p:last-child{color:#382326}
+#banner-editor input[type="file"]{width:100%;padding:.55rem;background:#fffaf6;border:1px solid var(--line);color:var(--ink);font:inherit}
+html[data-theme="dark"] #banner-editor input[type="file"]{background:#211e1a;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .brand-banner.has-background-image{background:#211e1a}
