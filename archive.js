@@ -65,6 +65,12 @@
       card.append(details);
       const actions = document.createElement("div");
       actions.className = "record-actions";
+      if (record.file_path && record.mime_type && record.mime_type.startsWith("image/")) {
+        const preview = document.createElement("div"); preview.className = "record-preview";
+        const image = document.createElement("img"); image.alt = "Preview of " + record.title; image.loading = "lazy";
+        preview.append(image); card.append(preview);
+        client.storage.from("family-archive").createSignedUrl(record.file_path, 300).then(({data}) => { if (data?.signedUrl) image.src = data.signedUrl; });
+      }
       if (record.file_path) {
         const open = document.createElement("button");
         open.type = "button"; open.className = "small-button";
@@ -164,7 +170,15 @@
       message(uploadMessage, error.message || "Upload failed.", true);
     } finally { submit.disabled = false; }
   });
-  categoryFilter.addEventListener("change", renderRecords);
-  recordSearch.addEventListener("input", renderRecords);
+  if (categoryFilter) {
+    const requested = document.body.dataset.category || new URLSearchParams(location.search).get("category");
+    if (requested && [...categoryFilter.options].some(option => option.value === requested)) categoryFilter.value = requested;
+    categoryFilter.addEventListener("change", renderRecords);
+  }
+  if (recordSearch) recordSearch.addEventListener("input", renderRecords);
+  if (document.body.dataset.page === "upload") {
+    const heading = document.querySelector(".records-heading"), listing = document.getElementById("records-list");
+    if (heading) heading.hidden = true; if (listing) listing.hidden = true;
+  }
   start();
 })();
