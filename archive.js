@@ -149,7 +149,7 @@
       if(file){const safeName=file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);filePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+safeName;const {error}=await client.storage.from("family-archive").upload(filePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
       const {error}=await client.from("archive_records").insert({owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),title,category,description,location,file_path:filePath,file_name:file?.name||null,mime_type:file?.type||null,file_size:file?.size||null});
       if(error){if(filePath)await client.storage.from("family-archive").remove([filePath]);throw error;}
-      uploadForm.reset();setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();setTimeout(()=>{closeModals();setMessage($("upload-message"),"");},700);
+      uploadForm.reset();button.textContent="✓ Saved";button.classList.add("upload-form-success");setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();setTimeout(()=>{closeModals();setMessage($("upload-message"),"");button.textContent="Save record";button.classList.remove("upload-form-success");},900);
     }catch(error){setMessage($("upload-message"),error.message||"Upload failed.",true);}finally{button.disabled=false;}
   });
 
