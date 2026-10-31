@@ -42,10 +42,10 @@
     const category = activeFolder;
     const filtered = records.filter(record =>
       (category === "all" || record.category === category) &&
-      [record.title, record.description, record.file_name].join(" ").toLowerCase().includes(term)
+      [record.title, record.description, record.file_name, record.location].join(" ").toLowerCase().includes(term)
     );
     if (!filtered.length) {
-      recordsList.append(safeText("p", records.length ? "No records match this search." : "Your archive is empty. Add your first record above.", "empty-state"));
+      recordsList.append(safeText("p", records.length ? "No records match this search." : "Your archive is empty. Use Add a record to upload your first item.", "empty-state"));
       return;
     }
     filtered.forEach(record => {
