@@ -18,6 +18,11 @@
   let currentUser = null;
   let records = [];
   let activeFolder = "all";
+  const canonicalCategory = value => {
+    const key = String(value || "").toLowerCase().trim().replace(/[ &-]+/g, "_");
+    const aliases = {research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"};
+    return aliases[key] || key;
+  };
 
   function message(node, text, error = false) {
     if (!node) return;
@@ -41,7 +46,7 @@
     const term = (recordSearch.value || "").trim().toLowerCase();
     const category = activeFolder;
     const filtered = records.filter(record =>
-      (category === "all" || record.category === category) &&
+      (category === "all" || canonicalCategory(record.category) === category) &&
       [record.title, record.description, record.file_name, record.location].join(" ").toLowerCase().includes(term)
     );
     if (!filtered.length) {
@@ -171,14 +176,20 @@
       message(uploadMessage, error.message || "Upload failed.", true);
     } finally { submit.disabled = false; }
   });
-  document.querySelectorAll(".archive-folder").forEach(button => {
-    button.addEventListener("click", () => {
-      activeFolder = button.dataset.folder || "all";
-      document.querySelectorAll(".archive-folder").forEach(item => item.classList.toggle("is-active", item === button));
-      const heading = document.getElementById("folder-heading");
-      if (heading) heading.textContent = button.textContent.trim();
-      renderRecords();
+  const folderContainer = document.querySelector(".archive-folders");
+  if (folderContainer) folderContainer.addEventListener("click", event => {
+    const button = event.target.closest(".archive-folder");
+    if (!button || !folderContainer.contains(button)) return;
+    activeFolder = canonicalCategory(button.dataset.folder || "all");
+    folderContainer.querySelectorAll(".archive-folder").forEach(item => {
+      const active = item === button;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-pressed", String(active));
     });
+    const heading = document.getElementById("folder-heading");
+    if (heading) heading.textContent = button.textContent.trim();
+    if (recordSearch) recordSearch.value = "";
+    renderRecords();
   });
   if (categoryFilter) categoryFilter.addEventListener("change", renderRecords);
   if (recordSearch) recordSearch.addEventListener("input", renderRecords);
