@@ -877,3 +877,6 @@ button:focus-visible,
     white-space:normal;
   }
 }
+
+/* Face-crop and ancestor portrait pages */
+.face-crop-canvas-wrap{max-height:58vh;overflow:auto;border:1px solid var(--line);background:#21180f;padding:.5rem;margin:.8rem 0}.face-crop-canvas-wrap canvas{display:block;width:100%;height:auto;max-height:55vh;object-fit:contain;touch-action:none;cursor:crosshair}.face-crop-actions{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:1rem}.face-crop-card>input{width:100%;margin:.4rem 0 .8rem}.ancestor-page{padding-block:2rem 4rem}.ancestor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}.ancestor-card{overflow:hidden;border:1px solid var(--line);background:var(--paper-light);border-radius:5px;min-width:0}.ancestor-portrait{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--paper-dark)}.ancestor-card-body{padding:1rem}.ancestor-card-body h3{margin:.1rem 0 .5rem;overflow-wrap:anywhere}.ancestor-source{font-size:.9rem;color:var(--muted);overflow-wrap:anywhere}.ancestor-card .small-button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}.face-crop-card{max-height:94vh;overflow:auto}@media(max-width:600px){.face-crop-actions>*{width:100%}.ancestor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ancestor-card-body{padding:.7rem}}
