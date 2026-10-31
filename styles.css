@@ -1214,3 +1214,49 @@ body:after{inset:0;opacity:.36;mix-blend-mode:multiply;background-image:url("dat
 @keyframes chrono-orbit-glow{from{opacity:.35;filter:blur(0)}to{opacity:.8;filter:blur(2px)}}
 .archive-folder:hover,.primary-nav a:hover{filter:drop-shadow(0 4px 6px rgba(112,35,42,.18))}
 @media(prefers-reduced-motion:reduce){body:before,body:after,.archive-page>h1,.ancestor-page .section-intro h1,.chrono-main>h1,main>h1,body>main h1,.brand-banner:after,.chrono-main:before{animation:none!important}.archive-toolbar,.upload-card,.auth-card,.chrono-filter-panel,.chrono-year-column,.record-card,.ancestor-card,.location-item{transition:none!important}}
+
+
+/* 2026-10-31 refinement: page-level ivory light, no title badges, fixed grain. */
+body{
+  background-color:#cbb99a!important;
+  background-image:
+    radial-gradient(ellipse 82rem 48rem at 0% 0%,rgba(255,252,239,.96) 0%,rgba(255,249,230,.78) 24%,rgba(250,239,215,.38) 49%,rgba(250,239,215,0) 78%),
+    linear-gradient(145deg,rgba(255,248,226,.16),transparent 48%)!important;
+  background-attachment:fixed!important;
+}
+/* The grain is a stationary paper texture, not a moving effect. */
+body:after{
+  inset:0!important;
+  opacity:.62!important;
+  mix-blend-mode:multiply!important;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='papergrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23papergrain)' opacity='.48'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 88% 13%,rgba(213,164,108,.13),transparent 22%),
+    radial-gradient(ellipse at 8% 89%,rgba(91,119,99,.10),transparent 24%)!important;
+  background-size:160px 160px,100% 100%,100% 100%!important;
+  background-position:0 0,0 0,0 0!important;
+  animation:none!important;
+}
+/* Let the broad upper-left page wash illuminate headings naturally. */
+.archive-page>h1,
+.ancestor-page .section-intro h1,
+.chrono-main>h1,
+main>h1,
+body>main h1{
+  display:block!important;
+  width:max-content;
+  max-width:100%;
+  padding:0!important;
+  margin-left:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.42);
+  animation:none!important;
+}
+.archive-page>h1:before,
+.ancestor-page .section-intro h1:before,
+.chrono-main>h1:before,
+main>h1:before,
+body>main h1:before{content:none!important;display:none!important}
+@media(prefers-reduced-motion:reduce){body:after{animation:none!important}}
