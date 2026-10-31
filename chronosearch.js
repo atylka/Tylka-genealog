@@ -26,7 +26,7 @@
    const column=node("section","","chrono-year-column");
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>(a.title||"").localeCompare(b.title||"")).forEach(r=>{
-    const card=node("article","","chrono-record-card");
+    const card=node("article","","chrono-record-card");card.dataset.recordId=r.id||"";
     if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     card.append(node("h3",r.title||"Untitled record"));
@@ -35,6 +35,7 @@
     if(dateLabel)card.append(node("p","Date: "+dateLabel[1].trim(),"chrono-record-date"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
     if(r.file_name)card.append(node("small",r.file_name,"record-filename"));
+    const thumbnails=card.querySelectorAll(".record-thumbnail");thumbnails.forEach((thumb,index)=>{if(index>0)thumb.remove();});
     column.append(card);
    });
    timeline.append(column);
@@ -45,7 +46,14 @@
   client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
   const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
-  const records=data||[];
+  // Deduplicate rows by record id so duplicate database results cannot create duplicate cards or thumbnails.
+  const seenIds=new Set();
+  const records=(data||[]).filter(record=>{
+   if(!record?.id)return true;
+   if(seenIds.has(record.id))return false;
+   seenIds.add(record.id);
+   return true;
+  });
   [...new Set(records.map(recordYear).filter(Boolean))].sort((a,b)=>a-b).forEach(y=>yearInput.append(new Option(String(y),String(y))));
   if(records.some(r=>recordYear(r)===null))yearInput.append(new Option("Undated","undated"));
   [locationInput,personInput,folderInput,yearInput].forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",()=>render(records)));
