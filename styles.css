@@ -485,3 +485,11 @@ input:focus,select:focus,textarea:focus{animation:focus-ink .25s ease-out}
  .motion-reveal{opacity:1!important;transform:none!important;filter:none!important}
  .brand-banner,.brand-banner-inner>*,.site-header .wordmark,.site-header .primary-nav>*{animation:none!important}
 }
+
+
+/* Public record thumbnails */
+.record-thumbnail{width:100%;max-width:220px;aspect-ratio:4/3;overflow:hidden;background:rgba(115,83,54,.10);border:1px solid rgba(90,62,42,.22);display:flex;align-items:center;justify-content:center;margin:0 0 1rem;}
+.record-thumbnail img{display:block;width:100%;height:100%;object-fit:contain;background:#e9dfcb;}
+.record-thumbnail-placeholder{font-family:"IM Fell English",serif;letter-spacing:.12em;color:#765d48;font-size:.9rem;}
+.location-record .record-preview img{width:100%;max-height:220px;object-fit:contain;background:#e9dfcb;}
+@media(min-width:700px){.record-card-expanded{display:grid;grid-template-columns:minmax(130px,220px) 1fr;gap:1.25rem;}.record-card-expanded .record-thumbnail{grid-row:1 / span 2;max-width:none;margin:0;}}
