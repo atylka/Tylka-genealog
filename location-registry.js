@@ -110,7 +110,7 @@
     places=buildPlaces(data||[]);
     count.textContent=places.length+" indexed places · "+(data||[]).length+" private records reviewed";
     renderList();initMap();
-    if(places.length) selectPlace(places[0]);
+    if(places.length){const requested=new URLSearchParams(window.location.search).get("place");const initial=(requested&&places.find(p=>normalize(p.name)===normalize(requested)))||places[0];if(requested)search.value=requested;renderList();selectPlace(initial);}
   }
   async function start(){
     if(!configured||!window.supabase){status.textContent="Supabase connection is not configured.";setMessage(loginMessage,"The private location registry needs the configured Supabase project.",true);return;}
