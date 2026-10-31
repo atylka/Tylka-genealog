@@ -1,16 +1,13 @@
 (() => {
   const config = window.TYLKA_SUPABASE_CONFIG || {};
   const configured = config.url && config.anonKey && !config.url.includes("YOUR_") && !config.anonKey.includes("YOUR_");
-  const loginPanel = document.getElementById("location-login");
   const workspace = document.getElementById("location-workspace");
-  const status = document.getElementById("location-status");
-  const loginForm = document.getElementById("location-login-form");
-  const loginMessage = document.getElementById("location-login-message");
   const list = document.getElementById("location-list");
   const search = document.getElementById("location-search");
   const detail = document.getElementById("location-detail");
   const count = document.getElementById("location-count");
-  if (!loginPanel) return;
+  if (!workspace) return;
+  let currentUser = null;
 
   let client = null, map = null, markerLayer = null, places = [], selected = null;
 
@@ -77,7 +74,7 @@
         const category=document.createElement("small");category.textContent=record.category;
         card.append(title,category);
         if(record.description){const note=document.createElement("p");note.textContent=record.description;card.append(note);}
-        if(record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
+        if(currentUser && record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
           const preview=document.createElement("div");preview.className="record-preview";
           const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);card.append(preview);
           client.storage.from("family-archive").createSignedUrl(record.file_path,300).then(({data})=>{if(data?.signedUrl)image.src=data.signedUrl;});
@@ -98,31 +95,21 @@
   const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.addEventListener("click",buildMigrationRoute);
 
   async function loadRegistry(){
-    count.textContent="Loading locations from your private records…";
+    count.textContent="Loading public family locations…";
     const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
-    count.textContent=places.length+" indexed places · "+(data||[]).length+" private records reviewed";
+    count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
     renderList();initMap();
     if(places.length){const requested=new URLSearchParams(window.location.search).get("place");const initial=(requested&&places.find(p=>normalize(p.name)===normalize(requested)))||places[0];if(requested)search.value=requested;renderList();selectPlace(initial);}
   }
   async function start(){
-    if(!configured||!window.supabase){status.textContent="Supabase connection is not configured.";setMessage(loginMessage,"The private location registry needs the configured Supabase project.",true);return;}
+    if(!configured||!window.supabase){count.textContent="Supabase connection is not configured.";list.textContent="The public location registry could not connect.";return;}
     client=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-    const {data:{session}}=await client.auth.getSession();
-    if(session?.user){loginPanel.hidden=true;workspace.hidden=false;await loadRegistry();}
-    else status.textContent="Sign in with your archive owner account to view private locations.";
-    client.auth.onAuthStateChange((_event,sessionNow)=>{
-      if(sessionNow?.user){loginPanel.hidden=true;workspace.hidden=false;loadRegistry();}
-      else{workspace.hidden=true;loginPanel.hidden=false;places=[];list.replaceChildren();}
-    });
+    const {data:{session}}=await client.auth.getSession();currentUser=session?.user||null;await loadRegistry();
+    client.auth.onAuthStateChange((_event,s)=>{currentUser=s?.user||null;loadRegistry();});
+    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session:now}}=await client.auth.getSession();currentUser=now?.user||null;loadRegistry();});
   }
-  loginForm.addEventListener("submit",async event=>{
-    event.preventDefault();if(!client)return setMessage(loginMessage,"Supabase is not connected.",true);
-    setMessage(loginMessage,"Signing in…");
-    const {error}=await client.auth.signInWithPassword({email:document.getElementById("location-email").value.trim(),password:document.getElementById("location-password").value});
-    setMessage(loginMessage,error?error.message:"Signed in. Loading the location registry…",!!error);
-  });
   search.addEventListener("input",renderList);
   start();
 })();
