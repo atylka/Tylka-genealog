@@ -39,7 +39,6 @@
     const menuButton=oldToggle||document.createElement("button");
     menuButton.className="menu-toggle site-menu-toggle";menuButton.type="button";menuButton.innerHTML='<span aria-hidden="true">☰</span>';menuButton.setAttribute("aria-label","Open site menu");menuButton.setAttribute("aria-expanded","false");
     const panel=document.createElement("div");panel.className="site-menu-panel";panel.id="site-menu-panel";panel.hidden=true;
-    const mailbox=document.createElement("button");mailbox.type="button";mailbox.className="site-menu-action";mailbox.id="site-mailbox";mailbox.innerHTML='<span aria-hidden="true">✉</span> Mailbox';panel.append(mailbox);
     const settings=document.createElement("button");settings.type="button";settings.className="site-menu-action";settings.id="site-settings-open";settings.textContent="Settings";panel.append(settings);
     if(oldToggle)oldToggle.replaceWith(menuButton);else header.append(menuButton);
     header.append(panel);
@@ -55,7 +54,6 @@
     sizeChoice.addEventListener("change",()=>{setPref(sizeKey,sizeChoice.value);applyFormat();});
     motionChoice.addEventListener("change",()=>{setPref(motionKey,motionChoice.value);applyFormat();});
     settings.addEventListener("click",()=>{panel.hidden=true;menuButton.setAttribute("aria-expanded","false");settingsModal.hidden=false;});
-    mailbox.addEventListener("click",()=>{panel.hidden=true;menuButton.setAttribute("aria-expanded","false");document.dispatchEvent(new CustomEvent("tylka:open-mailbox"));});
   }
   if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches&&getPref(motionKey,"full")!=="reduced"){
     document.body.classList.add("page-enter");requestAnimationFrame(()=>document.body.classList.add("page-enter-active"));
