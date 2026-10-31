@@ -35,7 +35,9 @@
       const title=document.createElement("h3");title.textContent=record.title;details.append(title);
       if(record.location){const p=document.createElement("p");p.className="record-location";p.append(document.createTextNode("Location: "));const a=document.createElement("a");a.className="record-location-link";a.textContent=record.location;a.href="location-registry.html?place="+encodeURIComponent(record.location);p.append(a);details.append(p);}
       if(record.description){const p=document.createElement("p");p.textContent=record.description;details.append(p);}
-      const confidence=readConfidence(record.description);const confidenceBadge=document.createElement("span");confidenceBadge.className="confidence-badge confidence-"+confidence;confidenceBadge.textContent=confidenceLabel(confidence);details.append(confidenceBadge);\n      const detailButton=document.createElement("button");detailButton.type="button";detailButton.className="record-detail-trigger";detailButton.textContent="View record details";detailButton.addEventListener("click",()=>openRecordDetail(record));details.append(detailButton);\n      const date=document.createElement("small");date.className="record-date";date.textContent=new Date(record.created_at).toLocaleDateString();details.append(date);
+      const confidence=readConfidence(record.description);const confidenceBadge=document.createElement("span");confidenceBadge.className="confidence-badge confidence-"+confidence;confidenceBadge.textContent=confidenceLabel(confidence);details.append(confidenceBadge);
+      const detailButton=document.createElement("button");detailButton.type="button";detailButton.className="record-detail-trigger";detailButton.textContent="View record details";detailButton.addEventListener("click",()=>openRecordDetail(record));details.append(detailButton);
+      const date=document.createElement("small");date.className="record-date";date.textContent=new Date(record.created_at).toLocaleDateString();details.append(date);
       card.append(details);
       const actions=document.createElement("div");actions.className="record-actions";
       if(record.file_path){
