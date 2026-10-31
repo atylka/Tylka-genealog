@@ -53,6 +53,7 @@
       const details = document.createElement("div");
       details.append(safeText("span", categoryNames[record.category] || record.category, "record-category"));
       details.append(safeText("h3", record.title));
+      if (record.location) details.append(safeText("p", "Location: " + record.location, "record-location"));
       if (record.description) details.append(safeText("p", record.description));
       if (record.file_name) details.append(safeText("small", record.file_name, "record-filename"));
       details.append(safeText("small", new Date(record.created_at).toLocaleString(), "record-date"));
@@ -129,6 +130,7 @@
     const title = document.getElementById("record-title").value.trim();
     const category = document.getElementById("record-category").value;
     const description = document.getElementById("record-description").value.trim();
+    const location = document.getElementById("record-location").value.trim();
     const file = document.getElementById("record-file").files[0];
     if (!title) return message(uploadMessage, "Please enter a record title.", true);
     if (file && file.size > 20 * 1024 * 1024) return message(uploadMessage, "Files must be 20 MB or smaller.", true);
@@ -144,7 +146,7 @@
         if (storageError) throw storageError;
       }
       const {error: insertError} = await client.from("archive_records").insert({
-        owner_id:currentUser.id,title,category,description,file_path:filePath,
+        owner_id:currentUser.id,title,category,description,location,file_path:filePath,
         file_name:file?.name || null,mime_type:file?.type || null,file_size:file?.size || null
       });
       if (insertError) {
