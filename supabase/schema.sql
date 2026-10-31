@@ -18,10 +18,11 @@ create table if not exists public.archive_records (
 
 alter table public.archive_records enable row level security;
 
-create policy "Only the site owner can read archive records"
+-- Record metadata is public; owner-only writes and private file storage remain protected.
+create policy "Anyone can view archive record details"
 on public.archive_records for select
-to authenticated
-using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid());
+to anon, authenticated
+using (true);
 
 create policy "Only the site owner can add archive records"
 on public.archive_records for insert
