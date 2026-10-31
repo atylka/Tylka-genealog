@@ -329,3 +329,9 @@ html.reduce-motion .motion-reveal{opacity:1;transform:none;filter:none}
 .confidence-editor label{font-size:.8rem;font-weight:700;color:var(--accent-dark)}
 .confidence-editor select{min-height:40px;padding:.4rem .6rem;border:1px solid var(--line);background:var(--paper-light);color:var(--ink);font:inherit}
 #confidence-save-status{font-size:.78rem;color:var(--muted)}
+
+/* One consistent owner sign-in entry point across the public site */
+.primary-nav .owner-sign-in-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin-left:.35rem;padding:.72rem 1.05rem;border:1px solid #741923;background:#741923;color:#fff8f2;font:inherit;font-size:.82rem;font-weight:800;letter-spacing:.035em;cursor:pointer;box-shadow:0 4px 12px rgba(70,20,25,.16);transition:transform .25s,background .25s,box-shadow .25s}
+.primary-nav .owner-sign-in-button:hover{background:#a32632;transform:translateY(-2px);box-shadow:0 7px 17px rgba(70,20,25,.22)}
+.owner-sign-in-card{max-width:480px}
+@media(max-width:800px){.primary-nav .owner-sign-in-button{width:100%;margin:.35rem 0;min-height:48px;justify-content:flex-start}}
