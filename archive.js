@@ -109,7 +109,7 @@
   }
   async function start(){
     if(!configured||!window.supabase){recordsList.textContent="Archive connection is not configured.";return;}
-    client=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}));
     await loadRecords();
     const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);
     client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);loadRecords();});
