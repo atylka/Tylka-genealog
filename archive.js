@@ -37,7 +37,7 @@
       const actions=document.createElement("div");actions.className="record-actions";
       if(record.file_path){
         const view=document.createElement("button");view.type="button";view.className="small-button";
-        if(currentUser){view.textContent="Open attachment";view.addEventListener("click",async()=>{const {data,error}=await client.storage.from("family-archive").createSignedUrl(record.file_path,180);if(error)return alert("Could not open file: "+error.message);showAttachment(data.signedUrl,record);});}
+        if(currentUser){view.textContent="Open attachment";view.addEventListener("click",async()=>{const {data,error}=await client.storage.from("family-archive").createSignedUrl(record.file_path,180);if(error)return alert("Could not open file: "+error.message);showAttachment(data.signedUrl,record,record.mime_type);});}
         else {view.textContent="Request to view";view.addEventListener("click",()=>openRequest(record));}
         actions.append(view);
       }
@@ -45,7 +45,7 @@
       card.append(actions);recordsList.append(card);
     });
   }
-  function showAttachment(url,record){const modal=$("access-notice");$("access-notice-title").textContent="Attachment ready";$("access-notice-text").textContent=record.title+" is ready to view.";const link=$("approved-file-link");link.href=url;link.textContent="View attachment";showModal("access-notice");}
+  function showAttachment(url,record,mimeType){const modal=$("access-notice");$("access-notice-title").textContent="Attachment ready";$("access-notice-text").textContent=record.title+" is ready to view.";const preview=$("approved-preview");preview.replaceChildren();if((mimeType||record.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=url;img.alt=record.title;preview.append(img);}else{const frame=document.createElement("iframe");frame.src=url;frame.title=record.title;preview.append(frame);}showModal("access-notice");}
   function openRequest(record){selectedRecord=record;$("request-record-title").textContent=record.title;$("visitor-name").value="";setMessage($("request-message"),"");showModal("request-modal");}
   async function loadRecords(){
     recordsList.textContent="Loading records…";
@@ -68,7 +68,7 @@
         clearInterval(pollHandle);localStorage.removeItem(pendingKey);
         $("access-notice-title").textContent="Request denied";
         $("access-notice-text").textContent="The archive owner did not approve this attachment request.";
-        $("approved-file-link").hidden=true;showModal("access-notice");
+        $("approved-preview").replaceChildren();showModal("access-notice");
       }
     }catch(_){/* Retry while the visitor remains on the page. */}
   }
