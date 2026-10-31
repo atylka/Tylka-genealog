@@ -132,7 +132,8 @@
       uploadForm.reset();setMessage($("upload-message"),"Record saved to your archive.");await loadRecords();
     }catch(error){setMessage($("upload-message"),error.message||"Upload failed.",true);}finally{button.disabled=false;}
   });
-\n  const folderContainer=document.querySelector(".archive-folders");
+
+  const folderContainer=document.querySelector(".archive-folders");
   if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
   if(recordSearch)recordSearch.addEventListener("input",renderRecords);
   start();
