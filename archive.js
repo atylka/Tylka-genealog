@@ -2,8 +2,7 @@
   const config = window.TYLKA_SUPABASE_CONFIG || {};
   const configured = config.url && config.anonKey && !config.url.includes("YOUR_") && !config.anonKey.includes("YOUR_");
   const $ = id => document.getElementById(id);
-  const loginPanel = $("login-panel"), loginForm = $("login-form"), loginToggle = $("owner-login-toggle");
-  const loginMessage = $("login-message"), recordsList = $("records-list"), recordSearch = $("record-search");
+  const recordsList = $("records-list"), recordSearch = $("record-search");
   const categoryNames = {births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
   let client = null, currentUser = null, records = [], activeFolder = "all", selectedRecord = null, pollHandle = null;
   const pendingKey = "tylka_pending_attachment_request";
@@ -20,9 +19,8 @@
   const closeModals = () => document.querySelectorAll(".site-modal").forEach(node=>node.hidden=true);
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
-  if(loginToggle) loginToggle.addEventListener("click",()=>{loginPanel.hidden=!loginPanel.hidden;});
   const addRecordButton=$("open-add-record");
-  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){if(loginPanel)loginPanel.hidden=false;loginPanel?.scrollIntoView({behavior:"smooth",block:"center"});return;}setMessage($("upload-message"),"");showModal("add-record-modal");});
+  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
@@ -115,16 +113,16 @@
     await loadRecords();
     const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);
     client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);loadRecords();});
+    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);loadRecords();});
     checkPendingRequest();pollHandle=setInterval(checkPendingRequest,5000);
     setInterval(()=>{if(currentUser)refreshInbox().catch(()=>{});},30000);
   }
   function setOwner(user){
-    currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(loginToggle)loginToggle.hidden=!!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
+    currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
-    if(user){if(loginPanel)loginPanel.hidden=true;if($("owner-tools"))refreshInbox().catch(()=>{});}else if(document.body.dataset.page==="upload"&&loginPanel){loginPanel.hidden=false;}if(recordsList)renderRecords();
+    if(user&&$("owner-tools"))refreshInbox().catch(()=>{});if(recordsList)renderRecords();
   }
-  if(loginForm)loginForm.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;setMessage(loginMessage,"Signing in…");const {error}=await client.auth.signInWithPassword({email:$("login-email").value.trim(),password:$("login-password").value});setMessage(loginMessage,error?error.message:"Signed in.",!!error);});
   if($("sign-out"))$("sign-out").addEventListener("click",async()=>{await client.auth.signOut();});
   if($("inbox-button"))$("inbox-button").addEventListener("click",async()=>{try{await refreshInbox();showModal("inbox-modal");}catch(error){alert(error.message);}});
   if($("request-form"))$("request-form").addEventListener("submit",async e=>{
