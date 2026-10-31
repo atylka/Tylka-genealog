@@ -2,9 +2,25 @@
  const config=window.TYLKA_SUPABASE_CONFIG||{}, configured=config.url&&config.anonKey&&!config.url.includes("YOUR_")&&!config.anonKey.includes("YOUR_");
  const login=document.getElementById("home-login"), workspace=document.getElementById("home-search-workspace"), status=document.getElementById("home-status"), form=document.getElementById("home-login-form"), msg=document.getElementById("home-login-message"), results=document.getElementById("home-results"), count=document.getElementById("home-result-count");
  const query=document.getElementById("home-query"), category=document.getElementById("home-category"), location=document.getElementById("home-location");
+ const activitySection=document.getElementById("home-activity-log"), activityList=document.getElementById("home-activity-list");
  const names={births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
- let client,records=[];
+ let client,records=[],activeUser=null;
  const node=(tag,text,cls)=>{const e=document.createElement(tag);if(cls)e.className=cls;e.textContent=text||"";return e;};
+ function renderLog(){
+  if(!activityList)return;
+  activityList.replaceChildren();
+  if(!records.length){activityList.append(node("p","No records have been added yet.","empty-state"));return;}
+  records.forEach(r=>{
+   const item=node("article","","activity-log-item");
+   const details=node("div","","activity-log-record");
+   details.append(node("span",names[r.category]||r.category,"record-category"),node("h3",r.title||"Untitled record"));
+   const addedBy=(activeUser?.user_metadata?.full_name||activeUser?.user_metadata?.name||activeUser?.email||"Archive owner");
+   details.append(node("p","Added by "+addedBy,"activity-log-by"));
+   const stamp=new Date(r.created_at);
+   details.append(node("time",stamp.toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"}),"activity-log-time"));
+   item.append(details);activityList.append(item);
+  });
+ }
  function render(){
   const q=query.value.trim().toLowerCase(),loc=location.value.trim().toLowerCase(),cat=category.value;
   const found=records.filter(r=>(cat==="all"||r.category===cat)&&(!loc||(r.location||"").toLowerCase().includes(loc))&&[r.title,r.description,r.file_name,r.location].join(" ").toLowerCase().includes(q));
@@ -26,13 +42,14 @@
    results.append(card);
   });
  }
- async function load(){const {data,error}=await client.from("archive_records").select("*").order("created_at",{ascending:false});if(error){count.textContent="Could not load records: "+error.message;return;}records=data||[];render();}
+ async function load(){const {data,error}=await client.from("archive_records").select("*").order("created_at",{ascending:false});if(error){count.textContent="Could not load records: "+error.message;if(activityList)activityList.textContent="Could not load the archive log: "+error.message;return;}records=data||[];render();renderLog();}
  async function start(){
   if(!configured||!window.supabase){status.textContent="Supabase connection is not configured.";msg.textContent="Connect the private Supabase project to search records.";return;}
   client=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-  const {data:{session}}=await client.auth.getSession();if(session?.user){login.hidden=true;workspace.hidden=false;await load();}else status.textContent="Sign in with your archive owner account to search records.";
-  client.auth.onAuthStateChange((_e,s)=>{login.hidden=!!s?.user;workspace.hidden=!s?.user;if(s?.user)load();else{records=[];results.replaceChildren();}});
+  const {data:{session}}=await client.auth.getSession();activeUser=session?.user||null;
+  if(activeUser){login.hidden=true;workspace.hidden=false;if(activitySection)activitySection.hidden=false;await load();}else status.textContent="Sign in with your archive owner account to search records and view the log.";
+  client.auth.onAuthStateChange((_e,s)=>{activeUser=s?.user||null;login.hidden=!!activeUser;workspace.hidden=!activeUser;if(activitySection)activitySection.hidden=!activeUser;if(activeUser)load();else{records=[];results.replaceChildren();if(activityList)activityList.replaceChildren();}});
  }
- form.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;msg.textContent="Signing in…";const {error}=await client.auth.signInWithPassword({email:document.getElementById("home-email").value.trim(),password:document.getElementById("home-password").value});msg.textContent=error?error.message:"Signed in.";});
- [query,category,location].forEach(el=>el.addEventListener("input",render));start();
+ if(form)form.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;msg.textContent="Signing in…";const {error}=await client.auth.signInWithPassword({email:document.getElementById("home-email").value.trim(),password:document.getElementById("home-password").value});msg.textContent=error?error.message:"Signed in.";});
+ [query,category,location].filter(Boolean).forEach(el=>el.addEventListener("input",render));start();
 })();
