@@ -79,3 +79,7 @@ using (
 
 -- Disable public sign-ups in Authentication > Settings after creating your owner account.
 -- Never expose the service_role key in this website.
+
+
+-- Persons named in each archive record; used by the site's People search filter.
+alter table public.archive_records add column if not exists persons_mentioned text not null default '';
