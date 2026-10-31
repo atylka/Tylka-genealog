@@ -1163,3 +1163,35 @@ body:before{content:"";position:fixed;inset:0;z-index:20;pointer-events:none;opa
 @keyframes cabinet-drawer-slide-right{0%{opacity:.55;transform:translateX(30px) scaleX(.965);clip-path:inset(0 0 0 8%);box-shadow:inset -18px 0 24px rgba(55,24,17,.18)}62%{opacity:1;transform:translateX(-4px) scaleX(1.005);clip-path:inset(0);box-shadow:0 5px 18px rgba(48,25,19,.08)}100%{opacity:1;transform:translateX(0) scaleX(1);clip-path:inset(0);box-shadow:0 9px 24px rgba(48,25,19,.13)}}
 @media(max-width:760px){.archive-folder-content.is-opening{animation:cabinet-drawer-slide-right-mobile .42s ease both!important}@keyframes cabinet-drawer-slide-right-mobile{from{opacity:.45;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}}
 @media(prefers-reduced-motion:reduce){.archive-folder-content.is-opening{animation:none!important}}
+
+
+/* High-visibility archival patina overlay. Deliberately visible, still subtle enough for text. */
+html{background:#c9b58f}
+body{position:relative;isolation:isolate;background-color:#c9b58f!important;background-image:
+ radial-gradient(ellipse 46px 32px at 8% 18%,rgba(45,25,12,.24) 0%,rgba(65,37,17,.12) 38%,transparent 75%),
+ radial-gradient(ellipse 30px 48px at 93% 39%,rgba(45,25,12,.22) 0%,rgba(65,37,17,.11) 42%,transparent 76%),
+ radial-gradient(ellipse 23px 17px at 73% 87%,rgba(35,20,10,.24) 0%,transparent 72%),
+ radial-gradient(ellipse 16px 12px at 28% 65%,rgba(45,25,12,.2) 0%,transparent 75%),
+ radial-gradient(ellipse 90px 55px at 52% 4%,rgba(255,245,214,.28),transparent 76%),
+ repeating-linear-gradient(4deg,transparent 0 42px,rgba(75,46,24,.09) 43px,transparent 44px 91px),
+ repeating-linear-gradient(93deg,transparent 0 67px,rgba(255,246,217,.14) 68px,transparent 70px 139px),
+ linear-gradient(120deg,rgba(255,245,215,.17),transparent 38%,rgba(68,39,19,.10)),#c9b58f!important;background-attachment:fixed}
+body:after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.78;background-image:
+ radial-gradient(ellipse 13px 8px at 4% 31%,rgba(25,13,7,.42) 0 22%,rgba(44,25,12,.24) 40%,transparent 78%),
+ radial-gradient(ellipse 7px 11px at 12% 74%,rgba(38,20,9,.3) 0 26%,transparent 76%),
+ radial-gradient(ellipse 17px 10px at 89% 17%,rgba(27,14,6,.37) 0 18%,rgba(55,30,13,.2) 44%,transparent 78%),
+ radial-gradient(ellipse 9px 6px at 96% 82%,rgba(27,14,6,.38) 0 20%,transparent 78%),
+ radial-gradient(ellipse 5px 4px at 43% 92%,rgba(37,19,9,.33) 0 24%,transparent 80%),
+ radial-gradient(ellipse 4px 5px at 65% 9%,rgba(37,19,9,.3) 0 24%,transparent 80%),
+ radial-gradient(ellipse 2px 2px at 18% 11%,rgba(40,22,10,.32) 0 40%,transparent 75%),
+ radial-gradient(ellipse 3px 2px at 36% 37%,rgba(40,22,10,.25) 0 40%,transparent 75%),
+ radial-gradient(ellipse 2px 3px at 59% 57%,rgba(40,22,10,.3) 0 40%,transparent 75%),
+ radial-gradient(ellipse 3px 2px at 81% 63%,rgba(40,22,10,.27) 0 40%,transparent 75%),
+ linear-gradient(176deg,transparent 0 23%,rgba(74,44,22,.13) 23.1%,rgba(255,247,221,.18) 23.35%,transparent 23.8%),
+ linear-gradient(2deg,transparent 0 56%,rgba(74,44,22,.11) 56.1%,rgba(255,247,221,.15) 56.35%,transparent 56.8%),
+ repeating-linear-gradient(0deg,rgba(73,49,28,.025) 0 1px,transparent 1px 3px),
+ repeating-linear-gradient(90deg,rgba(73,49,28,.022) 0 1px,transparent 1px 4px)}
+/* Put content above the decorative paper grain while retaining visible background texture. */
+body>*{position:relative;z-index:1}
+body:after{z-index:9999}
+@media print{body:after{display:none}}
