@@ -1,17 +1,4 @@
 (() => {
-  const toggle = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".primary-nav");
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => {
-      const open = toggle.getAttribute("aria-expanded") === "true";
-      toggle.setAttribute("aria-expanded", String(!open));
-      nav.classList.toggle("is-open", !open);
-    });
-    nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
-      toggle.setAttribute("aria-expanded", "false");
-      nav.classList.remove("is-open");
-    }));
-  }
   const reveals = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
@@ -48,11 +35,10 @@
   applyTheme(getPref(themeKey,"light")==="dark"?"dark":"light");applyFormat();
   const header=document.querySelector(".site-header");
   if(header){
-    const oldToggle=header.querySelector(".menu-toggle"),nav=header.querySelector(".primary-nav");
+    const oldToggle=header.querySelector(".menu-toggle");
     const menuButton=oldToggle||document.createElement("button");
     menuButton.className="menu-toggle site-menu-toggle";menuButton.type="button";menuButton.innerHTML='<span aria-hidden="true">☰</span>';menuButton.setAttribute("aria-label","Open site menu");menuButton.setAttribute("aria-expanded","false");
     const panel=document.createElement("div");panel.className="site-menu-panel";panel.id="site-menu-panel";panel.hidden=true;
-    if(nav){nav.classList.add("site-menu-nav");panel.append(nav);}
     const mailbox=document.createElement("button");mailbox.type="button";mailbox.className="site-menu-action";mailbox.id="site-mailbox";mailbox.innerHTML='<span aria-hidden="true">✉</span> Mailbox';panel.append(mailbox);
     const settings=document.createElement("button");settings.type="button";settings.className="site-menu-action";settings.id="site-settings-open";settings.textContent="Settings";panel.append(settings);
     if(oldToggle)oldToggle.replaceWith(menuButton);else header.append(menuButton);
