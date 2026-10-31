@@ -1,7 +1,7 @@
 (() => {
   const config=window.TYLKA_SUPABASE_CONFIG||{};
   if(!config.url||!config.anonKey||!window.supabase)return;
-  const client=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+  const client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true}}));
   const ownerId="7a8cd586-c68f-4078-b61d-a87f3842b07e";
   const ownerButton=document.querySelector("[data-owner-sign-in]");let ownerModal=null;
   function ensureOwnerModal(){
