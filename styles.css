@@ -1049,6 +1049,8 @@ button.small-button:active,
  @keyframes cabinet-drawer-slide-out-mobile{from{opacity:.35;transform:translateY(-10px) translateX(-5px)}to{opacity:1;transform:translateY(0) translateX(0)}}
 }
 @media(prefers-reduced-motion:reduce){
- .archive-folder-content.is-opening{animation:none!important}
- .archive-folders .archive-folder,.small-button{transition:none!important}
+  /* Respect reduced-motion preferences without making folder feedback disappear entirely. */
+  .archive-folder-content.is-opening{animation:cabinet-drawer-reduced .22s ease-out both!important}
+  @keyframes cabinet-drawer-reduced{from{opacity:.7;transform:translateX(-5px)}to{opacity:1;transform:translateX(0)}}
+  .archive-folders .archive-folder,.small-button{transition:background-color .12s ease,color .12s ease,border-color .12s ease!important}
 }
