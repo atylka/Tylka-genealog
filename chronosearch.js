@@ -41,7 +41,7 @@
  }
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
-  const client=window.supabase.createClient(config.url,config.anonKey);
+  const client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
   const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_name,created_at").order("created_at",{ascending:true});
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
   const records=data||[];
