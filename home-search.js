@@ -13,11 +13,11 @@
   records.forEach(r=>{
    const item=node("article","","activity-log-item");
    const details=node("div","","activity-log-record");
-   details.append(node("span",names[r.category]||r.category,"record-category"),node("h3",r.title||"Untitled record"));
-   const addedBy=(activeUser?.user_metadata?.full_name||activeUser?.user_metadata?.name||activeUser?.email||"Archive owner");
-   details.append(node("p","Added by "+addedBy,"activity-log-by"));
+   const folder=names[r.category]||r.category||"Uncategorized";
    const stamp=new Date(r.created_at);
-   details.append(node("time",stamp.toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"}),"activity-log-time"));
+   const who=r.created_by||"Archive owner";
+   const timeText=stamp.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+", "+stamp.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+   details.append(node("p",timeText+" — "+who+" added “"+(r.title||"Untitled record")+"” to “"+folder+"”.","activity-log-entry"));
    item.append(details);activityList.append(item);
   });
  }
