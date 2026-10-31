@@ -31,11 +31,9 @@
       if(record.location){const p=document.createElement("p");p.className="record-location";p.append(document.createTextNode("Location: "));const a=document.createElement("a");a.className="record-location-link";a.textContent=record.location;a.href="location-registry.html?place="+encodeURIComponent(record.location);p.append(a);details.append(p);}
       if(record.description){const p=document.createElement("p");p.textContent=record.description;details.append(p);}
       const confidence=readConfidence(record.description);const confidenceBadge=document.createElement("span");confidenceBadge.className="confidence-badge confidence-"+confidence;confidenceBadge.textContent=confidenceLabel(confidence);details.append(confidenceBadge);
-      const detailButton=document.createElement("button");detailButton.type="button";detailButton.className="record-detail-trigger";detailButton.textContent="View record details";detailButton.addEventListener("click",()=>openRecordDetail(record));details.append(detailButton);
       const date=document.createElement("small");date.className="record-date";date.textContent=new Date(record.created_at).toLocaleDateString();details.append(date);
       card.append(details);
       const actions=document.createElement("div");actions.className="record-actions";
-      if(record.file_path){const view=document.createElement("button");view.type="button";view.className="small-button";view.textContent="View original";view.addEventListener("click",()=>showAttachment(publicFileUrl(record.file_path),record,record.mime_type));actions.append(view);}
       if(currentUser){const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async()=>{if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(del);}
       card.append(actions);recordsList.append(card);
     });
@@ -99,7 +97,7 @@
       folderContainer.querySelectorAll(".archive-folder").forEach(item=>{const active=canonical(item.dataset.folder||"all")===activeFolder;item.classList.toggle("is-active",active);item.setAttribute("aria-pressed",String(active));if(active&&$("folder-heading"))$("folder-heading").textContent=item.textContent.trim();});
     }
   }
-  if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
+  if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";const panel=$(".archive-folder-content");if(panel){panel.classList.remove("is-opening");void panel.offsetWidth;panel.classList.add("is-opening");panel.addEventListener("animationend",()=>panel.classList.remove("is-opening"),{once:true});}renderRecords();});
   if(recordSearch)recordSearch.addEventListener("input",renderRecords);
 
   // Manual face selection and portrait profiles (kept in this browser's local storage).
