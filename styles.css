@@ -618,3 +618,39 @@ button:disabled{cursor:wait;opacity:.65}
 @media(max-width:420px){
  .record-card.record-card-expanded{grid-template-columns:82px minmax(0,1fr);gap:.7rem}
 }
+
+
+/* Burgundy accents and clearer header navigation */
+:root{--accent:#7b1e2b;--accent-dark:#48111b;--burgundy:#7b1e2b;--burgundy-deep:#48111b;--burgundy-mid:#9b2d3b;--burgundy-soft:#c66a70;--burgundy-wash:#ead0ce}
+.button-dark{background:var(--burgundy-deep);border-color:var(--burgundy-deep)}
+.button-dark:hover{background:var(--burgundy);border-color:var(--burgundy)}
+.small-button:hover,.text-link:hover,.record-detail-trigger:hover{color:var(--burgundy);border-color:var(--burgundy)}
+.monogram{border-color:var(--burgundy);color:var(--burgundy)}
+.eyebrow,.record-category,.timeline-date,.folder-number{color:var(--burgundy)}
+.site-header{align-items:center;gap:1.25rem}
+.primary-nav{display:flex;align-items:center;justify-content:flex-end;gap:.45rem;flex-wrap:wrap;max-width:780px}
+.primary-nav a,.primary-nav .owner-sign-in-button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:.55rem .85rem;border:1px solid transparent;border-radius:4px;font:600 .82rem/1.2 var(--sans);text-decoration:none;white-space:nowrap;transition:background-color .2s,border-color .2s,color .2s,transform .2s}
+.primary-nav a:hover,.primary-nav a[aria-current=page]{background:var(--burgundy-wash);border-color:#d6a6a6;color:var(--burgundy-deep)}
+.primary-nav .owner-sign-in-button{border-color:var(--burgundy);background:var(--burgundy);color:#fff5ed;cursor:pointer}
+.primary-nav .owner-sign-in-button:hover{background:var(--burgundy-deep);border-color:var(--burgundy-deep);transform:translateY(-1px)}
+.menu-toggle{border-radius:4px;border-color:var(--burgundy);color:var(--burgundy-deep);cursor:pointer}
+@media(max-width:800px){.site-header{align-items:center;gap:.8rem}.primary-nav{max-width:none;align-items:stretch;gap:.35rem;padding-top:.4rem}.primary-nav a,.primary-nav .owner-sign-in-button{justify-content:flex-start;width:100%;min-height:42px;padding:.7rem .85rem}}
+/* Three-column location registry: index | map | selected-place records */
+.location-layout{display:grid;grid-template-columns:minmax(205px,.78fr) minmax(360px,1.55fr) minmax(260px,1fr);gap:1rem;align-items:start}
+.location-sidebar,.map-panel,.location-records-panel{min-width:0;border:1px solid var(--line);background:var(--paper-light);padding:1rem}
+.location-sidebar .search-label{margin-top:0}
+.location-list{max-height:72vh}
+.location-records-panel{max-height:calc(100vh - 2rem);overflow:auto}
+.location-records-panel>h2{font-size:clamp(1.5rem,2vw,2.1rem);margin:0 0 1rem}
+.location-records-panel .location-detail{border-top:1px solid var(--line);padding-top:.75rem}
+.location-records-panel .location-detail>h3{font-size:1.55rem;overflow-wrap:anywhere}
+.location-records-panel .location-record{padding:.9rem 0}
+.location-records-panel .record-preview{max-width:100%;margin:.65rem 0}
+.location-records-panel .record-preview img{max-height:210px;object-fit:contain}
+.location-records-panel .location-record .text-link{margin-top:.45rem;font-size:.8rem}
+.map-panel{padding:.9rem}
+.location-route-tools>p:not(.eyebrow){font-size:.82rem;color:var(--muted);margin:.25rem 0 .7rem}
+#family-map{height:clamp(380px,62vh,720px)}
+.map-caption{font-size:.68rem}
+@media(max-width:1150px){.location-layout{grid-template-columns:minmax(190px,.72fr) minmax(320px,1.3fr)}.location-records-panel{grid-column:1/-1;max-height:none}.location-records-panel .location-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}.location-records-panel .location-detail>h3,.location-records-panel .location-detail>p:not(.location-record-heading){grid-column:1/-1}.location-records-panel .location-record-heading{grid-column:1/-1}}
+@media(max-width:760px){.location-layout{grid-template-columns:minmax(0,1fr);gap:.85rem}.location-sidebar,.map-panel,.location-records-panel{padding:.8rem}.location-list{max-height:260px}.location-records-panel{grid-column:auto}.location-records-panel .location-detail{display:block}#family-map{height:360px}}
