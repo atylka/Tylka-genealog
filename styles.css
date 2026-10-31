@@ -405,3 +405,83 @@ input,textarea,select{font-family:'EB Garamond',Georgia,serif}
 input:focus,textarea:focus,select:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(max-width:800px){.primary-nav a{font-size:1.02rem}}
 @media(prefers-reduced-motion:reduce){body{background-attachment:scroll}}
+
+
+/* Full-site motion suite: archival reveal, paper interactions, and gentle movement */
+:root{--motion-quick:180ms;--motion-smooth:520ms;--motion-dramatic:820ms;--motion-ease:cubic-bezier(.2,.75,.25,1)}
+@keyframes parchment-unfurl{0%{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(12px)}100%{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+@keyframes ink-write{0%{opacity:0;transform:translateY(9px);filter:blur(2px)}65%{opacity:1;filter:blur(0)}100%{transform:none}}
+@keyframes seal-stamp{0%{opacity:0;transform:scale(1.22) rotate(-5deg)}65%{opacity:1;transform:scale(.97) rotate(1deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes paper-lift{0%{transform:translateY(0);box-shadow:0 2px 5px rgba(55,35,20,.04)}100%{transform:translateY(-5px);box-shadow:0 13px 26px rgba(55,35,20,.13)}}
+@keyframes ink-flash{0%,100%{text-shadow:none}45%{text-shadow:0 0 12px rgba(113,51,58,.22)}}
+@keyframes modal-unfold{0%{opacity:0;transform:translateY(22px) scale(.975);clip-path:inset(0 0 100% 0)}100%{opacity:1;transform:none;clip-path:inset(0 0 0 0)}}
+@keyframes veil-in{from{opacity:0}to{opacity:1}}
+@keyframes button-press{0%{transform:scale(1)}45%{transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes line-draw{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}
+@keyframes map-pin-arrive{0%{opacity:0;transform:translateY(-12px) scale(.7)}70%{opacity:1;transform:translateY(2px) scale(1.08)}100%{transform:none}}
+@keyframes photo-develop{0%{opacity:0;filter:sepia(.5) blur(5px);transform:scale(.985)}100%{opacity:1;filter:none;transform:none}}
+@keyframes gentle-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes focus-ink{0%{box-shadow:0 0 0 0 rgba(113,51,58,0)}100%{box-shadow:0 0 0 3px rgba(113,51,58,.12)}}
+@keyframes ticker-drift{0%{background-position:0 0}100%{background-position:80px 0}}
+.motion-reveal{opacity:0;transform:translateY(18px);filter:blur(1px);transition:opacity .7s var(--motion-ease),transform .7s var(--motion-ease),filter .7s var(--motion-ease)}
+.motion-reveal.motion-visible{opacity:1;transform:none;filter:none}
+.motion-reveal.motion-ink{animation:ink-write .78s var(--motion-ease) both}
+.motion-reveal.motion-paper{animation:parchment-unfurl .8s var(--motion-ease) both}
+.motion-reveal.motion-stamp{animation:seal-stamp .58s var(--motion-ease) both}
+.site-header .wordmark{animation:ink-write .7s .08s both}
+.site-header .primary-nav>*{animation:ink-write .48s both}
+.site-header .primary-nav>*:nth-child(2){animation-delay:.08s}
+.site-header .primary-nav>*:nth-child(3){animation-delay:.16s}
+.site-header .primary-nav>*:nth-child(4){animation-delay:.24s}
+.brand-banner{animation:parchment-unfurl .9s var(--motion-ease) both}
+.brand-banner-inner>*{animation:ink-write .75s both}
+.brand-banner-inner>*:nth-child(2){animation-delay:.12s}
+.brand-banner-inner>*:nth-child(3){animation-delay:.24s}
+.hero h1,.archive-page>h1{animation:ink-write .8s .08s both}
+.eyebrow{animation:ink-write .55s both}
+.section-heading h2,.section-heading .section-intro{animation:ink-write .65s both}
+.section-heading:after{content:"";display:block;width:min(160px,35%);height:1px;margin-top:1rem;background:var(--line);animation:line-draw .8s .25s both}
+.folio-card,.paper-card,.generation,.archive-folders,.archive-folder-content,.home-search-box,.chrono-filter-panel,.location-sidebar,.map-panel,.activity-log-item,.record-card,.inbox-item{transition:transform .35s var(--motion-ease),box-shadow .35s var(--motion-ease),border-color .35s,background-color .35s}
+.paper-card:hover,.record-card:hover,.activity-log-item:hover,.inbox-item:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(55,35,20,.10)}
+.folio-card:hover{transform:translateY(-4px) rotate(-.25deg);box-shadow:10px 14px 26px rgba(55,35,20,.12)}
+.generation:hover{transform:scale(1.015);box-shadow:0 8px 18px rgba(55,35,20,.09)}
+.archive-folder{position:relative;isolation:isolate;transition:transform .25s var(--motion-ease),background .25s,border-color .25s}
+.archive-folder:after{content:"";position:absolute;left:.8rem;right:.8rem;bottom:5px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--motion-ease);z-index:-1}
+.archive-folder:hover:after,.archive-folder.is-active:after{transform:scaleX(1)}
+.archive-folder:hover{transform:translateX(4px)}
+button,.button,.small-button,.site-menu-toggle,.theme-toggle{transition:transform .2s var(--motion-ease),box-shadow .25s,background-color .25s,color .25s,border-color .25s}
+button:hover:not(:disabled),.button:hover,.small-button:hover,.site-menu-toggle:hover{box-shadow:0 5px 13px rgba(55,35,20,.12)}
+button:active:not(:disabled),.button:active,.small-button:active{animation:button-press .24s ease}
+a:not(.wordmark):not(.button){transition:color .2s,text-decoration-color .2s}
+input,select,textarea{transition:border-color .2s,background-color .2s,box-shadow .25s}
+input:focus,select:focus,textarea:focus{animation:focus-ink .25s ease-out}
+.site-modal{animation:veil-in .2s ease both}
+.site-modal:not([hidden]) .modal-card{animation:modal-unfold .42s var(--motion-ease) both}
+.site-modal:not([hidden]) .modal-card>*{animation:ink-write .4s .08s both}
+.modal-close:hover{transform:rotate(90deg) scale(1.08)}
+.detail-image-viewport img,.record-preview img,.approved-preview img{animation:photo-develop .75s ease both}
+.record-preview img:hover{transform:scale(1.025);transition:transform .45s var(--motion-ease)}
+#family-map .leaflet-marker-icon{animation:map-pin-arrive .5s var(--motion-ease) both}
+#family-map .leaflet-popup{animation:ink-write .25s ease both}
+.location-item:hover{transform:translateX(3px)}
+.location-item.is-selected{box-shadow:inset 3px 0 var(--accent),0 3px 10px rgba(55,35,20,.08)}
+.archive-scroll-progress{transform-origin:left center;transition:transform .08s linear}
+.back-to-top{transition:opacity .25s,transform .3s var(--motion-ease),background .2s}
+.back-to-top.is-visible{animation:seal-stamp .35s var(--motion-ease) both}
+.site-menu-panel:not([hidden]){transform-origin:top right;animation:modal-unfold .28s var(--motion-ease) both}
+.site-menu-panel>*{animation:ink-write .3s both}
+.site-menu-panel>*:nth-child(2){animation-delay:.06s}
+.site-menu-panel>*:nth-child(3){animation-delay:.12s}
+.ticker{background-image:repeating-linear-gradient(90deg,transparent 0 38px,rgba(113,51,58,.06) 38px 39px);animation:ticker-drift 18s linear infinite}
+.folio-top,.folio-bottom{transition:letter-spacing .3s}
+.folio-card:hover .folio-top,.folio-card:hover .folio-bottom{letter-spacing:.14em}
+.archive-folder-content,.location-detail,.detail-transcription{animation:ink-write .45s var(--motion-ease) both}
+.form-message:not(:empty){animation:ink-write .3s ease both}
+#upload-message:not(:empty){padding:.35rem .5rem;border-left:2px solid var(--accent)}
+.empty-state{animation:ink-write .5s ease both}
+@media(hover:hover) and (pointer:fine){.monogram:hover{animation:seal-stamp .45s ease}.wordmark:hover .monogram{box-shadow:0 0 0 4px rgba(113,51,58,.09)}}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+ .motion-reveal{opacity:1!important;transform:none!important;filter:none!important}
+ .brand-banner,.brand-banner-inner>*,.site-header .wordmark,.site-header .primary-nav>*{animation:none!important}
+}
