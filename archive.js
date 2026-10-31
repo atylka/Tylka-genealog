@@ -80,9 +80,9 @@
     if(!currentUser)return;
     editingRecordId=record.id;
     const raw=String(record.description||"");
-    const dateMatch=raw.match(/^Date on record:\\s*([^\\r\\n]+)$/im);
+    const dateMatch=raw.match(/^Date on record:\s*([^\r\n]+)$/im);
     const confidence=readConfidence(raw);
-    const notes=raw.replace(/^Date on record:\\s*[^\\r\\n]+\\s*/im,"").replace(/^Research confidence:\\s*(?:confirmed|probable|uncertain|unverified|unassessed)\\s*\\r?\\n?/im,"").trim();
+    const notes=raw.replace(/^Date on record:\s*[^\r\n]+\s*/im,"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").trim();
     $("record-title").value=record.title||"";
     $("record-category").value=canonical(record.category)||"notes";
     $("record-date").value=dateMatch?dateMatch[1].trim():"";
@@ -99,7 +99,7 @@
   const uploadForm=$("upload-form");
   if(uploadForm)uploadForm.addEventListener("submit",async e=>{
     e.preventDefault();if(!client||!currentUser)return setMessage($("upload-message"),"Sign in to edit records.",true);
-    const title=$("record-title").value.trim(),category=$("record-category").value,personsMentioned=[...new Set($("record-persons").value.split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"","Research confidence: "+($("record-confidence")?.value||"unassessed"),notes].filter(Boolean).join(String.fromCharCode(10,10)),location=$("record-location").value.trim(),file=$("record-file").files[0];
+    const title=$("record-title").value.trim(),category=$("record-category").value,personsMentioned=[...new Set($("record-persons").value.split(/[\n,;]+/).map(name=>name.trim()).filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"","Research confidence: "+($("record-confidence")?.value||"unassessed"),notes].filter(Boolean).join(String.fromCharCode(10,10)),location=$("record-location").value.trim(),file=$("record-file").files[0];
     if(!title)return setMessage($("upload-message"),"Enter a record title.",true);
     if(file&&file.size>20*1024*1024)return setMessage($("upload-message"),"Files must be 20 MB or smaller.",true);
     if(file&&!["image/jpeg","image/png","image/webp","image/tiff","application/pdf"].includes(file.type))return setMessage($("upload-message"),"Allowed files: JPG, PNG, WEBP, TIFF, or PDF.",true);
