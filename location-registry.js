@@ -12,13 +12,6 @@
   const count = document.getElementById("location-count");
   if (!loginPanel) return;
 
-  const knownPlaces = [
-    {name:"Chochołów, Poland",aliases:["chochołów","chocholow"],lat:49.3684,lng:19.8271,context:"Parish research area connected to the early Tylka family line"},
-    {name:"Wielogłowy, Poland",aliases:["wielogłowy","wieloglowy"],lat:49.6502,lng:20.6868,context:"Area associated with Michał Tylka burial research and family records"},
-    {name:"Pittsburgh, Pennsylvania, USA",aliases:["pittsburgh"],lat:40.4406,lng:-79.9959,context:"Western Pennsylvania migration and family connection"},
-    {name:"Mount Pleasant, Pennsylvania, USA",aliases:["mount pleasant","mt. pleasant"],lat:40.1484,lng:-79.5412,context:"Area where Tylka relatives were reportedly living before Bronisław's Ohio settlement"},
-    {name:"St. Clairsville, Ohio, USA",aliases:["st. clairsville","saint clairsville"],lat:40.0806,lng:-80.9001,context:"Ohio community associated with Bronisław Tylka after his 1908 immigration"}
-  ];
   let client = null, map = null, markerLayer = null, places = [], selected = null;
 
   const normalize = value => (value || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
@@ -30,27 +23,14 @@
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
   }
-  function matchKnown(text){
-    const haystack = normalize(text);
-    return knownPlaces.find(place=>place.aliases.some(alias=>haystack.includes(normalize(alias))));
-  }
   function buildPlaces(records){
-    const found = new Map();
+    const found=new Map();
     records.forEach(record=>{
-      const explicit = (record.location || "").trim();
-      const match = explicit ? (knownPlaces.find(p=>normalize(p.name)===normalize(explicit)) || matchKnown(explicit)) : matchKnown([record.title,record.description].join(" "));
-      if(!explicit && !match) return;
-      const name = explicit || match.name;
-      const key = normalize(name);
-      if(!found.has(key)){
-        const base = match || knownPlaces.find(p=>normalize(p.name)===key);
-        found.set(key,{name,lat:base?.lat ?? null,lng:base?.lng ?? null,context:base?.context || "",records:[]});
-      }
+      const name=(record.location||"").trim();
+      if(!name)return;
+      const key=normalize(name);
+      if(!found.has(key))found.set(key,{name,lat:null,lng:null,context:"",records:[]});
       found.get(key).records.push(record);
-    });
-    knownPlaces.forEach(place=>{
-      const key=normalize(place.name);
-      if(!found.has(key)) found.set(key,{...place,records:[],researchOnly:true});
     });
     return [...found.values()].sort((a,b)=>a.name.localeCompare(b.name));
   }
@@ -91,13 +71,22 @@
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
       const recordsHeading=document.createElement("p");recordsHeading.className="location-record-heading";recordsHeading.textContent="Associated records";
       detail.replaceChildren(heading,context,recordsHeading);
-      if(!place.records.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="This is a known family research location. No uploaded record is currently linked to it.";detail.append(empty);}
       place.records.forEach(record=>{
         const card=document.createElement("article");card.className="location-record";
         const title=document.createElement("strong");title.textContent=record.title;
         const category=document.createElement("small");category.textContent=record.category;
         card.append(title,category);
         if(record.description){const note=document.createElement("p");note.textContent=record.description;card.append(note);}
+        if(record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
+          const preview=document.createElement("div");preview.className="record-preview";
+          const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);card.append(preview);
+          client.storage.from("family-archive").createSignedUrl(record.file_path,300).then(({data})=>{if(data?.signedUrl)image.src=data.signedUrl;});
+        }
+        if(record.file_path){
+          const link=document.createElement("button");link.type="button";link.className="small-button";link.textContent="Open original file";
+          link.addEventListener("click",async()=>{const {data,error}=await client.storage.from("family-archive").createSignedUrl(record.file_path,60);if(error)return alert("Could not open file: "+error.message);window.open(data.signedUrl,"_blank","noopener,noreferrer");});
+          card.append(link);
+        }
         detail.append(card);
       });
       marker.openPopup();
@@ -105,7 +94,7 @@
   }
   async function loadRegistry(){
     count.textContent="Loading locations from your private records…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,created_at").order("created_at",{ascending:false});
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
     count.textContent=places.length+" indexed places · "+(data||[]).length+" private records reviewed";
