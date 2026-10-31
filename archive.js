@@ -102,7 +102,7 @@
     setInterval(()=>{if(currentUser)refreshInbox().catch(()=>{});},30000);
   }
   function setOwner(user){
-    currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(loginToggle)loginToggle.hidden=!!user;
+    currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(loginToggle)loginToggle.hidden=!!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if(user){loginPanel.hidden=true;refreshInbox().catch(()=>{});}
