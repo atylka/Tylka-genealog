@@ -28,7 +28,6 @@
    groups.get(key).sort((a,b)=>(a.title||"").localeCompare(b.title||"")).forEach(r=>{
     const card=node("article","","chrono-record-card");
     if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
-    if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     card.append(node("h3",r.title||"Untitled record"));
     if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
