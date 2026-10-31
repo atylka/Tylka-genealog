@@ -154,6 +154,13 @@
   });
 
   const folderContainer=document.querySelector(".archive-folders");
+  if(folderContainer){
+    const requestedFolder=canonical(new URLSearchParams(window.location.search).get("folder")||"all");
+    if(["all","births","deaths","marriages","immigration","photos","notes"].includes(requestedFolder)){
+      activeFolder=requestedFolder;
+      folderContainer.querySelectorAll(".archive-folder").forEach(item=>{const active=canonical(item.dataset.folder||"all")===activeFolder;item.classList.toggle("is-active",active);item.setAttribute("aria-pressed",String(active));if(active&&$("folder-heading"))$("folder-heading").textContent=item.textContent.trim();});
+    }
+  }
   if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
   if(recordSearch)recordSearch.addEventListener("input",renderRecords);
   start();
