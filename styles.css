@@ -1138,3 +1138,28 @@ button.small-button:active,
 .archive-folder-content.is-opening{animation:cabinet-drawer-slide-out .52s cubic-bezier(.18,.72,.22,1) both}
 @keyframes cabinet-drawer-slide-out{0%{opacity:.55;transform:translateX(-24px) scaleX(.965);clip-path:inset(0 8% 0 0);box-shadow:inset 18px 0 24px rgba(55,24,17,.18)}65%{opacity:1;transform:translateX(5px) scaleX(1.005);clip-path:inset(0);box-shadow:0 5px 18px rgba(48,25,19,.08)}100%{opacity:1;transform:translateX(0) scaleX(1);clip-path:inset(0);box-shadow:0 9px 24px rgba(48,25,19,.13)}}
 @media(max-width:760px){.archive-folder-content.is-opening{animation:cabinet-drawer-slide-out-mobile .42s ease both}@keyframes cabinet-drawer-slide-out-mobile{from{opacity:.35;transform:translateY(-10px) translateX(-5px)}to{opacity:1;transform:translate(0,0)}}}
+
+
+/* Archival paper finish: subtle age marks, creases, and historical ink. */
+:root{--paper:#c9b58f;--paper-light:#e4d5b5;--paper-dark:#a58a63}
+body{background-color:var(--paper);background-image:
+ radial-gradient(ellipse at 8% 14%,rgba(72,43,20,.12) 0 1px,transparent 2px),
+ radial-gradient(ellipse at 91% 26%,rgba(67,37,18,.13) 0 2px,transparent 3px),
+ radial-gradient(ellipse at 78% 82%,rgba(255,247,218,.22),transparent 25%),
+ radial-gradient(ellipse at 15% 87%,rgba(73,43,21,.09),transparent 22%),
+ repeating-linear-gradient(7deg,transparent 0 78px,rgba(91,61,34,.035) 79px,transparent 81px),
+ repeating-linear-gradient(97deg,transparent 0 125px,rgba(255,248,224,.10) 126px,transparent 128px),
+ linear-gradient(115deg,rgba(255,249,226,.14),transparent 42%,rgba(71,42,22,.055)),
+ var(--paper);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.38;background:
+ radial-gradient(ellipse 18px 13px at 7% 22%,rgba(45,25,14,.16),transparent 72%),
+ radial-gradient(ellipse 11px 17px at 92% 68%,rgba(45,25,14,.12),transparent 74%),
+ radial-gradient(ellipse 5px 4px at 28% 76%,rgba(45,25,14,.19),transparent 80%),
+ radial-gradient(ellipse 9px 6px at 72% 11%,rgba(45,25,14,.13),transparent 80%),
+ linear-gradient(174deg,transparent 0 17%,rgba(91,61,35,.035) 17.1%,transparent 17.5% 61%,rgba(91,61,35,.035) 61.1%,transparent 61.5%),
+ linear-gradient(3deg,transparent 0 44%,rgba(255,250,230,.11) 44.1%,transparent 44.5%)}
+.site-header,.card,.panel,.archive-folder-content,.archive-folders,.record-card,.modal-card{background-image:linear-gradient(135deg,rgba(255,248,225,.10),transparent 55%),radial-gradient(ellipse at 96% 7%,rgba(64,37,20,.045),transparent 24%)}
+.archive-folder-content.is-opening{animation:cabinet-drawer-slide-right .56s cubic-bezier(.18,.72,.22,1) both!important}
+@keyframes cabinet-drawer-slide-right{0%{opacity:.55;transform:translateX(30px) scaleX(.965);clip-path:inset(0 0 0 8%);box-shadow:inset -18px 0 24px rgba(55,24,17,.18)}62%{opacity:1;transform:translateX(-4px) scaleX(1.005);clip-path:inset(0);box-shadow:0 5px 18px rgba(48,25,19,.08)}100%{opacity:1;transform:translateX(0) scaleX(1);clip-path:inset(0);box-shadow:0 9px 24px rgba(48,25,19,.13)}}
+@media(max-width:760px){.archive-folder-content.is-opening{animation:cabinet-drawer-slide-right-mobile .42s ease both!important}@keyframes cabinet-drawer-slide-right-mobile{from{opacity:.45;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}}
+@media(prefers-reduced-motion:reduce){.archive-folder-content.is-opening{animation:none!important}}
