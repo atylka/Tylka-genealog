@@ -1,7 +1,5 @@
 -- Tylka Genealogical Log: private archive schema
--- Run this in Supabase SQL Editor AFTER creating your Supabase project.
--- Create your owner account in Authentication > Users, then replace OWNER_USER_UUID below
--- with that account's UUID before running this script.
+-- Run this in Supabase SQL Editor. Owner account UUID is configured below.
 
 create extension if not exists pgcrypto;
 
@@ -20,27 +18,26 @@ create table if not exists public.archive_records (
 
 alter table public.archive_records enable row level security;
 
--- Replace this UUID with your Supabase Auth user UUID.
 create policy "Only the site owner can read archive records"
 on public.archive_records for select
 to authenticated
-using (auth.uid() = 'OWNER_USER_UUID'::uuid and owner_id = auth.uid());
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid());
 
 create policy "Only the site owner can add archive records"
 on public.archive_records for insert
 to authenticated
-with check (auth.uid() = 'OWNER_USER_UUID'::uuid and owner_id = auth.uid());
+with check (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid());
 
 create policy "Only the site owner can update archive records"
 on public.archive_records for update
 to authenticated
-using (auth.uid() = 'OWNER_USER_UUID'::uuid and owner_id = auth.uid())
-with check (auth.uid() = 'OWNER_USER_UUID'::uuid and owner_id = auth.uid());
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid())
+with check (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid());
 
 create policy "Only the site owner can delete archive records"
 on public.archive_records for delete
 to authenticated
-using (auth.uid() = 'OWNER_USER_UUID'::uuid and owner_id = auth.uid());
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid and owner_id = auth.uid());
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -59,24 +56,24 @@ create policy "Owner can view private family archive files"
 on storage.objects for select to authenticated
 using (
   bucket_id = 'family-archive'
-  and (storage.foldername(name))[1] = 'OWNER_USER_UUID'
-  and auth.uid() = 'OWNER_USER_UUID'::uuid
+  and (storage.foldername(name))[1] = '7a8cd586-c68f-4078-b61d-a87f3842b07e'
+  and auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
 );
 
 create policy "Owner can upload private family archive files"
 on storage.objects for insert to authenticated
 with check (
   bucket_id = 'family-archive'
-  and (storage.foldername(name))[1] = 'OWNER_USER_UUID'
-  and auth.uid() = 'OWNER_USER_UUID'::uuid
+  and (storage.foldername(name))[1] = '7a8cd586-c68f-4078-b61d-a87f3842b07e'
+  and auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
 );
 
 create policy "Owner can delete private family archive files"
 on storage.objects for delete to authenticated
 using (
   bucket_id = 'family-archive'
-  and (storage.foldername(name))[1] = 'OWNER_USER_UUID'
-  and auth.uid() = 'OWNER_USER_UUID'::uuid
+  and (storage.foldername(name))[1] = '7a8cd586-c68f-4078-b61d-a87f3842b07e'
+  and auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
 );
 
 -- Disable public sign-ups in Authentication > Settings after creating your owner account.
