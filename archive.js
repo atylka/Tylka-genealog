@@ -11,8 +11,6 @@
   const isImage = record => (record.mime_type||"").startsWith("image/");
   function makeThumbnail(record) { const wrap=document.createElement("div");wrap.className="record-thumbnail";if(record.file_path&&isImage(record)){const img=document.createElement("img");img.src=publicFileUrl(record.file_path);img.alt="Thumbnail of "+record.title;img.loading="lazy";wrap.append(img);}else{const label=document.createElement("span");label.className="record-thumbnail-placeholder";label.textContent=record.file_path?(record.mime_type==="application/pdf"?"PDF":"FILE"):"No scan";wrap.append(label);}return wrap; }
 
-
-  function makeThumbnail(record) { const wrap=document.createElement("div");wrap.className="record-thumbnail";if(record.file_path&&isImage(record)){const img=document.createElement("img");img.src=publicFileUrl(record.file_path);img.alt="Thumbnail of "+record.title;img.loading="lazy";wrap.append(img);}else{const label=document.createElement("span");label.className="record-thumbnail-placeholder";label.textContent=record.file_path?(record.mime_type==="application/pdf"?"PDF":"FILE"):"No scan";wrap.append(label);}return wrap; }
   const showModal = id => { const node=$(id); if(node) node.hidden=false; };
   const closeModals = () => document.querySelectorAll(".site-modal").forEach(node=>node.hidden=true);
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
@@ -25,9 +23,8 @@
     const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location].join(" ").toLowerCase().includes(term));
     if(!filtered.length){const p=document.createElement("p");p.className="empty-state";p.textContent=records.length?"No records match this search.":"No records have been added yet.";recordsList.append(p);return;}
     filtered.forEach(record=>{
-      const card=document.createElement("article");card.className="record-card";
+      const card=document.createElement("article");card.className="record-card record-card-expanded";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record: "+record.title);card.addEventListener("click",e=>{if(e.target.closest("button,a,input,select,textarea"))return;openRecordDetail(record);});card.addEventListener("keydown",e=>{if(e.target!==card)return;if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecordDetail(record);}});
       const details=document.createElement("div");
-      card.append(makeThumbnail(record));
       card.append(makeThumbnail(record));
       const category=document.createElement("span");category.className="record-category";category.textContent=categoryNames[canonical(record.category)]||record.category;details.append(category);
       const title=document.createElement("h3");title.textContent=record.title;details.append(title);
