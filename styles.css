@@ -212,3 +212,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)!
 @media(max-width:800px){.primary-nav{align-items:stretch}.primary-nav a{justify-content:flex-start;width:100%;min-height:44px;padding:.7rem .9rem;border:1px solid rgba(93,53,31,.25);border-top:1px solid rgba(93,53,31,.25);margin:.18rem 0}.primary-nav a:hover,.primary-nav a[aria-current=page]{padding-left:1.2rem}}
 @media(prefers-reduced-motion:reduce){:root{--motion-fast:0ms;--motion-mid:0ms;--motion-slow:0ms}*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.page-enter,.page-enter.page-enter-active,.page-leave{opacity:1;transform:none}}
 html.reduce-motion *,html.reduce-motion *:before,html.reduce-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+
+/* Banner image framing: show the uploaded photograph instead of aggressively cropping it */
+.brand-banner.has-background-image{background-color:#38202a;background-image:linear-gradient(120deg,rgba(56,13,26,.28),rgba(126,31,53,.18))}
+.brand-banner.has-background-image:before{inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;filter:blur(5px);transform:none;opacity:1}
+.brand-banner.has-background-image:after{inset:0}
