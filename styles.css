@@ -1132,3 +1132,9 @@ button.small-button:active,
 /* Keep the compact menu control out of the desktop header; show it only on mobile. */
 .site-header>.menu-toggle{display:none!important}
 @media(max-width:800px){.site-header>.menu-toggle{display:block!important}}
+
+
+/* Reliable cabinet drawer feedback after folder selection. */
+.archive-folder-content.is-opening{animation:cabinet-drawer-slide-out .52s cubic-bezier(.18,.72,.22,1) both}
+@keyframes cabinet-drawer-slide-out{0%{opacity:.55;transform:translateX(-24px) scaleX(.965);clip-path:inset(0 8% 0 0);box-shadow:inset 18px 0 24px rgba(55,24,17,.18)}65%{opacity:1;transform:translateX(5px) scaleX(1.005);clip-path:inset(0);box-shadow:0 5px 18px rgba(48,25,19,.08)}100%{opacity:1;transform:translateX(0) scaleX(1);clip-path:inset(0);box-shadow:0 9px 24px rgba(48,25,19,.13)}}
+@media(max-width:760px){.archive-folder-content.is-opening{animation:cabinet-drawer-slide-out-mobile .42s ease both}@keyframes cabinet-drawer-slide-out-mobile{from{opacity:.35;transform:translateY(-10px) translateX(-5px)}to{opacity:1;transform:translate(0,0)}}}
