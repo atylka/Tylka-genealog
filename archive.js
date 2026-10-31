@@ -125,10 +125,10 @@
     const name=$("face-person-name").value.trim();
     if(!name)return setMessage($("face-crop-status"),"Enter the ancestor's name.",true);
     if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return setMessage($("face-crop-status"),"Drag a box around the face first.",true);
-    const side=Math.max(faceSelection.w,faceSelection.h),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
+    const side=Math.min(Math.max(faceSelection.w,faceSelection.h),faceCanvas.width,faceCanvas.height),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
     const sx=Math.max(0,Math.min(faceCanvas.width-side,cx-side/2)),sy=Math.max(0,Math.min(faceCanvas.height-side,cy-side/2));
     const output=document.createElement("canvas");output.width=512;output.height=512;
-    output.getContext("2d").drawImage(faceSourceImage,sx,sy,Math.min(side,faceCanvas.width-sx,faceCanvas.height-sy),Math.min(side,faceCanvas.width-sx,faceCanvas.height-sy),0,0,512,512);
+    output.getContext("2d").drawImage(faceSourceImage,sx,sy,side,side,0,0,512,512);
     const portrait=output.toDataURL("image/jpeg",.88),key="tylkaAncestorPortraits";
     try{
       const people=JSON.parse(localStorage.getItem(key)||"[]");
