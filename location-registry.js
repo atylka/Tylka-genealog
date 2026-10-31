@@ -92,7 +92,11 @@
       marker.openPopup();
     }catch(error){detail.textContent=error.message;}
   }
-  async function loadRegistry(){
+
+  const yearOf=record=>{const text=[record.title,record.description].join(" ");const m=text.match(/(?:18|19|20)\d{2}/);return m?Number(m[0]):9999;};
+  async function buildMigrationRoute(){const output=document.getElementById("route-status");const button=document.getElementById("build-family-route");button.disabled=true;output.textContent="Geocoding places and ordering records…";try{const ordered=[...places].map(p=>({...p,firstYear:Math.min(...p.records.map(yearOf))})).sort((a,b)=>a.firstYear-b.firstYear);const coords=[];for(const place of ordered){try{coords.push(await coordinatesFor(place));}catch(_){}}if(coords.length<2)throw new Error("Add at least two specific locations with town and country details to build a route.");markerLayer.clearLayers();const line=L.polyline(coords,{color:"#a32632",weight:4,opacity:.82,dashArray:"8 9"}).addTo(map);coords.forEach((point,index)=>L.circleMarker(point,{radius:7,color:"#741923",fillColor:"#c34443",fillOpacity:1}).addTo(markerLayer).bindPopup("<strong>"+(index+1)+". "+escapeText(ordered[index].name)+"</strong>"));map.fitBounds(line.getBounds().pad(.18),{animate:true});output.textContent="Journey plotted across "+coords.length+" places, ordered by the earliest year found in their linked records.";}catch(error){output.textContent=error.message;}finally{button.disabled=false;}}
+  const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.addEventListener("click",buildMigrationRoute);
+\n  async function loadRegistry(){
     count.textContent="Loading locations from your private records…";
     const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
