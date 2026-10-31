@@ -139,8 +139,10 @@
       setMessage($("face-crop-status"),"Portrait saved. Open Ancestors to view it.");setTimeout(()=>{closeModals();},700);
     }catch(error){setMessage($("face-crop-status"),"Could not save in this browser. Try a smaller face selection or free up browser storage.",true);}
   });
-  const activeDetailObserver=new MutationObserver(()=>{const record=window.tylkaActiveDetailRecord;const button=$("mark-face");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);});
+  function syncFaceButton(){const record=window.tylkaActiveDetailRecord;const button=$("mark-face");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);}
+  const activeDetailObserver=new MutationObserver(syncFaceButton);
   const detailModal=$("record-detail-modal");if(detailModal)activeDetailObserver.observe(detailModal,{attributes:true,attributeFilter:["hidden"]});
+  syncFaceButton();
 
   start();
 })();
