@@ -1187,3 +1187,30 @@ body:after{inset:0;opacity:.72;background-image:
 @keyframes paper-glow-breathe{0%{opacity:.42;filter:hue-rotate(-8deg)}100%{opacity:.82;filter:hue-rotate(12deg)}}
 .archive-folder-content.is-opening{animation:cabinet-drawer-slide-right .56s cubic-bezier(.18,.72,.22,1) both!important}
 @media(prefers-reduced-motion:reduce){body:before,body:after{animation:none!important}.archive-folder-content.is-opening{animation:none!important}}
+
+
+/* 2026 editorial polish: luminous title wash, tactile grain, layered depth. */
+:root{--glow-cream:rgba(255,239,204,.72);--glow-rose:rgba(169,91,73,.16);--glow-gold:rgba(211,166,103,.22)}
+body:before{filter:blur(30px) saturate(1.18);opacity:.96;animation:paper-aurora-drift 21s ease-in-out infinite alternate,ambient-hue-shift 34s linear infinite}
+body:after{inset:0;opacity:.36;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E"),radial-gradient(ellipse at 88% 13%,rgba(213,164,108,.2),transparent 22%),radial-gradient(ellipse at 8% 89%,rgba(91,119,99,.14),transparent 24%);background-size:180px 180px,100% 100%,100% 100%;animation:grain-shimmer 7s steps(4,end) infinite,ambient-glow 13s ease-in-out infinite alternate}
+@keyframes grain-shimmer{0%{background-position:0 0,0 0,0 0}25%{background-position:17px -9px,0 0,0 0}50%{background-position:-11px 13px,0 0,0 0}75%{background-position:9px 7px,0 0,0 0}100%{background-position:0 0,0 0,0 0}}
+@keyframes ambient-glow{from{opacity:.24}to{opacity:.48}}
+@keyframes ambient-hue-shift{from{filter:blur(30px) hue-rotate(-8deg) saturate(1.12)}to{filter:blur(30px) hue-rotate(14deg) saturate(1.25)}}
+/* Soft parchment light behind each page's principal heading. */
+.archive-page>h1,.ancestor-page .section-intro h1,.chrono-main>h1,main>h1,body>main h1{position:relative;isolation:isolate;display:table;max-width:100%;padding:.12em .28em .2em;margin-left:-.28em;border-radius:48% 52% 44% 56%/58% 43% 57% 42%;background:radial-gradient(ellipse at 48% 52%,rgba(255,244,218,.82) 0%,rgba(250,226,188,.55) 42%,rgba(214,174,125,.12) 72%,transparent 100%);box-shadow:0 10px 32px rgba(104,65,38,.08),inset 0 1px 0 rgba(255,255,255,.52);text-shadow:0 1px 0 rgba(255,255,255,.35);animation:title-light-breathe 9s ease-in-out infinite alternate}
+.archive-page>h1:before,.ancestor-page .section-intro h1:before,.chrono-main>h1:before,main>h1:before,body>main h1:before{content:"";position:absolute;z-index:-1;inset:-.45em -1.1em;border-radius:50%;background:radial-gradient(ellipse,rgba(255,239,204,.58),rgba(220,176,126,.14) 48%,transparent 72%);filter:blur(13px);animation:title-halo-drift 12s ease-in-out infinite alternate}
+.chrono-main>h1{background:linear-gradient(100deg,rgba(255,246,222,.96),rgba(244,218,180,.76) 45%,rgba(255,239,211,.88));-webkit-background-clip:padding-box;background-clip:padding-box;color:var(--burgundy);box-shadow:0 12px 38px rgba(112,35,42,.10),inset 0 1px 0 rgba(255,255,255,.78)}
+@keyframes title-light-breathe{from{box-shadow:0 8px 24px rgba(104,65,38,.06),inset 0 1px 0 rgba(255,255,255,.42);transform:translateY(0)}to{box-shadow:0 14px 40px rgba(104,65,38,.14),inset 0 1px 0 rgba(255,255,255,.82);transform:translateY(-2px)}}
+@keyframes title-halo-drift{from{transform:translateX(-1.2%) scale(.96);opacity:.58}to{transform:translateX(1.2%) scale(1.04);opacity:1}}
+/* Raised, beveled surfaces and warm edge lighting. */
+.archive-toolbar,.upload-card,.auth-card,.chrono-filter-panel,.chrono-year-column,.record-card,.ancestor-card,.location-item{box-shadow:0 8px 20px rgba(61,39,24,.07),0 2px 4px rgba(61,39,24,.06),inset 0 1px 0 rgba(255,250,231,.52);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+.archive-toolbar:hover,.upload-card:hover,.auth-card:hover,.chrono-filter-panel:hover,.chrono-year-column:hover,.record-card:hover,.ancestor-card:hover,.location-item:hover{transform:translateY(-4px) perspective(900px) rotateX(.5deg);box-shadow:0 18px 34px rgba(61,39,24,.13),0 0 22px rgba(196,147,91,.13),inset 0 1px 0 rgba(255,250,231,.7)}
+.site-header{box-shadow:0 8px 24px rgba(55,34,22,.07),inset 0 -1px rgba(255,248,224,.45)}
+.brand-banner{position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,231,202,.3),0 14px 36px rgba(60,25,25,.18)}
+.brand-banner:after{background:linear-gradient(110deg,transparent 15%,rgba(255,236,205,.18) 48%,transparent 72%);background-size:220% 100%;animation:banner-sheen 11s ease-in-out infinite}
+@keyframes banner-sheen{0%,20%{background-position:130% 0}75%,100%{background-position:-130% 0}}
+.chrono-main:before{animation:chrono-orbit 28s linear infinite,chrono-orbit-glow 8s ease-in-out infinite alternate}
+@keyframes chrono-orbit{to{transform:rotate(360deg)}}
+@keyframes chrono-orbit-glow{from{opacity:.35;filter:blur(0)}to{opacity:.8;filter:blur(2px)}}
+.archive-folder:hover,.primary-nav a:hover{filter:drop-shadow(0 4px 6px rgba(112,35,42,.18))}
+@media(prefers-reduced-motion:reduce){body:before,body:after,.archive-page>h1,.ancestor-page .section-intro h1,.chrono-main>h1,main>h1,body>main h1,.brand-banner:after,.chrono-main:before{animation:none!important}.archive-toolbar,.upload-card,.auth-card,.chrono-filter-panel,.chrono-year-column,.record-card,.ancestor-card,.location-item{transition:none!important}}
