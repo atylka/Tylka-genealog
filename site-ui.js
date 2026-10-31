@@ -70,8 +70,4 @@
   document.addEventListener("tylka:save-request",event=>{
     const tokens=getTokens();tokens.push(event.detail);saveTokens(tokens);
   });
-  setInterval(async()=>{
-    const tokens=getTokens();if(!tokens.length)return;
-    for(const saved of tokens){try{await call({action:"status",requestToken:saved.requestToken});}catch(_){}}
-  },15000);
 })();
