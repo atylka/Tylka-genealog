@@ -113,7 +113,11 @@
   if($("request-form"))$("request-form").addEventListener("submit",async e=>{
     e.preventDefault();if(!selectedRecord)return;
     const button=e.currentTarget.querySelector('button[type="submit"]');button.disabled=true;setMessage($("request-message"),"Sending request…");
-    try{const result=await functionCall({action:"request",recordId:selectedRecord.id,name:$("visitor-name").value.trim()});localStorage.setItem(pendingKey,JSON.stringify({requestId:result.requestId,requestToken:result.requestToken}));\n      let saved=[];try{saved=JSON.parse(localStorage.getItem(visitorTokensKey)||"[]");}catch(_){}\n      saved.push({requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title});try{localStorage.setItem(visitorTokensKey,JSON.stringify(saved.slice(-50)));}catch(_){}\n      document.dispatchEvent(new CustomEvent("tylka:save-request",{detail:{requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title}}));\n      setMessage($("request-message"),"Request sent. You can check its status in the site mailbox.");button.textContent="Request sent";}
+    try{const result=await functionCall({action:"request",recordId:selectedRecord.id,name:$("visitor-name").value.trim()});localStorage.setItem(pendingKey,JSON.stringify({requestId:result.requestId,requestToken:result.requestToken}));
+      let saved=[];try{saved=JSON.parse(localStorage.getItem(visitorTokensKey)||"[]");}catch(_){}
+      saved.push({requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title});try{localStorage.setItem(visitorTokensKey,JSON.stringify(saved.slice(-50)));}catch(_){}
+      document.dispatchEvent(new CustomEvent("tylka:save-request",{detail:{requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title}}));
+      setMessage($("request-message"),"Request sent. You can check its status in the site mailbox.");button.textContent="Request sent";}
     catch(error){setMessage($("request-message"),error.message,true);button.disabled=false;}
   });
 
