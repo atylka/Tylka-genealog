@@ -17,6 +17,7 @@
   let client = null;
   let currentUser = null;
   let records = [];
+  let activeFolder = "all";
 
   function message(node, text, error = false) {
     if (!node) return;
@@ -38,7 +39,7 @@
   function renderRecords() {
     recordsList.replaceChildren();
     const term = (recordSearch.value || "").trim().toLowerCase();
-    const category = categoryFilter.value;
+    const category = activeFolder;
     const filtered = records.filter(record =>
       (category === "all" || record.category === category) &&
       [record.title, record.description, record.file_name].join(" ").toLowerCase().includes(term)
@@ -170,11 +171,16 @@
       message(uploadMessage, error.message || "Upload failed.", true);
     } finally { submit.disabled = false; }
   });
-  if (categoryFilter) {
-    const requested = document.body.dataset.category || new URLSearchParams(location.search).get("category");
-    if (requested && [...categoryFilter.options].some(option => option.value === requested)) categoryFilter.value = requested;
-    categoryFilter.addEventListener("change", renderRecords);
-  }
+  document.querySelectorAll(".archive-folder").forEach(button => {
+    button.addEventListener("click", () => {
+      activeFolder = button.dataset.folder || "all";
+      document.querySelectorAll(".archive-folder").forEach(item => item.classList.toggle("is-active", item === button));
+      const heading = document.getElementById("folder-heading");
+      if (heading) heading.textContent = button.textContent.trim();
+      renderRecords();
+    });
+  });
+  if (categoryFilter) categoryFilter.addEventListener("change", renderRecords);
   if (recordSearch) recordSearch.addEventListener("input", renderRecords);
   if (document.body.dataset.page === "upload") {
     const heading = document.querySelector(".records-heading"), listing = document.getElementById("records-list");
