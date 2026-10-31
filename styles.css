@@ -335,3 +335,52 @@ html.reduce-motion .motion-reveal{opacity:1;transform:none;filter:none}
 .primary-nav .owner-sign-in-button:hover{background:#a32632;transform:translateY(-2px);box-shadow:0 7px 17px rgba(70,20,25,.22)}
 .owner-sign-in-card{max-width:480px}
 @media(max-width:800px){.primary-nav .owner-sign-in-button{width:100%;margin:.35rem 0;min-height:48px;justify-content:flex-start}}
+
+/* 19th-century manuscript / aged archival paper theme */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+:root{
+ --paper:#9b8668;--paper-light:#b5a080;--paper-dark:#766044;
+ --ink:#17100b;--muted:#33251a;--line:#55402b;
+ --accent:#3c1d14;--accent-dark:#21100c;
+ --serif:'IM Fell English',Georgia,'Times New Roman',serif;
+ --sans:'IM Fell English',Georgia,serif;
+}
+html,body{background-color:var(--paper)}
+body{
+ color:var(--ink);font-family:var(--sans);
+ background-image:
+  radial-gradient(ellipse at 12% 18%,rgba(48,28,13,.16),transparent 35%),
+  radial-gradient(ellipse at 88% 72%,rgba(39,22,12,.13),transparent 38%),
+  repeating-linear-gradient(0deg,rgba(55,36,18,.025) 0,rgba(55,36,18,.025) 1px,transparent 1px,transparent 4px);
+ background-attachment:fixed;
+}
+h1,h2,h3,blockquote,.wordmark strong,.monogram,.generation strong,.archive-folder strong,.record-card h3,.location-item strong{
+ font-family:'Caveat','IM Fell English',cursive;
+ font-weight:600;letter-spacing:.01em;
+}
+h1{font-size:clamp(3.6rem,7vw,6.4rem);line-height:.98}
+h2{font-size:clamp(3rem,5vw,4.5rem)}
+h3{font-size:1.8rem}
+.wordmark strong{font-size:1.8rem}
+.wordmark small,.eyebrow,.folio-label,.ticker,.timeline-date,.record-category,.folder-number,.search-label,.site-footer .footer-end{
+ color:var(--accent-dark);font-family:'Caveat',cursive;font-size:1rem;letter-spacing:.08em;
+}
+p,a,button,input,select,textarea,label,small,.primary-nav{ text-shadow:0 0 .25px rgba(30,17,8,.25)}
+.primary-nav a{font-family:'Caveat',cursive;font-size:1.25rem;color:var(--ink)}
+.site-header,.site-footer{border-color:var(--line)}
+.folio-card,.auth-card,.upload-card,.location-sidebar,.map-panel{
+ background-color:var(--paper-light);
+ background-image:linear-gradient(135deg,rgba(255,245,215,.10),transparent 45%),radial-gradient(ellipse at 90% 5%,rgba(52,31,14,.08),transparent 38%);
+ border-color:var(--line);box-shadow:inset 0 0 28px rgba(49,29,13,.10);
+}
+.paper-card,.generation,.record-card,.location-item,.search-input,.auth-card input,.upload-card input,.upload-card select,.upload-card textarea,.record-filters input,.record-filters select{
+ background-color:rgba(181,160,128,.76);border-color:var(--line);
+}
+.button-dark{background:var(--accent-dark);border-color:var(--accent-dark)}
+.button-dark:hover{background:#4b2619}
+.notice,.chronology-section{background-color:rgba(118,96,68,.45)}
+.research-band,.ticker{background-color:var(--paper-dark)}
+a:hover,.text-link:hover,.small-button:hover{color:#1b0d08}
+input,textarea,select{color:var(--ink)!important}
+::selection{background:#4b2a1b;color:#e2cfaa}
+@media(max-width:800px){.primary-nav a{font-size:1.3rem}}
