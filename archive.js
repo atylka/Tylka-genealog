@@ -46,7 +46,7 @@
       card.append(actions);recordsList.append(card);
     });
   }
-  function showAttachment(url,record,mimeType){const modal=$("access-notice");$("access-notice-title").textContent="Attachment ready";$("access-notice-text").textContent=record.title+" is ready to view.";const preview=$("approved-preview");preview.replaceChildren();if((mimeType||record.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=url;img.alt=record.title;preview.append(img);}else{const frame=document.createElement("iframe");frame.src=url;frame.title=record.title;preview.append(frame);}showModal("access-notice");}
+  function showAttachment(url,record,mimeType,heading="Attachment ready"){const modal=$("access-notice");$("access-notice-title").textContent=heading;$("access-notice-text").textContent=record.title+" is ready to view.";const preview=$("approved-preview");preview.replaceChildren();if((mimeType||record.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=url;img.alt=record.title;preview.append(img);}else{const frame=document.createElement("iframe");frame.src=url;frame.title=record.title;preview.append(frame);}showModal("access-notice");}
   function openRequest(record){selectedRecord=record;$("request-record-title").textContent=record.title;$("visitor-name").value="";setMessage($("request-message"),"");showModal("request-modal");}
   async function loadRecords(){
     recordsList.textContent="Loading records…";
@@ -63,7 +63,7 @@
         clearInterval(pollHandle);localStorage.removeItem(pendingKey);
         $("access-notice-title").textContent="Access granted";
         $("access-notice-text").textContent="The archive owner approved your request for “"+(result.title||"this attachment")+"”. You can view it here.";
-        showAttachment(result.signedUrl,{title:result.title||"Approved attachment",mime_type:result.mimeType},result.mimeType);
+        showAttachment(result.signedUrl,{title:result.title||"Approved attachment",mime_type:result.mimeType},result.mimeType,"Access granted");
         showModal("access-notice");
       }else if(result.status==="denied"){
         clearInterval(pollHandle);localStorage.removeItem(pendingKey);
