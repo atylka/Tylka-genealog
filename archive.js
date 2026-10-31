@@ -6,7 +6,7 @@
   const loginMessage = $("login-message"), recordsList = $("records-list"), recordSearch = $("record-search");
   const categoryNames = {births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
   let client = null, currentUser = null, records = [], activeFolder = "all", selectedRecord = null, pollHandle = null;
-  const pendingKey = "tylka_pending_attachment_request";
+  const pendingKey = "tylka_pending_attachment_request";\n  const visitorTokensKey = "tylka_access_request_tokens";
   const functionCall = async body => {
     const {data,error} = await client.functions.invoke("record-access",{body});
     if (error) throw new Error(error.message || "The access service could not be reached.");
@@ -113,7 +113,7 @@
   if($("request-form"))$("request-form").addEventListener("submit",async e=>{
     e.preventDefault();if(!selectedRecord)return;
     const button=e.currentTarget.querySelector('button[type="submit"]');button.disabled=true;setMessage($("request-message"),"Sending request…");
-    try{const result=await functionCall({action:"request",recordId:selectedRecord.id,name:$("visitor-name").value.trim()});localStorage.setItem(pendingKey,JSON.stringify({requestId:result.requestId,requestToken:result.requestToken}));setMessage($("request-message"),"Request sent. Keep this page open; a message will appear here when the owner responds.");button.textContent="Request sent";}
+    try{const result=await functionCall({action:"request",recordId:selectedRecord.id,name:$("visitor-name").value.trim()});localStorage.setItem(pendingKey,JSON.stringify({requestId:result.requestId,requestToken:result.requestToken}));\n      let saved=[];try{saved=JSON.parse(localStorage.getItem(visitorTokensKey)||"[]");}catch(_){}\n      saved.push({requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title});try{localStorage.setItem(visitorTokensKey,JSON.stringify(saved.slice(-50)));}catch(_){}\n      document.dispatchEvent(new CustomEvent("tylka:save-request",{detail:{requestId:result.requestId,requestToken:result.requestToken,title:selectedRecord.title}}));\n      setMessage($("request-message"),"Request sent. You can check its status in the site mailbox.");button.textContent="Request sent";}
     catch(error){setMessage($("request-message"),error.message,true);button.disabled=false;}
   });
 
