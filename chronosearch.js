@@ -1,7 +1,7 @@
 (() => {
  const config=window.TYLKA_SUPABASE_CONFIG||{};
  const names={births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
- const $=id=>document.getElementById(id);
+ const $=id=>document.getElementById(id);let client=null;const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
  const timeline=$("chrono-timeline"),count=$("chrono-count"),locationInput=$("chrono-location"),personInput=$("chrono-person"),folderInput=$("chrono-folder"),yearInput=$("chrono-year");
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
  const findYear=value=>{const match=String(value||"").match(/\b(1[5-9]\d{2}|20\d{2}|21\d{2})\b/);return match?Number(match[1]):null;};
@@ -27,6 +27,7 @@
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>(a.title||"").localeCompare(b.title||"")).forEach(r=>{
     const card=node("article","","chrono-record-card");
+    if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     card.append(node("h3",r.title||"Untitled record"));
     if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
@@ -41,8 +42,8 @@
  }
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
-  const client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
-  const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_name,created_at").order("created_at",{ascending:true});
+  client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
+  const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
   const records=data||[];
   [...new Set(records.map(recordYear).filter(Boolean))].sort((a,b)=>a-b).forEach(y=>yearInput.append(new Option(String(y),String(y))));
