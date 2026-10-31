@@ -53,7 +53,12 @@
       const details = document.createElement("div");
       details.append(safeText("span", categoryNames[record.category] || record.category, "record-category"));
       details.append(safeText("h3", record.title));
-      if (record.location) details.append(safeText("p", "Location: " + record.location, "record-location"));
+      if (record.location) {
+        const locationLine = safeText("p", "Location: ", "record-location");
+        const locationLink = safeText("a", record.location, "record-location-link");
+        locationLink.href = "location-registry.html?place=" + encodeURIComponent(record.location);
+        locationLine.append(locationLink); details.append(locationLine);
+      }
       if (record.description) details.append(safeText("p", record.description));
       if (record.file_name) details.append(safeText("small", record.file_name, "record-filename"));
       details.append(safeText("small", new Date(record.created_at).toLocaleString(), "record-date"));
