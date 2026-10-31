@@ -101,5 +101,48 @@
   }
   if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
   if(recordSearch)recordSearch.addEventListener("input",renderRecords);
+
+  // Manual face selection and portrait profiles (kept in this browser's local storage).
+  const faceCanvas=$("face-crop-canvas"), faceCtx=faceCanvas?.getContext("2d");
+  let faceSelection=null, faceDragStart=null, faceSourceImage=null;
+  function drawFaceCanvas(){
+    if(!faceCtx||!faceSourceImage)return;
+    faceCtx.clearRect(0,0,faceCanvas.width,faceCanvas.height);
+    faceCtx.drawImage(faceSourceImage,0,0,faceCanvas.width,faceCanvas.height);
+    if(faceSelection){faceCtx.save();faceCtx.fillStyle="rgba(93,53,31,.18)";faceCtx.fillRect(0,0,faceCanvas.width,faceCanvas.height);faceCtx.clearRect(faceSelection.x,faceSelection.y,faceSelection.w,faceSelection.h);faceCtx.drawImage(faceSourceImage,faceSelection.x,faceSelection.y,faceSelection.w,faceSelection.h,faceSelection.x,faceSelection.y,faceSelection.w,faceSelection.h);faceCtx.strokeStyle="#fff";faceCtx.lineWidth=Math.max(3,faceCanvas.width/500);faceCtx.strokeRect(faceSelection.x,faceSelection.y,faceSelection.w,faceSelection.h);faceCtx.restore();}
+  }
+  function canvasPoint(event){const r=faceCanvas.getBoundingClientRect();return{x:Math.max(0,Math.min(faceCanvas.width,(event.clientX-r.left)*faceCanvas.width/r.width)),y:Math.max(0,Math.min(faceCanvas.height,(event.clientY-r.top)*faceCanvas.height/r.height))};}
+  function openFaceCrop(){
+    const record=window.tylkaActiveDetailRecord;
+    if(!currentUser||!record||!isImage(record)||!$("detail-image")?.naturalWidth){setMessage($("face-crop-status"),"Open an attached image and sign in as the archive owner first.",true);return;}
+    faceSourceImage=$("detail-image");faceCanvas.width=faceSourceImage.naturalWidth;faceCanvas.height=faceSourceImage.naturalHeight;faceSelection=null;drawFaceCanvas();$("face-person-name").value="";setMessage($("face-crop-status"),"");showModal("face-crop-modal");
+  }
+  $("mark-face")?.addEventListener("click",openFaceCrop);
+  faceCanvas?.addEventListener("pointerdown",event=>{if(!faceSourceImage)return;faceCanvas.setPointerCapture(event.pointerId);faceDragStart=canvasPoint(event);faceSelection={x:faceDragStart.x,y:faceDragStart.y,w:1,h:1};drawFaceCanvas();});
+  faceCanvas?.addEventListener("pointermove",event=>{if(!faceDragStart)return;const p=canvasPoint(event);faceSelection={x:Math.min(p.x,faceDragStart.x),y:Math.min(p.y,faceDragStart.y),w:Math.abs(p.x-faceDragStart.x),h:Math.abs(p.y-faceDragStart.y)};drawFaceCanvas();});
+  function finishFaceDrag(){faceDragStart=null;}
+  faceCanvas?.addEventListener("pointerup",finishFaceDrag);faceCanvas?.addEventListener("pointercancel",finishFaceDrag);
+  $("face-crop-reset")?.addEventListener("click",()=>{faceSelection=null;drawFaceCanvas();setMessage($("face-crop-status"),"Selection cleared.");});
+  $("save-face-portrait")?.addEventListener("click",()=>{
+    const name=$("face-person-name").value.trim();
+    if(!name)return setMessage($("face-crop-status"),"Enter the ancestor's name.",true);
+    if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return setMessage($("face-crop-status"),"Drag a box around the face first.",true);
+    const side=Math.max(faceSelection.w,faceSelection.h),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
+    const sx=Math.max(0,Math.min(faceCanvas.width-side,cx-side/2)),sy=Math.max(0,Math.min(faceCanvas.height-side,cy-side/2));
+    const output=document.createElement("canvas");output.width=512;output.height=512;
+    output.getContext("2d").drawImage(faceSourceImage,sx,sy,Math.min(side,faceCanvas.width-sx,faceCanvas.height-sy),Math.min(side,faceCanvas.width-sx,faceCanvas.height-sy),0,0,512,512);
+    const portrait=output.toDataURL("image/jpeg",.88),key="tylkaAncestorPortraits";
+    try{
+      const people=JSON.parse(localStorage.getItem(key)||"[]");
+      const existing=people.findIndex(p=>p.name.toLocaleLowerCase()===name.toLocaleLowerCase());
+      const person={id:existing>=0?people[existing].id:crypto.randomUUID(),name,portrait,sourceRecordId:window.tylkaActiveDetailRecord.id,sourceTitle:window.tylkaActiveDetailRecord.title,updatedAt:new Date().toISOString()};
+      if(existing>=0)people[existing]=person;else people.push(person);
+      localStorage.setItem(key,JSON.stringify(people));
+      setMessage($("face-crop-status"),"Portrait saved. Open Ancestors to view it.");setTimeout(()=>{closeModals();},700);
+    }catch(error){setMessage($("face-crop-status"),"Could not save in this browser. Try a smaller face selection or free up browser storage.",true);}
+  });
+  const activeDetailObserver=new MutationObserver(()=>{const record=window.tylkaActiveDetailRecord;const button=$("mark-face");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);});
+  const detailModal=$("record-detail-modal");if(detailModal)activeDetailObserver.observe(detailModal,{attributes:true,attributeFilter:["hidden"]});
+
   start();
 })();
