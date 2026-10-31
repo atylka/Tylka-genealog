@@ -75,7 +75,7 @@
     document.body.classList.add("page-enter");requestAnimationFrame(()=>document.body.classList.add("page-enter-active"));
     document.querySelectorAll('a[href]').forEach(link=>{
       const href=link.getAttribute("href")||"";
-      if(!href||href.startsWith("#")||link.target==="_blank"||link.hasAttribute("download")||link.origin!==location.origin||!/\\.html(?:$|[?#])/.test(href))return;
+      if(!href||href.startsWith("#")||link.target==="_blank"||link.hasAttribute("download")||link.origin!==location.origin||!/\.html(?:$|[?#])/.test(href))return;
       link.addEventListener("click",event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();document.body.classList.add("page-leave");setTimeout(()=>{location.href=link.href;},150);});
     });
   }
