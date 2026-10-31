@@ -501,3 +501,81 @@ input:focus,select:focus,textarea:focus{animation:focus-ink .25s ease-out}
 .record-thumbnail-placeholder{font-family:"IM Fell English",serif;letter-spacing:.12em;color:#765d48;font-size:.9rem;}
 .location-record .record-preview img{width:100%;max-height:220px;object-fit:contain;background:#e9dfcb;}
 @media(min-width:700px){.record-card-expanded{display:grid;grid-template-columns:minmax(130px,220px) 1fr;gap:1.25rem;}.record-card-expanded .record-thumbnail{grid-row:1 / span 2;max-width:none;margin:0;}}
+
+
+/* 2026 polish pass: consistent spacing, responsive controls, and slide-out motion */
+:root{
+  --motion-slide:cubic-bezier(.16,1,.3,1);
+  --focus-ring:0 0 0 3px rgba(113,51,58,.16);
+}
+img{max-width:100%}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px
+}
+button:disabled{cursor:wait;opacity:.65}
+.site-header{gap:1.25rem}
+.primary-nav{align-items:center}
+.primary-nav a{padding:.35rem 0;text-underline-offset:4px}
+.primary-nav a:hover{text-decoration:underline;text-decoration-color:var(--line)}
+.archive-page,.home-search-page,.location-page{width:100%}
+.archive-toolbar,.records-heading,.location-toolbar{flex-wrap:wrap}
+.search-input,.search-fields input,.search-fields select,.record-filters input,.record-filters select,
+.auth-card input,.upload-card input,.upload-card select,.upload-card textarea,.modal-card input,.modal-card select{
+  border-radius:2px;min-width:0;max-width:100%
+}
+.search-input:focus,.search-fields input:focus,.search-fields select:focus,.record-filters input:focus,
+.record-filters select:focus,.auth-card input:focus,.upload-card input:focus,.upload-card select:focus,
+.upload-card textarea:focus,.modal-card input:focus,.modal-card select:focus{box-shadow:var(--focus-ring)}
+.record-card{min-width:0;overflow-wrap:anywhere}
+.record-card>*{min-width:0}
+.record-card p,.detail-meta,.detail-transcription pre{overflow-wrap:anywhere}
+.record-actions{align-items:center}
+.record-actions .small-button,.record-actions a{min-height:40px;padding:.5rem .7rem}
+.record-thumbnail{border-radius:2px;transition:transform .4s var(--motion-slide),box-shadow .4s}
+.record-card:hover .record-thumbnail{box-shadow:0 5px 14px rgba(55,35,20,.12)}
+.archive-folder-content{transform-origin:top left}
+.archive-folder-content.is-opening{animation:drawer-enter .48s var(--motion-slide) both}
+.archive-folder-content.is-closing{animation:drawer-exit .22s ease both}
+.records-list.is-refreshing{animation:drawer-enter .32s var(--motion-slide) both}
+.location-detail.is-opening{animation:drawer-enter .4s var(--motion-slide) both}
+.location-sidebar,.map-panel{min-width:0}
+.site-modal{overscroll-behavior:contain}
+.modal-card{border-radius:2px}
+.site-modal:not([hidden]) .modal-card{transform-origin:center top}
+.site-menu-panel{z-index:100}
+.back-to-top{z-index:50}
+@keyframes drawer-enter{
+  from{opacity:0;transform:translateX(18px) translateY(7px);clip-path:inset(0 0 0 12%)}
+  to{opacity:1;transform:none;clip-path:inset(0)}
+}
+@keyframes drawer-exit{
+  from{opacity:1;transform:none}
+  to{opacity:0;transform:translateX(-8px)}
+}
+@keyframes nav-slide-down{
+  from{opacity:0;transform:translateY(-8px);clip-path:inset(0 0 100% 0)}
+  to{opacity:1;transform:none;clip-path:inset(0)}
+}
+@media(max-width:800px){
+  .primary-nav.is-open{padding:.45rem 0 .8rem;animation:nav-slide-down .32s var(--motion-slide) both}
+  .primary-nav a{width:100%;padding:.72rem .3rem}
+  .archive-toolbar,.records-heading,.location-toolbar{gap:.85rem}
+  .archive-toolbar .button,.records-heading .button,.location-toolbar .button{max-width:100%}
+  .site-header{gap:.8rem}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .section,.archive-page{padding-left:1rem;padding-right:1rem}
+  .site-header{padding:1rem}
+  .wordmark strong{font-size:1.4rem}
+  .wordmark small{letter-spacing:.1em}
+  .record-card{padding:.9rem}
+  .record-actions>*{flex:1 1 auto;justify-content:center}
+  .modal-card{padding:1.2rem}
+  .detail-image-viewport{min-height:190px}
+}
+@media(prefers-reduced-motion:reduce){
+  .archive-folder-content.is-opening,.archive-folder-content.is-closing,.records-list.is-refreshing,
+  .location-detail.is-opening,.primary-nav.is-open{animation:none!important}
+}
