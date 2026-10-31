@@ -66,3 +66,29 @@
     });
   }
 })();
+
+/* Advanced micro-interactions and accessibility helpers */
+(() => {
+ const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches||document.documentElement.classList.contains("reduce-motion");
+ const progress=document.createElement("div");progress.className="archive-scroll-progress";progress.setAttribute("aria-hidden","true");document.body.append(progress);
+ const top=document.createElement("button");top.type="button";top.className="back-to-top";top.textContent="↑";top.setAttribute("aria-label","Back to top");top.title="Back to top";document.body.append(top);
+ top.addEventListener("click",()=>window.scrollTo({top:0,behavior:reduce?"auto":"smooth"}));
+ let scheduled=false;
+ const updateScroll=()=>{const max=document.documentElement.scrollHeight-window.innerHeight;progress.style.transform="scaleX("+(max>0?window.scrollY/max:0)+")";top.classList.toggle("is-visible",window.scrollY>420);scheduled=false;};
+ window.addEventListener("scroll",()=>{if(!scheduled){scheduled=true;requestAnimationFrame(updateScroll);}},{passive:true});window.addEventListener("resize",updateScroll,{passive:true});updateScroll();
+ if(!reduce&&"IntersectionObserver"in window){
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("motion-visible");observer.unobserve(entry.target);}}),{threshold:.08,rootMargin:"0px 0px -35px 0px"});
+  document.querySelectorAll("main>section,main .record-card,main .activity-log-item,main .chrono-year-column,main .location-item,main .paper-card,main .archive-folder").forEach((el,i)=>{if(i<80){el.classList.add("motion-reveal");observer.observe(el);}});
+ }
+ if(!reduce){
+  document.addEventListener("pointerdown",event=>{
+   const target=event.target.closest("button,.button,.small-button,.archive-folder,.location-item,.primary-nav a");
+   if(!target||target.disabled)return;
+   const rect=target.getBoundingClientRect(),size=Math.max(rect.width,rect.height)*.8;
+   const ripple=document.createElement("span");ripple.className="motion-ripple";ripple.style.width=size+"px";ripple.style.height=size+"px";
+   ripple.style.left=(event.clientX-rect.left-size/2)+"px";ripple.style.top=(event.clientY-rect.top-size/2)+"px";
+   if(getComputedStyle(target).position==="static")target.style.position="relative";
+   target.style.overflow="hidden";target.append(ripple);ripple.addEventListener("animationend",()=>ripple.remove(),{once:true});
+  },{passive:true});
+ }
+})();
