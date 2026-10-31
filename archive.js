@@ -126,7 +126,7 @@
       else { records=[]; recordsList.replaceChildren(); }
     });
   }
-  loginForm.addEventListener("submit", async event => {
+  if (loginForm) loginForm.addEventListener("submit", async event => {
     event.preventDefault();
     if (!client) return message(loginMessage, "Supabase is not configured yet. Follow SETUP.md.", true);
     const email = document.getElementById("login-email").value.trim();
@@ -135,8 +135,8 @@
     const {error} = await client.auth.signInWithPassword({email,password});
     message(loginMessage, error ? error.message : "Signed in. Loading your archive…", !!error);
   });
-  signOut.addEventListener("click", async () => { if (client) await client.auth.signOut(); });
-  uploadForm.addEventListener("submit", async event => {
+  if (signOut) signOut.addEventListener("click", async () => { if (client) await client.auth.signOut(); });
+  if (uploadForm) uploadForm.addEventListener("submit", async event => {
     event.preventDefault();
     if (!client || !currentUser) return message(uploadMessage, "Sign in to upload records.", true);
     const title = document.getElementById("record-title").value.trim();
