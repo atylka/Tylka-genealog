@@ -57,3 +57,24 @@ html[data-theme="dark"] .notice{background:var(--paper-light);color:var(--muted)
 html[data-theme="dark"] #family-map{background:#292722}
 @media(max-width:800px){.site-header .theme-toggle{margin-left:auto}.site-header .menu-toggle{order:2}.site-header .primary-nav{order:3}}
 @media(prefers-reduced-motion:reduce){.page-enter,.page-enter-active,.page-leave{opacity:1;transform:none;transition:none!important}.theme-toggle,button,.button,.small-button,.archive-folder,.location-item{transition:none!important}}
+
+
+/* Universal hamburger menu and display settings */
+.site-header{position:relative}
+.site-menu-toggle{display:inline-grid;place-items:center;width:44px;height:42px;padding:0;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:1.55rem;line-height:1;cursor:pointer;order:10}
+.site-menu-toggle:hover{background:var(--accent-dark);color:var(--paper-light);transform:translateY(-2px)}
+.site-menu-panel{position:absolute;z-index:1200;right:0;top:calc(100% + .5rem);width:min(320px,calc(100vw - 2rem));padding:.8rem;background:var(--paper-light);border:1px solid var(--line);box-shadow:0 14px 36px rgba(0,0,0,.2)}
+.site-menu-panel[hidden]{display:none}
+.site-menu-nav{display:grid;gap:.15rem;margin:0 0 .6rem;padding:0;border:0}
+.site-menu-nav a{display:block;padding:.7rem .8rem;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.site-menu-nav a:hover{background:rgba(203,185,154,.22)}
+.site-menu-action{display:block;width:100%;padding:.8rem;text-align:left;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer}
+.site-menu-action:hover{background:rgba(203,185,154,.22)}
+.site-menu-action:first-of-type{margin-top:.25rem}
+#site-settings-modal select{width:100%;min-height:44px;margin:.35rem 0 1rem;padding:.6rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:inherit}
+html[data-text-size="large"] body{font-size:1.1rem}
+html[data-text-size="large"] p,html[data-text-size="large"] li,html[data-text-size="large"] label,html[data-text-size="large"] input,html[data-text-size="large"] select,html[data-text-size="large"] textarea{font-size:1.08em}
+html.reduce-motion *,html.reduce-motion *::before,html.reduce-motion *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+html[data-theme="dark"] .site-menu-panel,html[data-theme="dark"] #site-settings-modal .modal-card{background:var(--paper-light);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .site-menu-nav a,html[data-theme="dark"] .site-menu-action{color:var(--ink);border-color:var(--line)}
+@media(max-width:800px){.site-header{display:flex;align-items:center;flex-wrap:wrap}.site-menu-toggle{margin-left:auto}.site-menu-panel{right:0}.site-header .primary-nav{display:grid;position:static;box-shadow:none;background:transparent;width:auto}}
