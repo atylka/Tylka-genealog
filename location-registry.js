@@ -74,19 +74,13 @@
         const category=document.createElement("small");category.textContent=record.category;
         card.append(title,category);
         if(record.description){const note=document.createElement("p");note.textContent=record.description;card.append(note);}
-        if(currentUser && record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
+        if(record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
           const preview=document.createElement("div");preview.className="record-preview";
           const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);card.append(preview);
-          client.storage.from("family-archive").createSignedUrl(record.file_path,300).then(({data})=>{if(data?.signedUrl)image.src=data.signedUrl;});
+          image.src=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;
         }
         if(record.file_path){
-          if(currentUser){
-            const link=document.createElement("button");link.type="button";link.className="small-button";link.textContent="Open original file";
-            link.addEventListener("click",async()=>{const {data,error}=await client.storage.from("family-archive").createSignedUrl(record.file_path,60);if(error)return alert("Could not open file: "+error.message);window.open(data.signedUrl,"_blank","noopener,noreferrer");});
-            card.append(link);
-          }else{
-            const note=document.createElement("small");note.className="record-filename";note.textContent="Private attachment · request access from the Archive page";card.append(note);
-          }
+          const link=document.createElement("a");link.className="text-link";link.href=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open original file";card.append(link);
         }
         detail.append(card);
       });
