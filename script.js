@@ -25,7 +25,7 @@
   const applyTheme=theme=>{
     document.documentElement.dataset.theme=theme;
     const meta=document.querySelector('meta[name="theme-color"]');
-    if(meta)meta.content=theme==="dark"?"#211e1a":"#cbb99a";
+    if(meta)meta.content=theme==="dark"?"#211e1a":"#541522";
   };
   const applyFormat=()=>{
     document.documentElement.dataset.textSize=getPref(sizeKey,"normal");
