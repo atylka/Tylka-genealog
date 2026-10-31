@@ -105,7 +105,7 @@
     currentUser=user;if($("owner-tools"))$("owner-tools").hidden=!user;if(loginToggle)loginToggle.hidden=!!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
-    if(user){if(loginPanel)loginPanel.hidden=true;if($("owner-tools"))refreshInbox().catch(()=>{});}else if(document.body.dataset.page==="upload"&&loginPanel){loginPanel.hidden=false;}
+    if(user){if(loginPanel)loginPanel.hidden=true;if($("owner-tools"))refreshInbox().catch(()=>{});}else if(document.body.dataset.page==="upload"&&loginPanel){loginPanel.hidden=false;}if(recordsList)renderRecords();
   }
   if(loginForm)loginForm.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;setMessage(loginMessage,"Signing in…");const {error}=await client.auth.signInWithPassword({email:$("login-email").value.trim(),password:$("login-password").value});setMessage(loginMessage,error?error.message:"Signed in.",!!error);});
   if($("sign-out"))$("sign-out").addEventListener("click",async()=>{await client.auth.signOut();});
