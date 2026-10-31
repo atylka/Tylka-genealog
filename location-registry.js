@@ -106,9 +106,9 @@
   async function start(){
     if(!configured||!window.supabase){count.textContent="Supabase connection is not configured.";list.textContent="The public location registry could not connect.";return;}
     client=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-    const {data:{session}}=await client.auth.getSession();currentUser=session?.user||null;await loadRegistry();
-    client.auth.onAuthStateChange((_event,s)=>{currentUser=s?.user||null;loadRegistry();});
-    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session:now}}=await client.auth.getSession();currentUser=now?.user||null;loadRegistry();});
+    const {data:{session}}=await client.auth.getSession();currentUser=session?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?session.user:null;await loadRegistry();
+    client.auth.onAuthStateChange((_event,s)=>{currentUser=s?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?s.user:null;loadRegistry();});
+    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session:now}}=await client.auth.getSession();currentUser=now?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?now.user:null;loadRegistry();});
   }
   search.addEventListener("input",renderList);
   start();
