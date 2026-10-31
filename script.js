@@ -92,3 +92,38 @@
   },{passive:true});
  }
 })();
+
+
+/* Dynamic motion observer: animate records and controls added after data loads */
+(() => {
+ const root=document.documentElement;
+ const prefers=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const reduced=()=>prefers.matches||root.classList.contains("reduce-motion");
+ if(reduced())return;
+ const seen=new WeakSet();
+ const classify=el=>{
+  if(!(el instanceof Element)||seen.has(el))return;
+  if(el.matches(".record-card,.activity-log-item,.inbox-item,.chrono-record-card,.location-item,.archive-folder,.paper-card,.generation,.folio-card,.archive-folders,.archive-folder-content,.location-sidebar,.map-panel,.home-search-box,.chrono-filter-panel,.notice,.empty-state,.record-preview,.detail-source,.detail-transcription")){
+   seen.add(el);el.classList.add("motion-reveal");
+   const type=el.matches(".folio-card,.brand-banner,.archive-folders")?"motion-paper":el.matches(".monogram,.record-category,.folder-number")?"motion-stamp":"motion-ink";
+   el.classList.add(type);
+   requestAnimationFrame(()=>{if(el.isConnected)el.classList.add("motion-visible");});
+  }
+ };
+ const scan=node=>{
+  if(!(node instanceof Element))return;
+  classify(node);node.querySelectorAll(".record-card,.activity-log-item,.inbox-item,.chrono-record-card,.location-item,.archive-folder,.paper-card,.generation,.folio-card,.archive-folders,.archive-folder-content,.location-sidebar,.map-panel,.home-search-box,.chrono-filter-panel,.notice,.empty-state,.record-preview,.detail-source,.detail-transcription").forEach(classify);
+ };
+ scan(document.body);
+ const observer=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)scan(node);})));
+ observer.observe(document.body,{childList:true,subtree:true});
+ const focusable="button,a,input,select,textarea,[role=button]";
+ document.addEventListener("focusin",event=>{const el=event.target.closest(focusable);if(el&&!el.disabled)el.classList.add("motion-focused");});
+ document.addEventListener("focusout",event=>{const el=event.target.closest(focusable);if(el)el.classList.remove("motion-focused");});
+ document.addEventListener("click",event=>{
+  const button=event.target.closest("button,.button,.small-button");
+  if(button&&!button.disabled){button.classList.remove("motion-clicked");void button.offsetWidth;button.classList.add("motion-clicked");}
+ });
+ const updateMotion=()=>{if(reduced()){observer.disconnect();document.querySelectorAll(".motion-reveal").forEach(el=>{el.style.opacity="1";el.style.transform="none";el.style.filter="none";});}};
+ prefers.addEventListener?.("change",updateMotion);
+})();
