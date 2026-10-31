@@ -21,3 +21,6 @@ body[data-page="upload"] .upload-card{max-width:900px}
 .archive-folder-content .records-heading{margin-top:0}
 .archive-folder-content .records-list{margin-top:1rem}
 @media(max-width:760px){.folder-archive-layout{grid-template-columns:1fr}.archive-folders{position:static}.archive-folders button{width:100%}.archive-folder-content{padding:.8rem}}
+
+/* Homepage archive activity log */
+.activity-log-section{padding:clamp(3rem,7vw,5rem) clamp(1.25rem,8vw,8rem);border-top:1px solid var(--line);background:var(--paper-light)}.activity-log-section .section-heading{margin-bottom:1.5rem}.activity-log-section h2{font-size:clamp(2.2rem,4vw,3.4rem)}.activity-log-list{display:grid;gap:.65rem;max-width:1000px}.activity-log-item{padding:1rem 1.2rem;border:1px solid var(--line);background:rgba(203,185,154,.32)}.activity-log-record h3{margin:.2rem 0 .35rem;font:1.35rem var(--serif)}.activity-log-by,.activity-log-time{display:block;margin:.15rem 0;color:var(--muted);font-size:.82rem}.activity-log-time{font-size:.75rem;letter-spacing:.025em}
