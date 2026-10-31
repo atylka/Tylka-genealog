@@ -22,7 +22,7 @@
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
   if(loginToggle) loginToggle.addEventListener("click",()=>{loginPanel.hidden=!loginPanel.hidden;});
   const addRecordButton=$("open-add-record");
-  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser)return;setMessage($("upload-message"),"");showModal("add-record-modal");});
+  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){if(loginPanel)loginPanel.hidden=false;loginPanel?.scrollIntoView({behavior:"smooth",block:"center"});return;}setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
