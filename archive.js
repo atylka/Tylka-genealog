@@ -6,7 +6,8 @@
   const loginMessage = $("login-message"), recordsList = $("records-list"), recordSearch = $("record-search");
   const categoryNames = {births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
   let client = null, currentUser = null, records = [], activeFolder = "all", selectedRecord = null, pollHandle = null;
-  const pendingKey = "tylka_pending_attachment_request";\n  const visitorTokensKey = "tylka_access_request_tokens";
+  const pendingKey = "tylka_pending_attachment_request";
+  const visitorTokensKey = "tylka_access_request_tokens";
   const functionCall = async body => {
     const {data,error} = await client.functions.invoke("record-access",{body});
     if (error) throw new Error(error.message || "The access service could not be reached.");
@@ -62,7 +63,7 @@
         clearInterval(pollHandle);localStorage.removeItem(pendingKey);
         $("access-notice-title").textContent="Access granted";
         $("access-notice-text").textContent="The archive owner approved your request for “"+(result.title||"this attachment")+"”. You can view it here.";
-        const link=$("approved-file-link");link.href=result.signedUrl;link.textContent="View attachment";
+        showAttachment(result.signedUrl,{title:result.title||"Approved attachment",mime_type:result.mimeType},result.mimeType);
         showModal("access-notice");
       }else if(result.status==="denied"){
         clearInterval(pollHandle);localStorage.removeItem(pendingKey);
