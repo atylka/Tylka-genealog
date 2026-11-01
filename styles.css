@@ -3427,3 +3427,12 @@ html[data-theme="dark"] body .site-header .primary-nav a:hover,
 html[data-theme="dark"] body .site-header .primary-nav a[aria-current="page"],
 html[data-theme="dark"] body .site-header .owner-sign-in-button{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
 html[data-theme="dark"] body .site-header .site-menu-toggle{background:#38251e!important;color:#f7e8ca!important;border-color:#c6a36b!important}
+
+/* Wordmark lettering only: match the flowing calligraphic Tylka lettering in logo concept 5. */
+.site-header .wordmark strong{
+  font-family:"Caveat",cursive!important;
+  font-size:2rem!important;
+  font-weight:600!important;
+  letter-spacing:.01em!important;
+  line-height:1!important;
+}
