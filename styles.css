@@ -3154,3 +3154,47 @@ html[data-theme="dark"] .site-header,
   border-bottom-color:#96734d!important;
   color:#f3e3c4!important;
 }
+
+
+/* Footer readability and in-footer app installation control. */
+.site-footer{
+  color:#f4e8d2!important;
+  background:linear-gradient(110deg,#392820 0%,#493126 58%,#512d29 100%)!important;
+  border-top:3px double #a98758!important;
+}
+.site-footer p,
+.site-footer .footer-end,
+.site-footer .footer-mark,
+.site-footer .footer-mark strong,
+.site-footer .footer-mark small{
+  color:#f4e8d2!important;
+}
+.site-footer .footer-mark .monogram{
+  color:#fff4df!important;
+  background:#70472f!important;
+  border:1px solid #b99a69!important;
+}
+.site-footer .pwa-install-button{
+  position:static!important;
+  inset:auto!important;
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  width:auto;
+  max-width:100%;
+  margin:.25rem 0 0;
+  padding:.62rem 1rem;
+  border:1px solid #c6a36b;
+  border-radius:5px;
+  background:linear-gradient(135deg,#70452e,#512d29);
+  color:#fff2d8!important;
+  font:600 .82rem/1.2 inherit;
+  letter-spacing:.035em;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+.site-footer .pwa-install-button:hover{background:linear-gradient(135deg,#805438,#633631)}
+.site-footer .pwa-install-button[hidden]{display:none!important}
+@media(max-width:600px){
+  .site-footer{gap:.7rem;padding:1.1rem .9rem!important}
+  .site-footer .pwa-install-button{align-self:flex-start}
+}
