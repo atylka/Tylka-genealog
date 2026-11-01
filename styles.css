@@ -2940,3 +2940,24 @@ body[data-page="archive"] .archive-folder-content.is-opening .records-list{
 .archive-actions{display:flex;justify-content:flex-end;align-items:center;gap:.65rem;margin:.6rem 0 1rem;min-height:0}
 .archive-actions .owner-tools{display:flex;align-items:center;gap:.5rem}
 @media(max-width:700px){.archive-actions{justify-content:flex-start;flex-wrap:wrap}}
+
+
+/* Refined heirloom palette: soften the deepest header shade and bring the banner
+   closer to the oxblood-red used by active navigation and folder buttons. */
+.dark-mode .site-header,
+.dark-mode .site-footer{
+  background-image:linear-gradient(90deg,#493027 0%,#583329 34%,#733b30 66%,#3b2822 100%)!important;
+}
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .site-footer{
+  background-image:linear-gradient(90deg,#493027 0%,#583329 34%,#733b30 66%,#3b2822 100%)!important;
+}
+.brand-banner{
+  background:linear-gradient(118deg,#762c27 0%,#8d3b30 52%,#a3483b 100%),radial-gradient(ellipse at 82% 12%,rgba(255,203,169,.16),transparent 48%)!important;
+  border-bottom-color:#d2a16f!important;
+}
+html[data-theme="dark"] .brand-banner,
+.dark-mode .brand-banner{
+  background:linear-gradient(118deg,#692720 0%,#842f28 52%,#993b32 100%),radial-gradient(ellipse at 82% 12%,rgba(255,203,169,.12),transparent 48%)!important;
+  border-bottom-color:#b88b68!important;
+}
