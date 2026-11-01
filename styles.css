@@ -2071,3 +2071,36 @@ html[data-theme="dark"] #family-map .leaflet-tooltip-pane,
 html[data-theme="dark"] #family-map .leaflet-popup-pane{
   filter:none!important;
 }
+
+
+/* High-visibility pin for the currently selected family-history location. */
+#family-map .registry-pin-icon{
+  background:transparent!important;
+  border:0!important;
+}
+#family-map .registry-map-pin{
+  position:relative;
+  display:block;
+  width:30px;
+  height:30px;
+  margin:2px;
+  border:3px solid #fff4dc;
+  border-radius:50% 50% 50% 0;
+  background:linear-gradient(145deg,#c84c45,#761b2a 72%);
+  box-shadow:0 2px 5px rgba(0,0,0,.72),0 0 0 3px rgba(214,171,99,.9),0 0 18px rgba(219,159,76,.9);
+  transform:rotate(-45deg);
+}
+#family-map .registry-map-pin span{
+  position:absolute;
+  width:9px;
+  height:9px;
+  top:7px;
+  left:7px;
+  border-radius:50%;
+  background:#fff3d6;
+  box-shadow:0 0 5px rgba(255,239,205,.9);
+}
+html[data-theme="dark"] #family-map .registry-map-pin{
+  border-color:#fff1d1;
+  box-shadow:0 2px 6px rgba(0,0,0,.85),0 0 0 3px #d4a85f,0 0 20px rgba(220,164,83,.95);
+}
