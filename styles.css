@@ -3401,3 +3401,36 @@ html[data-theme="dark"] body .site-header .monogram{background:#70472f!important
  .home-record-detail-card .detail-image-viewport{min-height:130px;max-height:45vh}
  .home-record-detail-card #home-detail-image{max-height:43vh}
 }
+
+/* Single source of truth for the header palette. */
+html[data-theme="light"] body .site-header{
+  background-color:#5b382b!important;
+  background-image:linear-gradient(100deg,#d8bd91 0%,#a87955 36%,#744333 70%,#512a25 100%)!important;
+  border-bottom:2px solid #b08a55!important;
+  color:#fff0d2!important;
+}
+html[data-theme="light"] body .site-header .wordmark,
+html[data-theme="light"] body .site-header .wordmark strong,
+html[data-theme="light"] body .site-header .wordmark small{color:#fff0d2!important;text-shadow:0 1px 2px rgba(35,18,10,.35)}
+html[data-theme="light"] body .site-header .monogram{background:#f1dfbb!important;color:#653126!important;border-color:#c6a36b!important}
+html[data-theme="light"] body .site-header .primary-nav a{color:#fff0d2!important}
+html[data-theme="light"] body .site-header .primary-nav a:hover,
+html[data-theme="light"] body .site-header .primary-nav a[aria-current="page"]{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+html[data-theme="light"] body .site-header .owner-sign-in-button{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+html[data-theme="light"] body .site-header .site-menu-toggle{background:#f1dfbb!important;color:#4a2b20!important;border-color:#c6a36b!important}
+
+html[data-theme="dark"] body .site-header{
+  background-color:#38271f!important;
+  background-image:linear-gradient(100deg,#50382b 0%,#463025 43%,#38241e 72%,#2c1b19 100%)!important;
+  border-bottom:2px solid #b08a55!important;
+  color:#f7e8ca!important;
+}
+html[data-theme="dark"] body .site-header .wordmark,
+html[data-theme="dark"] body .site-header .wordmark strong,
+html[data-theme="dark"] body .site-header .wordmark small,
+html[data-theme="dark"] body .site-header .primary-nav a{color:#f7e8ca!important}
+html[data-theme="dark"] body .site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body .site-header .primary-nav a:hover,
+html[data-theme="dark"] body .site-header .primary-nav a[aria-current="page"],
+html[data-theme="dark"] body .site-header .owner-sign-in-button{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body .site-header .site-menu-toggle{background:#38251e!important;color:#f7e8ca!important;border-color:#c6a36b!important}
