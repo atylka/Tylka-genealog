@@ -1,4 +1,4 @@
-const VERSION='tylka-app-headerfix4';
+const VERSION='tylka-app-noresearchdesk1';
 const SHELL=[ './','./index.html','./styles.css?v=20261101-headerfix4','./icon.svg','./manifest.webmanifest' ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL.map(path=>new URL(path,self.registration.scope).href).filter(url=>new URL(url).origin===self.location.origin))).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==VERSION).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
