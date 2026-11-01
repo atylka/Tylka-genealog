@@ -2906,3 +2906,31 @@ body[data-page="archive"] .archive-folder-content.is-opening .records-list{
     animation:none!important;transition:none!important;transform:none!important;clip-path:none!important;
   }
 }
+
+
+/* Header navigation: spread buttons for readability while keeping the group tucked
+   close to the settings gear. */
+.site-header .primary-nav{
+  display:flex!important;
+  align-items:center!important;
+  gap:clamp(.7rem,1.15vw,1.15rem)!important;
+  margin-left:auto!important;
+  margin-right:.12rem!important;
+}
+.site-header .primary-nav a,
+.site-header .primary-nav .owner-sign-in-button{
+  padding:.52rem .78rem!important;
+}
+.site-header>.site-menu-toggle,
+.site-header .site-menu-toggle{
+  margin-left:.12rem!important;
+  flex-shrink:0!important;
+}
+@media(max-width:1000px){
+  .site-header .primary-nav{gap:.55rem!important;margin-right:.08rem!important}
+  .site-header .primary-nav a,.site-header .primary-nav .owner-sign-in-button{padding:.46rem .58rem!important}
+}
+@media(max-width:800px){
+  .site-header .primary-nav{gap:.4rem!important;margin-right:0!important}
+  .site-header .primary-nav a,.site-header .primary-nav .owner-sign-in-button{padding:.65rem .58rem!important}
+}
