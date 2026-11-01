@@ -120,7 +120,7 @@
 
   async function loadRegistry(){
     count.textContent="Loading public family locations…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false}).limit(1000);
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
