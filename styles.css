@@ -2653,3 +2653,10 @@ body.dark-mode{
   background-color:rgba(48,34,27,.94)!important;
   background-image:linear-gradient(135deg,rgba(194,145,79,.055),rgba(0,0,0,.08))!important;
 }
+
+/* Give the archive toolbar actions comfortable inset spacing. */
+.archive-toolbar{gap:1.25rem}
+.archive-toolbar .add-record-trigger{margin:.45rem .75rem .45rem 0;align-self:center}
+@media(max-width:700px){
+  .archive-toolbar .add-record-trigger{margin:.25rem .25rem .25rem 0}
+}
