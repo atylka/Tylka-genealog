@@ -3198,3 +3198,20 @@ html[data-theme="dark"] .site-header,
   .site-footer{gap:.7rem;padding:1.1rem .9rem!important}
   .site-footer .pwa-install-button{align-self:flex-start}
 }
+
+
+/* Definitive dark header palette — high-contrast walnut, antique gold and oxblood. */
+html[data-theme="dark"] body .site-header{
+  background-color:#594033!important;
+  background-image:linear-gradient(100deg,rgba(185,128,76,.30) 0%,rgba(89,64,51,.10) 46%,rgba(117,42,43,.34) 100%),linear-gradient(180deg,#684b38 0%,#594033 58%,#4b3429 100%)!important;
+  border-bottom:2px solid #b08a55!important;
+  color:#f7e8ca!important;
+}
+html[data-theme="dark"] body .site-header .wordmark,
+html[data-theme="dark"] body .site-header .wordmark strong,
+html[data-theme="dark"] body .site-header .wordmark small,
+html[data-theme="dark"] body .site-header .primary-nav a{color:#f7e8ca!important}
+html[data-theme="dark"] body .site-header .primary-nav a[aria-current="page"],
+html[data-theme="dark"] body .site-header .primary-nav a:hover,
+html[data-theme="dark"] body .site-header .owner-sign-in-button{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body .site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
