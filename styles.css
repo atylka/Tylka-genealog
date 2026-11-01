@@ -1876,3 +1876,33 @@ html[data-theme="dark"] .timeline-item,
 html[data-theme="dark"] .archive-grid{
   border-color:rgba(177,135,78,.48)!important;
 }
+
+
+/* Living candlelight: a slow, layered flicker that breathes across the dark study. */
+html[data-theme="dark"] body::before{
+  content:"";
+  position:fixed;
+  z-index:0;
+  inset:-12%;
+  pointer-events:none;
+  opacity:.20;
+  background:
+    radial-gradient(ellipse 28rem 22rem at 12% 12%,rgba(255,190,94,.20),transparent 72%),
+    radial-gradient(ellipse 24rem 30rem at 78% 38%,rgba(197,112,48,.13),transparent 72%),
+    radial-gradient(ellipse 30rem 20rem at 44% 88%,rgba(255,170,76,.11),transparent 74%);
+  mix-blend-mode:screen;
+  transform:translate3d(0,0,0) scale(1);
+  transform-origin:18% 18%;
+  animation:tylka-candle-breathe 7.8s ease-in-out infinite alternate;
+}
+@keyframes tylka-candle-breathe{
+  0%{opacity:.12;filter:blur(2px) brightness(.82);transform:translate3d(-.7%,.3%,0) scale(.985)}
+  17%{opacity:.22;filter:blur(0) brightness(1.08);transform:translate3d(.2%,-.2%,0) scale(1.005)}
+  31%{opacity:.16;filter:blur(1.5px) brightness(.91);transform:translate3d(-.15%,.25%,0) scale(.995)}
+  54%{opacity:.25;filter:blur(.4px) brightness(1.14);transform:translate3d(.55%,-.15%,0) scale(1.012)}
+  73%{opacity:.14;filter:blur(2px) brightness(.88);transform:translate3d(-.35%,.15%,0) scale(.99)}
+  100%{opacity:.21;filter:blur(.5px) brightness(1.04);transform:translate3d(.25%,-.25%,0) scale(1.008)}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-theme="dark"] body::before{animation:none!important;opacity:.15}
+}
