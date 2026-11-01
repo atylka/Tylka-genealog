@@ -150,7 +150,20 @@
   overlay.querySelector(".research-desk-close").addEventListener("click",()=>overlay.hidden=true);
   overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.hidden=true;});
   overlay.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{tab=b.dataset.tab;renderDesk();}));
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!overlay.hidden)overlay.hidden=true;if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();openDesk("search");}else if(event.key==="/"&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||"")&&!overlay.hidden){event.preventDefault();content.querySelector('input[type="search"]')?.focus();}});
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !overlay.hidden) overlay.hidden = true;
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault(); openDesk("search");
+    } else if (event.key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey &&
+      !event.target?.isContentEditable && !/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName || "")) {
+      event.preventDefault();
+      const field = document.querySelector("#home-query,#record-search,#chrono-person,#chrono-location,#location-search,#folder-search,input[type=search]");
+      if (field && field.getClientRects().length) {
+        field.focus({ preventScroll: true });
+        if (typeof field.select === "function") field.select();
+      } else openDesk("search");
+    }
+  });
   loadRecords().then(records=>{allRecords=records;renderCards();}).catch(error=>{console.warn("Research desk could not load records",error);});
   renderCards();
 })();
