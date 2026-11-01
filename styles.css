@@ -1501,3 +1501,109 @@ body.theme-wave-dark:after,body.theme-wave-light:after{content:"";position:fixed
 body.theme-wave-light:after{background:linear-gradient(180deg,rgba(255,248,237,.98),rgba(224,197,166,.94) 72%,rgba(255,248,237,.98))}
 @keyframes theme-wave-down{0%{clip-path:polygon(0 0,100% 0,100% 0,0 0);opacity:1}78%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);opacity:1}100%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);opacity:0}}
 @media(prefers-reduced-motion:reduce){body.theme-wave-dark:after,body.theme-wave-light:after{display:none}}
+
+
+/* Unified deep walnut / antique gold / oxblood dark palette. */
+html[data-theme="dark"]{
+ color-scheme:dark;
+ --paper:#17120f;
+ --paper-light:#251a15;
+ --paper-dark:#100c0a;
+ --ink:#f0e3cb;
+ --muted:#c0a987;
+ --line:#66503a;
+ --accent:#d4ad69;
+ --accent-dark:#390d16;
+ --burgundy:#4a101b;
+ --burgundy-deep:#26080f;
+ --surface-raised:#302119;
+ --surface-soft:#211611;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .archive-page,
+html[data-theme="dark"] main{background-color:var(--paper);color:var(--ink)}
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .site-footer,
+html[data-theme="dark"] .archive-toolbar,
+html[data-theme="dark"] .records-heading{background:#1d1410;border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .hero,
+html[data-theme="dark"] .section,
+html[data-theme="dark"] .chrono-page,
+html[data-theme="dark"] .ancestor-page{background-color:var(--paper)}
+html[data-theme="dark"] .folio-card,
+html[data-theme="dark"] .auth-card,
+html[data-theme="dark"] .upload-card,
+html[data-theme="dark"] .home-search-box,
+html[data-theme="dark"] .location-sidebar,
+html[data-theme="dark"] .map-panel,
+html[data-theme="dark"] .archive-folders,
+html[data-theme="dark"] .record-form-section,
+html[data-theme="dark"] .modal-card,
+html[data-theme="dark"] .site-modal .modal-card,
+html[data-theme="dark"] .site-menu-panel,
+html[data-theme="dark"] .record-preview,
+html[data-theme="dark"] .record-card,
+html[data-theme="dark"] .ancestor-card,
+html[data-theme="dark"] .location-item,
+html[data-theme="dark"] .paper-card,
+html[data-theme="dark"] .archive-folder-content{
+ background-color:var(--paper-light);color:var(--ink);border-color:var(--line)
+}
+html[data-theme="dark"] .generation,
+html[data-theme="dark"] .generation.current,
+html[data-theme="dark"] .archive-folder,
+html[data-theme="dark"] .timeline-item,
+html[data-theme="dark"] .chronology-section,
+html[data-theme="dark"] .location-records,
+html[data-theme="dark"] .record-detail-panel{
+ background-color:#2b1d16;color:var(--ink);border-color:var(--line)
+}
+html[data-theme="dark"] .ticker,
+html[data-theme="dark"] .research-band,
+html[data-theme="dark"] .button-dark,
+html[data-theme="dark"] .site-menu-action:hover,
+html[data-theme="dark"] .site-header>.site-menu-toggle[aria-expanded=true]{
+ background:#310b14;color:#f5e7cd;border-color:#875b37
+}
+html[data-theme="dark"] .button,
+html[data-theme="dark"] button,
+html[data-theme="dark"] .small-button,
+html[data-theme="dark"] .site-menu-action,
+html[data-theme="dark"] .site-menu-nav a{color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .button:hover,
+html[data-theme="dark"] button:hover,
+html[data-theme="dark"] .small-button:hover{background:#4a101b;color:#fff0d6}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .search-fields input,
+html[data-theme="dark"] .search-fields select{
+ background:#160f0c!important;color:#f0e3cb!important;border-color:#715638!important
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#a88d6c}
+html[data-theme="dark"] .wordmark strong,
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,html[data-theme="dark"] h4,
+html[data-theme="dark"] .record-title{color:var(--ink)}
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .folio-label,
+html[data-theme="dark"] .record-category,
+html[data-theme="dark"] .timeline-date,
+html[data-theme="dark"] .folder-number,
+html[data-theme="dark"] .monogram{color:var(--accent);border-color:var(--accent)}
+html[data-theme="dark"] p,
+html[data-theme="dark"] li,
+html[data-theme="dark"] .hero-text,
+html[data-theme="dark"] .section-intro,
+html[data-theme="dark"] .file-hint,
+html[data-theme="dark"] .field-hint{color:var(--muted)}
+html[data-theme="dark"] a:hover{color:#e3bd79}
+html[data-theme="dark"] .record-card:hover,
+html[data-theme="dark"] .paper-card:hover,
+html[data-theme="dark"] .archive-folder:hover,
+html[data-theme="dark"] .location-item:hover{background:#3b211b!important;border-color:#b48a52}
+body.theme-wave-dark:after{
+ background:linear-gradient(180deg,#10090b 0%,#351019 42%,#1d120e 76%,#100c0a 100%)!important
+}
