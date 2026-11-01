@@ -82,21 +82,25 @@
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
       const recordsHeading=document.createElement("p");recordsHeading.className="location-record-heading";recordsHeading.textContent="Associated records";
       detail.replaceChildren(heading,context,recordsHeading);
-      place.records.forEach(record=>{
-        const card=document.createElement("article");card.className="location-record";
-        const title=document.createElement("strong");title.textContent=record.title;
-        const category=document.createElement("small");category.textContent=record.category;
-        card.append(title,category);
-        if(record.description){const note=document.createElement("p");note.textContent=record.description;card.append(note);}
+      place.records.forEach((record,index)=>{
+        const card=document.createElement("details");card.className="location-record";
+        const summary=document.createElement("summary");summary.className="location-record-bar";
+        const title=document.createElement("strong");title.textContent=record.title || "Untitled record";
+        const category=document.createElement("small");category.textContent=record.category || "Family record";
+        const chevron=document.createElement("span");chevron.className="location-record-chevron";chevron.setAttribute("aria-hidden","true");chevron.textContent="＋";
+        const labels=document.createElement("span");labels.className="location-record-labels";labels.append(title,category);
+        summary.append(labels,chevron);card.append(summary);
+        const body=document.createElement("div");body.className="location-record-body";
+        if(record.description){const note=document.createElement("p");note.textContent=record.description;body.append(note);}
         if(record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
           const preview=document.createElement("div");preview.className="record-preview";
-          const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);card.append(preview);
+          const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);body.append(preview);
           image.src=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;
         }
         if(record.file_path){
-          const link=document.createElement("a");link.className="text-link";link.href=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open original file";card.append(link);
+          const link=document.createElement("a");link.className="text-link";link.href=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open original file";body.append(link);
         }
-        detail.append(card);
+        card.append(body);detail.append(card);
       });
       marker.openPopup();
     }catch(error){detail.textContent=error.message;}
