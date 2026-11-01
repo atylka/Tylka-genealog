@@ -32,7 +32,7 @@
     card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     card.append(node("h3",r.title||"Untitled record"));
     if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
-    const dateLabel=(r.description||"").match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
+    const dateLabel=r.record_date?{1:r.record_date}:(r.description||"").match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
     if(dateLabel)card.append(node("p","Date: "+dateLabel[1].trim(),"chrono-record-date"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
     if(r.file_name)card.append(node("small",r.file_name,"record-filename"));
