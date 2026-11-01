@@ -2488,3 +2488,124 @@ body,.site-header,.brand-banner,.brand-banner:before,.brand-banner-inner>*,.site
     content-visibility:visible;
   }
 }
+
+
+/* Lo-fi study-room palette: warmer, richer color on desktop without heavy filters. */
+:root{
+  --paper:#e6d6b7;
+  --paper-light:#f2e7d0;
+  --paper-dark:#cdb58d;
+  --ink:#35251f;
+  --ink-soft:#594035;
+  --muted:#80634e;
+  --accent:#9b493b;
+  --accent-dark:#713027;
+  --gold:#c39a55;
+  --border:#b69a70;
+  --shadow:rgba(54,31,22,.16);
+}
+html{background:#d7c09a}
+body{
+  background-color:var(--paper);
+  background-image:
+    radial-gradient(ellipse at 12% 8%,rgba(194,137,75,.17),transparent 42%),
+    radial-gradient(ellipse at 88% 30%,rgba(137,65,48,.10),transparent 38%),
+    linear-gradient(135deg,rgba(255,241,208,.18),rgba(110,69,43,.045));
+  color:var(--ink);
+}
+.site-header,.site-footer{
+  background-color:rgba(83,47,35,.97);
+  border-color:#bd9254;
+}
+.brand-banner{
+  background-color:#7d392e;
+  background-image:linear-gradient(115deg,#673027 0%,#914737 48%,#6d342a 100%);
+  color:#f6e4c1;
+}
+.brand-banner h1,.brand-banner h2,.brand-banner p{color:#f6e4c1}
+.paper-card,.record-card,.ancestor-card,.folio-card,.archive-folder,.location-item,
+.chrono-year-column,.chrono-record-card,.modal-card,.search-panel,.registry-panel{
+  background-color:rgba(246,232,204,.94);
+  border-color:rgba(143,101,61,.56);
+  color:#3b2921;
+}
+button,.button,.small-button,.owner-sign-in-button{
+  background-color:#8d4033;
+  border-color:#bd9254;
+  color:#fff0d2;
+}
+button:hover,.button:hover,.small-button:hover,.owner-sign-in-button:hover{
+  background-color:#a94f3e;
+  border-color:#d4ad6b;
+  box-shadow:0 4px 12px rgba(91,44,30,.18)!important;
+}
+a{color:#8b3f32}
+a:hover{color:#b15b40}
+input,select,textarea{
+  background-color:#f6ecd8;
+  color:#35251f;
+  border-color:#b69a70;
+}
+::selection{background:#a95a43;color:#fff0d2}
+/* A quiet paper grain, rendered as a static texture to keep scrolling smooth. */
+body:before{
+  opacity:.13;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.19'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+body.dark-mode,html.dark-mode{
+  --paper:#211916;
+  --paper-light:#33251f;
+  --paper-dark:#17110f;
+  --ink:#f0dfbf;
+  --ink-soft:#d3b995;
+  --muted:#c1a17e;
+  --accent:#a94e3c;
+  --accent-dark:#793329;
+  --gold:#d0a45b;
+  --border:#71513b;
+  --shadow:rgba(0,0,0,.35);
+  background-color:#17110f;
+  color:var(--ink);
+}
+body.dark-mode{
+  background-image:
+    radial-gradient(ellipse at 14% 5%,rgba(157,92,48,.19),transparent 42%),
+    radial-gradient(ellipse at 85% 32%,rgba(113,35,31,.22),transparent 43%),
+    linear-gradient(145deg,#251a16,#17110f 72%);
+}
+.dark-mode .site-header,.dark-mode .site-footer{background-color:rgba(29,19,16,.98);border-color:#8b653b}
+.dark-mode .brand-banner{
+  background-image:linear-gradient(115deg,#321916 0%,#56251e 48%,#291714 100%);
+  color:#f0d5a1;
+}
+.dark-mode .brand-banner h1,.dark-mode .brand-banner h2,.dark-mode .brand-banner p{color:#f0d5a1}
+.dark-mode .paper-card,.dark-mode .record-card,.dark-mode .ancestor-card,.dark-mode .folio-card,
+.dark-mode .archive-folder,.dark-mode .location-item,.dark-mode .chrono-year-column,
+.dark-mode .chrono-record-card,.dark-mode .modal-card,.dark-mode .search-panel,.dark-mode .registry-panel{
+  background-color:#30221c;
+  border-color:#765238;
+  color:#f0dfbf;
+}
+.dark-mode button,.dark-mode .button,.dark-mode .small-button,.dark-mode .owner-sign-in-button{
+  background-color:#713329;border-color:#a57b42;color:#f4dfb5;
+}
+.dark-mode button:hover,.dark-mode .button:hover,.dark-mode .small-button:hover,.dark-mode .owner-sign-in-button:hover{
+  background-color:#914333;border-color:#d0a45b;
+}
+.dark-mode a{color:#e0b56d}
+.dark-mode a:hover{color:#f1d49b}
+.dark-mode input,.dark-mode select,.dark-mode textarea{background-color:#211815;color:#f0dfbf;border-color:#765238}
+.dark-mode ::selection{background:#a94e3c;color:#fff0d2}
+/* Desktop screens often flatten the palette; restore warm contrast without oversaturating text. */
+@media(min-width:900px){
+  body{background-color:#e2d0ad}
+  .paper-card,.record-card,.ancestor-card,.folio-card,.archive-folder,.location-item,
+  .chrono-year-column,.chrono-record-card,.modal-card,.search-panel,.registry-panel{
+    box-shadow:0 5px 18px rgba(68,39,24,.09);
+  }
+  .brand-banner{background-image:linear-gradient(115deg,#71352b,#a4513b 52%,#75382d)}
+  .dark-mode{background-color:#17110f}
+  .dark-mode .brand-banner{background-image:linear-gradient(115deg,#321916,#61291f 52%,#291714)}
+}
+@media(prefers-reduced-motion:reduce){body:before{display:none}}
