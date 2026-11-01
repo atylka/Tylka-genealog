@@ -2795,3 +2795,30 @@ input,select,textarea{padding:.65rem .8rem}
   color:#fff0d2!important;
   background-color:#8d3b30!important;
 }
+
+
+/* Selected-folder drawer: keep the folder header fixed while the contents unfold downward. */
+.archive-folder-content.is-opening .records-heading{
+  animation:none!important;
+}
+.archive-folder-content.is-opening .records-list{
+  transform-origin:top center;
+  animation:folder-contents-unfold .58s cubic-bezier(.16,1,.3,1) both!important;
+}
+@keyframes folder-contents-unfold{
+  0%{opacity:.35;clip-path:inset(0 0 100% 0);transform:translateY(-8px) scaleY(.985)}
+  65%{opacity:1;clip-path:inset(0);transform:translateY(2px) scaleY(1.005)}
+  100%{opacity:1;clip-path:inset(0);transform:translateY(0) scaleY(1)}
+}
+@media(max-width:760px){
+  .archive-folder-content.is-opening .records-list{
+    animation:folder-contents-unfold-mobile .48s cubic-bezier(.16,1,.3,1) both!important;
+  }
+  @keyframes folder-contents-unfold-mobile{
+    from{opacity:.3;clip-path:inset(0 0 100% 0);transform:translateY(-6px)}
+    to{opacity:1;clip-path:inset(0);transform:translateY(0)}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .archive-folder-content.is-opening .records-list{animation:none!important}
+}
