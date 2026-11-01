@@ -20,6 +20,38 @@
   document.querySelectorAll(".primary-nav").forEach(nav => {
     if (!nav.hasAttribute("aria-label")) nav.setAttribute("aria-label", "Main navigation");
   });
+  // The gear button is reserved for settings; keep a separate mobile navigation control.
+  const header = document.querySelector(".site-header");
+  const nav = document.querySelector(".primary-nav");
+  if (header && nav && !document.getElementById("mobile-nav-toggle")) {
+    const navToggle = document.createElement("button");
+    navToggle.id = "mobile-nav-toggle";
+    navToggle.type = "button";
+    navToggle.className = "mobile-nav-toggle";
+    navToggle.textContent = "Menu";
+    navToggle.setAttribute("aria-controls", nav.id || "primary-nav");
+    navToggle.setAttribute("aria-expanded", "false");
+    navToggle.addEventListener("click", () => {
+      const open = !nav.classList.contains("is-open");
+      nav.classList.toggle("is-open", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+      navToggle.textContent = open ? "Close menu" : "Menu";
+      if (open) {
+        const firstLink = nav.querySelector("a,button");
+        if (firstLink) firstLink.focus();
+      }
+    });
+    nav.addEventListener("keydown", event => {
+      if (event.key === "Escape" && nav.classList.contains("is-open")) {
+        nav.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.textContent = "Menu";
+        navToggle.focus();
+      }
+    });
+    const settingsButton = header.querySelector(".site-menu-toggle");
+    header.insertBefore(navToggle, settingsButton || null);
+  }
   document.querySelectorAll(".primary-nav a").forEach(link => {
     if (new URL(link.href, location.href).pathname === location.pathname) link.setAttribute("aria-current", "page");
   });
