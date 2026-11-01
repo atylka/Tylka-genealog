@@ -8,6 +8,8 @@
   const canonical = value => { const key=String(value||"").toLowerCase().trim().replace(/[ &-]+/g,"_"); const aliases={research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"}; return aliases[key]||key; };
   const setMessage = (node,text,error=false) => { if(node){node.textContent=text;node.classList.toggle("message-error",error);} };
   const publicFileUrl = path => path ? client.storage.from("family-archive").getPublicUrl(path).data.publicUrl : null;
+  const filePrefixes={births:"log_bapt",deaths:"log_death",marriages:"log_marriage",immigration:"log_immig",photos:"log_photo",notes:"log_note"};
+  function nextSiteFileName(category,keep){const prefix=filePrefixes[canonical(category)]||"log_record";if(keep&&/^log_[a-z]+_\d+\.[a-z0-9]+$/i.test(keep))return keep;let max=0;records.forEach(r=>{const m=String(r.file_name||"").match(new RegExp("^"+prefix+"_(\\d+)(?:\\.[a-z0-9]+)?$","i"));if(m)max=Math.max(max,Number(m[1]));});return prefix+"_"+(max+1);}
   const isImage = record => (record.mime_type||"").startsWith("image/");
   function makeThumbnail(record) { const wrap=document.createElement("div");wrap.className="record-thumbnail";if(record.file_path&&isImage(record)){const img=document.createElement("img");img.src=publicFileUrl(record.file_path);img.alt="Thumbnail of "+record.title;img.loading="lazy";wrap.append(img);}else{const label=document.createElement("span");label.className="record-thumbnail-placeholder";label.textContent=record.file_path?(record.mime_type==="application/pdf"?"PDF":"FILE"):"No scan";wrap.append(label);}return wrap; }
 
@@ -107,9 +109,9 @@
     const button=uploadForm.querySelector('button[type="submit"]');button.disabled=true;setMessage($("upload-message"),editingRecordId?"Updating record…":"Saving record…");let newFilePath=null;
     try{
       const existing=editingRecordId?records.find(r=>r.id===editingRecordId):null;
-      if(file){const safeName=file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);newFilePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+safeName;const {error}=await client.storage.from("family-archive").upload(newFilePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
+      if(file){const siteName=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);newFilePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+siteName;const {error}=await client.storage.from("family-archive").upload(newFilePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
       const values={title,category,description,location,persons_mentioned:personsMentioned};
-      if(file){values.file_path=newFilePath;values.file_name=file.name;values.mime_type=file.type;values.file_size=file.size;}
+      if(file){values.file_path=newFilePath;values.file_name=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);values.mime_type=file.type;values.file_size=file.size;}
       let result;
       if(editingRecordId)result=await client.from("archive_records").update(values).eq("id",editingRecordId);
       else result=await client.from("archive_records").insert({owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),...values,file_path:newFilePath,file_name:file?.name||null,mime_type:file?.type||null,file_size:file?.size||null});
