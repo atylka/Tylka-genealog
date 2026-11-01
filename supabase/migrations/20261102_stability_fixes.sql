@@ -9,7 +9,7 @@ create table if not exists public.ancestor_portraits (
   source_title text,
   updated_at timestamptz not null default now(),
   created_by uuid null references auth.users(id) on delete set null,
-  unique (lower(name))
+
 );
 alter table public.ancestor_portraits enable row level security;
 drop policy if exists "Public can read ancestor portraits" on public.ancestor_portraits;
@@ -20,3 +20,5 @@ drop policy if exists "Owner can update ancestor portraits" on public.ancestor_p
 create policy "Owner can update ancestor portraits" on public.ancestor_portraits for update using (auth.uid() = created_by) with check (auth.uid() = created_by);
 drop policy if exists "Owner can delete ancestor portraits" on public.ancestor_portraits;
 create policy "Owner can delete ancestor portraits" on public.ancestor_portraits for delete using (auth.uid() = created_by);
+
+create unique index if not exists ancestor_portraits_name_lower_unique on public.ancestor_portraits (lower(name));
