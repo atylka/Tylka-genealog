@@ -2125,3 +2125,138 @@ html[data-theme="light"] #family-map .registry-location-label{
   color:#572a25!important;
   border-color:#9c713c!important;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THE GRAND ARCHIVE MOTION SYSTEM — cinematic transitions + living details
+   ═══════════════════════════════════════════════════════════════════════ */
+:root{
+  --motion-cinema:cubic-bezier(.19,1,.22,1);
+  --motion-elastic:cubic-bezier(.2,1.55,.45,1);
+  --motion-gold:rgba(211,170,103,.72);
+  --motion-wine:rgba(115,24,39,.72);
+}
+html{scroll-behavior:smooth}
+body{isolation:isolate}
+#tylka-page-veil{
+  position:fixed;inset:0;z-index:99999;pointer-events:none;opacity:0;
+  background:
+    radial-gradient(ellipse at 50% 45%,rgba(222,178,104,.28),transparent 34%),
+    radial-gradient(ellipse at 12% 90%,rgba(116,25,39,.7),transparent 48%),
+    linear-gradient(135deg,#160d0a 0%,#382116 42%,#541522 72%,#120b09 100%);
+  clip-path:circle(0% at 50% 50%);
+  filter:saturate(1.15);
+}
+#tylka-page-veil:before,#tylka-page-veil:after{
+  content:"";position:absolute;inset:-40%;pointer-events:none;
+}
+#tylka-page-veil:before{
+  background:repeating-conic-gradient(from 0deg at 50% 50%,transparent 0deg 8deg,rgba(230,190,119,.13) 8.2deg 8.5deg,transparent 8.8deg 16deg);
+  animation:archive-veil-spin 9s linear infinite;
+}
+#tylka-page-veil:after{
+  background:linear-gradient(110deg,transparent 35%,rgba(255,225,166,.22) 48%,transparent 59%);
+  transform:translateX(-70%) rotate(-12deg);
+  animation:archive-veil-glass 1.1s var(--motion-cinema) both;
+}
+body.page-leaving #tylka-page-veil{
+  opacity:1;clip-path:circle(150% at 50% 50%);
+  transition:clip-path .92s var(--motion-cinema),opacity .18s ease;
+}
+body.page-leaving main,body.page-leaving .site-header,body.page-leaving .site-footer{
+  filter:blur(8px) brightness(.62) saturate(.7);
+  transform:scale(.975) translateY(-10px);
+  opacity:0;
+  transition:filter .65s ease,transform .82s var(--motion-cinema),opacity .52s ease;
+}
+body.page-leaving .site-header{transform:translateY(-24px);letter-spacing:.04em}
+body.page-leaving .site-footer{transform:translateY(24px)}
+body.page-enter{opacity:0;transform:scale(1.018);filter:blur(7px)}
+body.page-enter-active{opacity:1;transform:none;filter:none;transition:opacity .9s ease,transform 1.1s var(--motion-cinema),filter 1s ease}
+body.page-enter-active .site-header{animation:archive-header-arrive 1.15s var(--motion-cinema) both}
+body.page-enter-active main>*{animation:archive-stagger-arrive 1.1s var(--motion-cinema) both}
+body.page-enter-active main>*:nth-child(2){animation-delay:.08s}
+body.page-enter-active main>*:nth-child(3){animation-delay:.15s}
+body.page-enter-active main>*:nth-child(4){animation-delay:.22s}
+body.page-enter-active main>*:nth-child(5){animation-delay:.29s}
+body.page-enter-active .site-footer{animation:archive-footer-arrive 1.2s var(--motion-cinema) .25s both}
+@keyframes archive-header-arrive{0%{opacity:0;transform:translateY(-35px);filter:blur(12px)}65%{opacity:1}100%{transform:none;filter:none}}
+@keyframes archive-stagger-arrive{0%{opacity:0;transform:translateY(35px) scale(.985);filter:blur(8px);clip-path:inset(0 0 12% 0)}100%{opacity:1;transform:none;filter:none;clip-path:inset(0)}}
+@keyframes archive-footer-arrive{0%{opacity:0;transform:translateY(28px);filter:blur(7px)}100%{opacity:1;transform:none;filter:none}}
+@keyframes archive-veil-spin{to{transform:rotate(360deg)}}
+@keyframes archive-veil-glass{0%{transform:translateX(-75%) rotate(-12deg)}100%{transform:translateX(75%) rotate(-12deg)}}
+
+/* Slow candlelit shimmer across the page; texture is decorative and never interactive. */
+body:after{
+  content:"";position:fixed;inset:-30%;z-index:50;pointer-events:none;opacity:.16;
+  background:linear-gradient(112deg,transparent 38%,rgba(221,178,109,.13) 47%,rgba(255,232,183,.08) 50%,transparent 59%);
+  transform:translateX(-35%) rotate(-8deg);
+  animation:archive-atmosphere-drift 24s ease-in-out infinite alternate;
+}
+@keyframes archive-atmosphere-drift{0%{transform:translate3d(-8%,2%,0) rotate(-8deg);opacity:.08}50%{opacity:.22}100%{transform:translate3d(8%,-2%,0) rotate(-8deg);opacity:.12}}
+
+/* Living gilt edges, ink-like underlines, and dimensional hover responses. */
+.site-header{position:relative}
+.site-header:after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;transform:scaleX(.25);transform-origin:center;
+  background:linear-gradient(90deg,transparent,var(--motion-gold),var(--motion-wine),var(--motion-gold),transparent);
+  animation:archive-gilt-rule 8s ease-in-out infinite;
+}
+@keyframes archive-gilt-rule{0%,100%{transform:scaleX(.22);opacity:.35}50%{transform:scaleX(1);opacity:.95}}
+.wordmark .monogram{position:relative;overflow:hidden;transition:transform .7s var(--motion-elastic),box-shadow .6s ease}
+.wordmark:hover .monogram{transform:rotate(8deg) scale(1.09);box-shadow:0 0 0 4px rgba(196,151,83,.12),0 0 22px rgba(196,151,83,.3)}
+.wordmark .monogram:after{content:"";position:absolute;inset:-80% 35%;background:linear-gradient(90deg,transparent,rgba(255,239,201,.75),transparent);transform:rotate(35deg) translateX(-160%);transition:transform .9s ease}
+.wordmark:hover .monogram:after{transform:rotate(35deg) translateX(220%)}
+.primary-nav a{position:relative;transition:color .35s ease,transform .35s var(--motion-elastic)}
+.primary-nav a:after{content:"";position:absolute;left:50%;right:50%;bottom:-7px;height:1px;background:linear-gradient(90deg,var(--accent),#d9b26f);transition:left .45s var(--motion-cinema),right .45s var(--motion-cinema)}
+.primary-nav a:hover{transform:translateY(-3px)}
+.primary-nav a:hover:after,.primary-nav a[aria-current=page]:after{left:0;right:0}
+button,.button,.small-button,.owner-sign-in-button,.archive-folder,.location-item,.paper-card,.record-card,.ancestor-card,.folio-card,.modal-card{
+  transition:transform .55s var(--motion-elastic),box-shadow .55s ease,border-color .4s ease,background-color .4s ease,filter .4s ease!important;
+}
+button:hover,.button:hover,.small-button:hover,.owner-sign-in-button:hover,.archive-folder:hover,.location-item:hover,.paper-card:hover,.record-card:hover,.ancestor-card:hover,.folio-card:hover{
+  filter:brightness(1.045) saturate(1.08);
+  box-shadow:0 12px 28px rgba(62,34,22,.13),0 0 0 1px rgba(199,158,93,.12);
+}
+.paper-card,.record-card,.ancestor-card,.archive-folder,.location-item,.folio-card,.modal-card,.map-panel,.location-sidebar,.location-records-panel{
+  position:relative;isolation:isolate;
+}
+.paper-card:before,.record-card:before,.ancestor-card:before,.archive-folder:before,.location-item:before,.folio-card:before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,239,203,.22) 48%,transparent 70%);
+  transform:translateX(-115%);transition:opacity .35s ease;
+}
+.paper-card:hover:before,.record-card:hover:before,.ancestor-card:hover:before,.archive-folder:hover:before,.location-item:hover:before,.folio-card:hover:before{
+  opacity:1;animation:archive-card-glint 1.15s var(--motion-cinema) both;
+}
+@keyframes archive-card-glint{to{transform:translateX(115%)}}
+h1,h2{position:relative}
+h1:after,h2:after{
+  content:"";display:block;width:clamp(44px,8vw,86px);height:1px;margin-top:.28em;
+  background:linear-gradient(90deg,var(--accent),rgba(211,170,103,.15));
+  transform-origin:left;animation:archive-heading-rule 1.8s var(--motion-cinema) both;
+}
+@keyframes archive-heading-rule{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+input,select,textarea{transition:box-shadow .4s ease,border-color .4s ease,background-color .4s ease,transform .4s var(--motion-elastic)!important}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 1px var(--accent),0 0 0 5px rgba(196,151,83,.13),0 8px 24px rgba(65,36,20,.12)!important;transform:translateY(-2px)}
+.site-modal:not([hidden]){animation:archive-modal-veil .55s ease both}
+.site-modal:not([hidden]) .modal-card{animation:archive-modal-arrive .8s var(--motion-cinema) both}
+@keyframes archive-modal-veil{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(9px)}}
+@keyframes archive-modal-arrive{0%{opacity:0;transform:translateY(42px) scale(.91) rotateX(8deg);filter:blur(10px)}70%{opacity:1}100%{transform:none;filter:none}}
+.back-to-top{overflow:hidden}
+.back-to-top:before{content:"";position:absolute;inset:-80%;background:linear-gradient(90deg,transparent,rgba(255,236,192,.4),transparent);transform:rotate(35deg) translateX(-120%);animation:archive-top-glimmer 6s ease-in-out infinite}
+@keyframes archive-top-glimmer{0%,65%,100%{transform:rotate(35deg) translateX(-120%)}82%{transform:rotate(35deg) translateX(120%)}}
+::selection{background:rgba(139,46,52,.28);color:inherit}
+html[data-theme="dark"] body:after{opacity:.23}
+html.reduce-motion #tylka-page-veil,html.reduce-motion body:after{display:none!important}
+html.reduce-motion *,html.reduce-motion *:before,html.reduce-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@media(prefers-reduced-motion:reduce){
+  #tylka-page-veil,body:after{display:none!important}
+  body.page-enter,body.page-enter-active,body.page-leave,body.page-leaving{opacity:1!important;transform:none!important;filter:none!important}
+  body.page-leaving main,body.page-leaving .site-header,body.page-leaving .site-footer{opacity:1!important;transform:none!important;filter:none!important}
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media(max-width:700px){
+  body.page-enter-active main>*{animation-duration:.8s}
+  .primary-nav a:hover{transform:none}
+}
