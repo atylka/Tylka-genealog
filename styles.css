@@ -3590,3 +3590,75 @@ main[id] { scroll-margin-top: 1rem; }
     min-height: 44px; padding: .65rem .25rem; text-align: left;
   }
 }
+
+
+/* Final repair: keep the footer in normal document flow and prevent its contents colliding. */
+.site-footer{
+  position:relative!important;
+  inset:auto!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) auto;
+  align-items:center!important;
+  justify-items:start;
+  gap:1rem clamp(.8rem,2vw,2rem)!important;
+  width:100%;
+  min-width:0;
+  height:auto!important;
+  min-height:0!important;
+  margin-top:clamp(2rem,5vw,4rem)!important;
+  padding:1.25rem clamp(1rem,3vw,2.5rem)!important;
+  overflow:hidden;
+  transform:none;
+}
+.site-footer>*{min-width:0;max-width:100%;position:relative}
+.site-footer .wordmark{display:flex!important;align-items:center;gap:.7rem;min-width:0;overflow-wrap:anywhere}
+.site-footer .wordmark>span:last-child{min-width:0}
+.site-footer .wordmark strong{display:block;overflow-wrap:anywhere}
+.site-footer .wordmark small{display:block}
+.site-footer p{margin:0!important;max-width:48ch;overflow-wrap:anywhere}
+.site-footer .footer-end{justify-self:end;white-space:normal;text-align:right;overflow-wrap:anywhere}
+@media(max-width:760px){
+  .site-footer{grid-template-columns:minmax(0,1fr)!important;align-items:start!important;gap:.65rem!important;padding:1rem!important}
+  .site-footer .wordmark{max-width:100%}
+  .site-footer p{max-width:none}
+  .site-footer .footer-end{display:none!important}
+}
+
+/* Dark theme cleanup: remove leftover cream/white panels across every page and popup. */
+html[data-theme="dark"],html.theme-dark,body[data-theme="dark"],body.theme-dark,body.dark-mode,html.dark-mode{
+  --paper:#211710!important;--paper-light:#302116!important;--paper-dark:#432b1b!important;
+  --ink:#f0dfbd!important;--muted:#cbb38b!important;--line:#765936!important;
+  --accent:#c39a55!important;--accent-dark:#1a100b!important;
+  color-scheme:dark;
+}
+html[data-theme="dark"] body,html.theme-dark body,body[data-theme="dark"],body.theme-dark,body.dark-mode,html.dark-mode body{
+  background-color:#211710!important;color:#f0dfbd!important;
+  background-image:radial-gradient(ellipse at 50% 0%,rgba(135,83,32,.16),transparent 54%),linear-gradient(180deg,#1b110c 0%,#2b1d13 48%,#211710 100%)!important;
+}
+html[data-theme="dark"] :is(.site-footer,.archive-page,.home-search-box,.search-results,.home-record-tile,.home-record-detail-card,.home-detail-metadata,.empty-state,.paper-card,.auth-card,.upload-card,.archive-folders,.archive-folder-content,.archive-folder,.record-card,.record-detail-content,.record-detail-grid,.detail-transcription,.detail-source,.detail-image-viewport,.location-sidebar,.map-panel,.location-records-panel,.location-detail,.location-record,.location-record-body,.location-route-tools,.location-item,.chrono-filter-panel,.chrono-timeline,.chrono-year-column,.chrono-record-card,.chrono-record-notes,.chrono-record-date,.chrono-year-heading,.ancestor-card,.generation,.folio-card,.activity-log-section,.activity-log-item,.research-band,.site-modal .modal-card,.home-record-detail-card .home-detail-metadata),
+html.theme-dark :is(.site-footer,.archive-page,.home-search-box,.search-results,.home-record-tile,.home-record-detail-card,.home-detail-metadata,.empty-state,.paper-card,.auth-card,.upload-card,.archive-folders,.archive-folder-content,.archive-folder,.record-card,.record-detail-content,.record-detail-grid,.detail-transcription,.detail-source,.detail-image-viewport,.location-sidebar,.map-panel,.location-records-panel,.location-detail,.location-record,.location-record-body,.location-route-tools,.location-item,.chrono-filter-panel,.chrono-timeline,.chrono-year-column,.chrono-record-card,.chrono-record-notes,.chrono-record-date,.chrono-year-heading,.ancestor-card,.generation,.folio-card,.activity-log-section,.activity-log-item,.research-band,.site-modal .modal-card,.home-record-detail-card .home-detail-metadata),
+body.dark-mode :is(.site-footer,.archive-page,.home-search-box,.search-results,.home-record-tile,.home-record-detail-card,.home-detail-metadata,.empty-state,.paper-card,.auth-card,.upload-card,.archive-folders,.archive-folder-content,.archive-folder,.record-card,.record-detail-content,.record-detail-grid,.detail-transcription,.detail-source,.detail-image-viewport,.location-sidebar,.map-panel,.location-records-panel,.location-detail,.location-record,.location-record-body,.location-route-tools,.location-item,.chrono-filter-panel,.chrono-timeline,.chrono-year-column,.chrono-record-card,.chrono-record-notes,.chrono-record-date,.chrono-year-heading,.ancestor-card,.generation,.folio-card,.activity-log-section,.activity-log-item,.research-band,.site-modal .modal-card,.home-record-detail-card .home-detail-metadata){
+  background-color:#302116!important;color:#f0dfbd!important;border-color:#765936!important;
+}
+html[data-theme="dark"] :is(.home-record-tile,.record-card,.chrono-record-card,.location-record,.location-item,.ancestor-card,.archive-folder,.folio-card,.activity-log-item),
+html.theme-dark :is(.home-record-tile,.record-card,.chrono-record-card,.location-record,.location-item,.ancestor-card,.archive-folder,.folio-card,.activity-log-item),
+body.dark-mode :is(.home-record-tile,.record-card,.chrono-record-card,.location-record,.location-item,.ancestor-card,.archive-folder,.folio-card,.activity-log-item){
+  background-image:linear-gradient(135deg,rgba(205,161,89,.06),transparent 58%)!important;
+}
+html[data-theme="dark"] :is(input,select,textarea,.search-input,.search-fields input,.search-fields select,.chrono-filter-panel input,.chrono-filter-panel select),
+html.theme-dark :is(input,select,textarea,.search-input,.search-fields input,.search-fields select,.chrono-filter-panel input,.chrono-filter-panel select),
+body.dark-mode :is(input,select,textarea,.search-input,.search-fields input,.search-fields select,.chrono-filter-panel input,.chrono-filter-panel select){
+  background:#211710!important;color:#f7e9ce!important;border-color:#8a6a3f!important;
+}
+html[data-theme="dark"] :is(input,textarea)::placeholder,html.theme-dark :is(input,textarea)::placeholder,body.dark-mode :is(input,textarea)::placeholder{color:#cbb894!important;opacity:1!important}
+html[data-theme="dark"] :is(.detail-image-viewport,.home-record-detail-card .detail-image-viewport,.face-crop-canvas-wrap),
+html.theme-dark :is(.detail-image-viewport,.home-record-detail-card .detail-image-viewport,.face-crop-canvas-wrap),
+body.dark-mode :is(.detail-image-viewport,.home-record-detail-card .detail-image-viewport,.face-crop-canvas-wrap){background:#19110c!important;border-color:#765936!important}
+html[data-theme="dark"] :is(.site-footer,.site-footer p,.site-footer .wordmark small,.site-footer .footer-end),
+html.theme-dark :is(.site-footer,.site-footer p,.site-footer .wordmark small,.site-footer .footer-end),
+body.dark-mode :is(.site-footer,.site-footer p,.site-footer .wordmark small,.site-footer .footer-end){color:#e9d5ad!important}
+html[data-theme="dark"] .site-footer .monogram,html.theme-dark .site-footer .monogram,body.dark-mode .site-footer .monogram{background:#593622!important;color:#fff0d2!important;border-color:#a8844b!important}
+html[data-theme="dark"] .small-button,html.theme-dark .small-button,body.dark-mode .small-button{background:#3b281b!important;color:#f0dfbd!important;border-color:#8a6a3f!important}
+html[data-theme="dark"] .small-button:hover,html.theme-dark .small-button:hover,body.dark-mode .small-button:hover{background:#573625!important;color:#fff0d2!important}
+html[data-theme="dark"] .notice,html.theme-dark .notice,body.dark-mode .notice{background:#302116!important;color:#f0dfbd!important;border-color:#765936!important}
+html[data-theme="dark"] .detail-file-fallback,html.theme-dark .detail-file-fallback,body.dark-mode .detail-file-fallback{color:#e9d5ad!important}
