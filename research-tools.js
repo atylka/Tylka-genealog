@@ -32,6 +32,8 @@
     .research-card-tools button,.research-desk-button{font:inherit;font-size:.82rem;padding:.35rem .55rem;border:1px solid #9c7845;border-radius:4px;background:rgba(83,35,29,.08);color:inherit;cursor:pointer}
     .research-card-tools button[aria-pressed="true"]{background:#64251f;color:#f7e6bd;border-color:#d4b16b}
     .research-desk-button{position:fixed;right:1rem;bottom:1rem;z-index:900;background:#4b211c;color:#f6e6c4;border:1px solid #c5a15c;box-shadow:0 3px 12px rgba(0,0,0,.2)}
+    .research-desk-button-inline{position:static;right:auto;bottom:auto;z-index:auto;box-shadow:none;white-space:nowrap;align-self:center}
+    .archive-actions .research-desk-button-inline{margin:.25rem 0}
     .research-desk-panel{position:fixed;inset:0;z-index:1200;background:rgba(17,10,8,.58);display:grid;place-items:center;padding:1rem}
     .research-desk-panel[hidden]{display:none}
     .research-desk-card{width:min(760px,100%);max-height:min(86vh,900px);overflow:auto;background:var(--paper,#f2e7d0);color:var(--ink,#35241c);border:1px solid #b18a4f;border-radius:7px;padding:1.1rem;box-shadow:0 12px 45px rgba(0,0,0,.35)}
@@ -58,7 +60,14 @@
   const overlay = document.createElement("section");
   overlay.className = "research-desk-panel"; overlay.hidden = true; overlay.setAttribute("role","dialog"); overlay.setAttribute("aria-modal","true"); overlay.setAttribute("aria-label","Researcher's Desk");
   overlay.innerHTML = '<div class="research-desk-card"><div class="research-desk-head"><div><p class="eyebrow">Tylka Genealogical Log</p><h2>Researcher\'s Desk</h2></div><button class="research-desk-close" type="button" aria-label="Close">×</button></div><div class="research-desk-tabs" role="tablist"><button type="button" data-tab="search" aria-pressed="true">Search</button><button type="button" data-tab="pinned" aria-pressed="false">Pinned records</button><button type="button" data-tab="recent" aria-pressed="false">Recently viewed</button><button type="button" data-tab="compare" aria-pressed="false">Compare</button><button type="button" data-tab="investigations" aria-pressed="false">Investigations</button></div><div class="research-desk-content"></div><p class="research-desk-note">Pins, research statuses, source notes, and recent history are saved in this browser only.</p></div>';
-  document.body.append(button, overlay);
+  const archiveActions = document.querySelector(".archive-actions");
+  if (document.body.dataset.page === "all" && archiveActions) {
+    button.classList.add("research-desk-button-inline");
+    archiveActions.append(button);
+  } else {
+    document.body.append(button);
+  }
+  document.body.append(overlay);
   const content = overlay.querySelector(".research-desk-content");
   let tab = "search", allRecords = [], compareKeys = [];
   const el = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
