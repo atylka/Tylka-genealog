@@ -3439,3 +3439,32 @@ html[data-theme="dark"] body .site-header .site-menu-toggle{background:#51392d!i
 .site-header .wordmark,.site-footer .footer-mark{animation:antique-ink 8s ease-in-out infinite!important}
 .site-header .wordmark .monogram,.site-footer .footer-mark .monogram{position:relative;overflow:hidden;animation:antique-ink 8s ease-in-out infinite!important}
 @media(prefers-reduced-motion:reduce){.site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}}
+
+
+/* Definitive header palette and logo motion: override the global performance reset intentionally. */
+html[data-theme="dark"] body header.site-header{
+  background:#594033!important;
+  background-image:linear-gradient(105deg,#72543f 0%,#674a37 42%,#5b4031 72%,#52392d 100%)!important;
+  background-color:#594033!important;
+  border-bottom:2px solid #c09a60!important;
+  color:#fff0d2!important;
+}
+html[data-theme="dark"] body header.site-header .wordmark,
+html[data-theme="dark"] body header.site-header .wordmark strong,
+html[data-theme="dark"] body header.site-header .wordmark small,
+html[data-theme="dark"] body header.site-header .primary-nav a{color:#fff0d2!important}
+html[data-theme="dark"] body header.site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
+.site-header .wordmark,.site-footer .footer-mark{
+  animation:antique-ink 8s ease-in-out infinite!important;
+}
+.site-header .wordmark .monogram,.site-footer .footer-mark .monogram{
+  animation:antique-ink 8s ease-in-out infinite!important;
+}
+.site-header .wordmark strong{
+  font-family:"Great Vibes",cursive!important;
+  font-size:2.15rem!important;
+  font-weight:400!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}
+}
