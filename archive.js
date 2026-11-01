@@ -65,7 +65,8 @@
     await loadRecords();
     const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);
     client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);loadRecords();});
-    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);loadRecords();});
+    // The Supabase auth listener above already handles sign-in changes.
+    // Avoid a second fetch from the shared site-ui auth event.
   }
   function setOwner(user){
     currentUser=user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?user:null;
