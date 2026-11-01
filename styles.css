@@ -3040,3 +3040,7 @@ html.reduce-motion .research-desk-card{animation:none!important;transition:none!
 .research-accession{display:inline-block;margin-top:.45rem;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;opacity:.72;font-variant-numeric:tabular-nums}
 .research-card-tools button{transition:background-color .12s ease,border-color .12s ease}
 @media(prefers-reduced-motion:reduce){.research-card-tools button{transition:none}}
+
+
+/* Installable Tylka app controls */
+.pwa-install-button{position:fixed;right:18px;bottom:18px;z-index:9998;padding:11px 17px;border:1px solid #b99558;border-radius:3px;background:linear-gradient(145deg,#543323,#2b1c18);color:#f0dfbb;font:600 .88rem Georgia,serif;letter-spacing:.03em;box-shadow:0 4px 16px rgba(0,0,0,.28);cursor:pointer}.pwa-install-button[hidden]{display:none}.pwa-install-button:hover{border-color:#e0c17d;background:#68412b}@media(prefers-reduced-motion:reduce){.pwa-install-button{transition:none!important}}
