@@ -3015,3 +3015,12 @@ html{scroll-behavior:auto!important}
 }
 .motion-reveal,.reveal{opacity:1!important;transform:none!important;filter:none!important}
 .motion-ripple,.archive-scroll-progress:after{display:none!important}
+
+
+/* Header gradient correction: lift the near-black end and keep the header oxblood-brown. */
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .site-footer{
+  background:
+    linear-gradient(105deg,rgba(143,76,43,.24),transparent 42%,rgba(105,29,39,.24)),
+    linear-gradient(180deg,#38241d 0%,#30201a 52%,#2b1c18 100%)!important;
+}
