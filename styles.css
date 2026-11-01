@@ -2961,3 +2961,36 @@ html[data-theme="dark"] .brand-banner,
   background:linear-gradient(118deg,#692720 0%,#842f28 52%,#993b32 100%),radial-gradient(ellipse at 82% 12%,rgba(255,203,169,.12),transparent 48%)!important;
   border-bottom-color:#b88b68!important;
 }
+
+
+/* Dark-mode contrast safeguard: owner sign-in dialog and header controls. */
+html[data-theme="dark"] #owner-sign-in-modal .owner-sign-in-card,
+html[data-theme="dark"] #owner-sign-in-modal .owner-sign-in-card *,
+.dark-mode #owner-sign-in-modal .owner-sign-in-card,
+.dark-mode #owner-sign-in-modal .owner-sign-in-card *{color:#f3e3c4!important}
+html[data-theme="dark"] #owner-sign-in-modal .owner-sign-in-card .eyebrow,
+.dark-mode #owner-sign-in-modal .owner-sign-in-card .eyebrow{color:#e1b96d!important}
+html[data-theme="dark"] #owner-sign-in-modal input,
+html[data-theme="dark"] #owner-sign-in-modal select,
+html[data-theme="dark"] #owner-sign-in-modal textarea,
+.dark-mode #owner-sign-in-modal input,
+.dark-mode #owner-sign-in-modal select,
+.dark-mode #owner-sign-in-modal textarea{
+ background:#211611!important;color:#fff0d2!important;border-color:#9b7545!important;caret-color:#e1b96d!important
+}
+html[data-theme="dark"] #owner-sign-in-modal input::placeholder,
+.dark-mode #owner-sign-in-modal input::placeholder{color:#c9b99f!important;opacity:1!important}
+html[data-theme="dark"] #owner-sign-in-modal .button-dark,
+html[data-theme="dark"] #owner-sign-in-modal .small-button,
+.dark-mode #owner-sign-in-modal .button-dark,
+.dark-mode #owner-sign-in-modal .small-button{
+ background:#8d3b30!important;color:#fff0d2!important;border-color:#c49a5a!important
+}
+html[data-theme="dark"] .site-header .owner-sign-in-button,
+.dark-mode .site-header .owner-sign-in-button{background:#8d3b30!important;color:#fff0d2!important;border-color:#c49a5a!important}
+html[data-theme="dark"] .site-header .primary-nav a,
+.dark-mode .site-header .primary-nav a{color:#f3e3c4!important}
+html[data-theme="dark"] .site-header .primary-nav a[aria-current="page"],
+html[data-theme="dark"] .site-header .primary-nav a:hover,
+.dark-mode .site-header .primary-nav a[aria-current="page"],
+.dark-mode .site-header .primary-nav a:hover{background:#8d3b30!important;color:#fff0d2!important}
