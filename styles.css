@@ -2260,3 +2260,6 @@ html.reduce-motion *,html.reduce-motion *:before,html.reduce-motion *:after{anim
   body.page-enter-active main>*{animation-duration:.8s}
   .primary-nav a:hover{transform:none}
 }
+
+/* Keep the canvas visible while the cinematic curtain travels across it. */
+body.page-leaving.page-leave{opacity:1!important;transform:none!important;transition:none!important}
