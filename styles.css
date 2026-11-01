@@ -3491,3 +3491,13 @@ html[data-theme="dark"] .eyebrow,body[data-theme="dark"] .eyebrow,html.theme-dar
 html[data-theme="dark"] #family-map,body[data-theme="dark"] #family-map,html.theme-dark #family-map,body.theme-dark #family-map{background:#211811}
 @media(min-width:1000px){.archive-page{max-width:1560px;margin-inline:auto;padding:clamp(2rem,4vw,4rem) clamp(1.5rem,4vw,4rem)}.chrono-main,.location-page{max-width:1560px}.record-card-expanded .record-preview img{max-height:420px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Ensure all interactive subpanels follow the same dark palette */
+html[data-theme="dark"] .chrono-record-card,html[data-theme="dark"] .location-records-panel,html[data-theme="dark"] .location-record,html[data-theme="dark"] .ancestor-card,html[data-theme="dark"] .chrono-record-notes,html[data-theme="dark"] .chrono-record-date,
+html[data-theme="dark"] .activity-log-section,html[data-theme="dark"] .activity-log-item,html[data-theme="dark"] .research-band,html[data-theme="dark"] .generation,html[data-theme="dark"] .folio-card,
+html[data-theme="dark"] .location-route-tools,html[data-theme="dark"] .location-record-body,html[data-theme="dark"] .chrono-year-heading,
+body[data-theme="dark"] .chrono-record-card,body[data-theme="dark"] .location-records-panel,body[data-theme="dark"] .location-record,body[data-theme="dark"] .ancestor-card,body[data-theme="dark"] .chrono-record-notes,body[data-theme="dark"] .chrono-record-date,
+body[data-theme="dark"] .activity-log-section,body[data-theme="dark"] .activity-log-item,body[data-theme="dark"] .research-band,body[data-theme="dark"] .generation,body[data-theme="dark"] .folio-card,
+body[data-theme="dark"] .location-route-tools,body[data-theme="dark"] .location-record-body,body[data-theme="dark"] .chrono-year-heading{background-color:#2a1c13!important;color:#ead9b7!important;border-color:#715332!important}
+html[data-theme="dark"] .chrono-record-card p,html[data-theme="dark"] .location-record p,html[data-theme="dark"] .ancestor-source,html[data-theme="dark"] .chrono-record-location,
+body[data-theme="dark"] .chrono-record-card p,body[data-theme="dark"] .location-record p,body[data-theme="dark"] .ancestor-source,body[data-theme="dark"] .chrono-record-location{color:#c0a77d!important}
