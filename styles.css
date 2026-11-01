@@ -2934,3 +2934,9 @@ body[data-page="archive"] .archive-folder-content.is-opening .records-list{
   .site-header .primary-nav{gap:.4rem!important;margin-right:0!important}
   .site-header .primary-nav a,.site-header .primary-nav .owner-sign-in-button{padding:.65rem .58rem!important}
 }
+
+
+/* Keep owner controls available without the large archive intro panel. */
+.archive-actions{display:flex;justify-content:flex-end;align-items:center;gap:.65rem;margin:.6rem 0 1rem;min-height:0}
+.archive-actions .owner-tools{display:flex;align-items:center;gap:.5rem}
+@media(max-width:700px){.archive-actions{justify-content:flex-start;flex-wrap:wrap}}
