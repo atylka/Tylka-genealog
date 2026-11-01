@@ -27,6 +27,9 @@
     const meta=document.querySelector('meta[name="theme-color"]');
     if(meta)meta.content=theme==="dark"?"#21130f":"#541522";
     document.body.classList.remove("theme-wave-dark","theme-wave-light");
+    const pageVeil=document.createElement("div");
+  pageVeil.id="tylka-page-veil";pageVeil.setAttribute("aria-hidden","true");
+  document.body.append(pageVeil);
     if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches&&getPref(motionKey,"full")!=="reduced"){
       const wave=theme==="dark"?"theme-wave-dark":"theme-wave-light";
       void document.body.offsetWidth;
