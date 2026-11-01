@@ -3436,3 +3436,12 @@ html[data-theme="dark"] body .site-header .site-menu-toggle{background:#38251e!i
   letter-spacing:.01em!important;
   line-height:1!important;
 }
+
+/* Final dark header correction: visibly lighter walnut, retaining oxblood warmth. */
+html[data-theme="dark"] body .site-header{background-color:#49352b!important;background-image:linear-gradient(100deg,#684c39 0%,#5d4232 43%,#51392d 72%,#493229 100%)!important;border-bottom:2px solid #c09a60!important;color:#f7e8ca!important}
+html[data-theme="dark"] body .site-header .wordmark,html[data-theme="dark"] body .site-header .wordmark strong,html[data-theme="dark"] body .site-header .wordmark small,html[data-theme="dark"] body .site-header .primary-nav a{color:#f7e8ca!important}
+html[data-theme="dark"] body .site-header .site-menu-toggle{background:#51392d!important;color:#f7e8ca!important;border-color:#c09a60!important}
+/* Match the header's complete logo animation to the footer's antique-ink animation. */
+.site-header .wordmark,.site-footer .footer-mark{animation:antique-ink 8s ease-in-out infinite!important}
+.site-header .wordmark .monogram,.site-footer .footer-mark .monogram{position:relative;overflow:hidden;animation:antique-ink 8s ease-in-out infinite!important}
+@media(prefers-reduced-motion:reduce){.site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}}
