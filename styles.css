@@ -2609,3 +2609,47 @@ body.dark-mode{
   .dark-mode .brand-banner{background-image:linear-gradient(115deg,#321916,#61291f 52%,#291714)}
 }
 @media(prefers-reduced-motion:reduce){body:before{display:none}}
+
+/* Match the reference parchment: fibrous tan paper, naturally darkened edges, no glossy gradients. */
+body{
+  background-color:#c9a779!important;
+  background-image:
+    radial-gradient(ellipse at 50% 42%,rgba(255,239,199,.40) 0%,rgba(230,201,151,.16) 56%,rgba(99,57,32,.22) 100%),
+    linear-gradient(90deg,rgba(99,57,32,.25),transparent 5%,transparent 95%,rgba(99,57,32,.25)),
+    repeating-linear-gradient(0deg,rgba(105,74,43,.035) 0px,rgba(105,74,43,.035) 1px,transparent 1px,transparent 4px),
+    linear-gradient(180deg,#ddc398 0%,#d2b184 38%,#c7a274 100%)!important;
+  background-attachment:fixed!important;
+}
+body:before{
+  opacity:.22!important;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035 .42' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='.48'/%3E%3C/svg%3E")!important;
+  background-size:240px 240px!important;
+  mix-blend-mode:multiply;
+}
+.paper-card,.record-card,.ancestor-card,.folio-card,.archive-folder,.location-item,
+.chrono-year-column,.chrono-record-card,.modal-card,.search-panel,.registry-panel{
+  background-color:rgba(240,222,187,.88)!important;
+  background-image:linear-gradient(135deg,rgba(255,246,218,.22),rgba(139,91,48,.055))!important;
+  border-color:rgba(128,83,47,.45)!important;
+}
+@media(min-width:900px){
+  body{background-color:#d0b184!important}
+  .paper-card,.record-card,.ancestor-card,.folio-card,.archive-folder,.location-item,
+  .chrono-year-column,.chrono-record-card,.modal-card,.search-panel,.registry-panel{
+    box-shadow:0 3px 12px rgba(73,45,26,.10)!important;
+  }
+}
+body.dark-mode{
+  background-color:#211814!important;
+  background-image:
+    radial-gradient(ellipse at 50% 35%,rgba(109,72,43,.24),transparent 66%),
+    repeating-linear-gradient(0deg,rgba(193,147,88,.025) 0px,rgba(193,147,88,.025) 1px,transparent 1px,transparent 4px),
+    linear-gradient(180deg,#30221b,#1d1411 100%)!important;
+}
+.dark-mode .paper-card,.dark-mode .record-card,.dark-mode .ancestor-card,.dark-mode .folio-card,
+.dark-mode .archive-folder,.dark-mode .location-item,.dark-mode .chrono-year-column,
+.dark-mode .chrono-record-card,.dark-mode .modal-card,.dark-mode .search-panel,.dark-mode .registry-panel{
+  background-color:rgba(48,34,27,.94)!important;
+  background-image:linear-gradient(135deg,rgba(194,145,79,.055),rgba(0,0,0,.08))!important;
+}
