@@ -2104,3 +2104,24 @@ html[data-theme="dark"] #family-map .registry-map-pin{
   border-color:#fff1d1;
   box-shadow:0 2px 6px rgba(0,0,0,.85),0 0 0 3px #d4a85f,0 0 20px rgba(220,164,83,.95);
 }
+
+
+/* Persistent label for the currently selected location pin. */
+#family-map .registry-location-label{
+  background:linear-gradient(135deg,#3a2118,#24130f)!important;
+  border:1px solid #d5ad68!important;
+  border-radius:999px!important;
+  color:#fff0d0!important;
+  font:600 12px/1.2 Georgia,serif!important;
+  letter-spacing:.02em;
+  padding:5px 10px!important;
+  box-shadow:0 3px 12px rgba(0,0,0,.55)!important;
+}
+#family-map .registry-location-label:before{
+  border-top-color:#d5ad68!important;
+}
+html[data-theme="light"] #family-map .registry-location-label{
+  background:#fff8e9!important;
+  color:#572a25!important;
+  border-color:#9c713c!important;
+}
