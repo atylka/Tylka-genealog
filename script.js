@@ -37,12 +37,12 @@
   if(header){
     const oldToggle=header.querySelector(".menu-toggle");
     const menuButton=oldToggle||document.createElement("button");
-    menuButton.className="menu-toggle site-menu-toggle";menuButton.type="button";menuButton.innerHTML='<span aria-hidden="true">☰</span>';menuButton.setAttribute("aria-label","Open site menu");menuButton.setAttribute("aria-expanded","false");
+    menuButton.className="menu-toggle site-menu-toggle";menuButton.type="button";menuButton.innerHTML='<span aria-hidden="true">⋮</span>';menuButton.setAttribute("aria-label","Open settings and site menu");menuButton.setAttribute("aria-expanded","false");
     const panel=document.createElement("div");panel.className="site-menu-panel";panel.id="site-menu-panel";panel.hidden=true;
     const settings=document.createElement("button");settings.type="button";settings.className="site-menu-action";settings.id="site-settings-open";settings.textContent="Settings";panel.append(settings);
     if(oldToggle)oldToggle.replaceWith(menuButton);else header.append(menuButton);
     header.append(panel);
-    menuButton.addEventListener("click",()=>{const open=menuButton.getAttribute("aria-expanded")==="true";menuButton.setAttribute("aria-expanded",String(!open));menuButton.setAttribute("aria-label",open?"Open site menu":"Close site menu");panel.hidden=open;});
+    menuButton.addEventListener("click",()=>{const open=menuButton.getAttribute("aria-expanded")==="true";menuButton.setAttribute("aria-expanded",String(!open));menuButton.setAttribute("aria-label",open?"Open settings and site menu":"Close site menu");panel.hidden=open;});
     panel.addEventListener("click",e=>{if(e.target.closest("a")){panel.hidden=true;menuButton.setAttribute("aria-expanded","false");}});
     document.addEventListener("click",e=>{if(!header.contains(e.target)){panel.hidden=true;menuButton.setAttribute("aria-expanded","false");}});
     const settingsModal=document.createElement("section");settingsModal.className="site-modal";settingsModal.id="site-settings-modal";settingsModal.hidden=true;settingsModal.setAttribute("role","dialog");settingsModal.setAttribute("aria-modal","true");settingsModal.innerHTML='<div class="modal-card"><button class="modal-close" type="button" aria-label="Close settings">×</button><p class="eyebrow">Display preferences</p><h2>Settings</h2><label for="site-theme-choice">Appearance</label><select id="site-theme-choice"><option value="light">Light mode</option><option value="dark">Dark mode</option></select><label for="site-size-choice">Text size</label><select id="site-size-choice"><option value="normal">Standard</option><option value="large">Large</option></select><label for="site-motion-choice">Animations</label><select id="site-motion-choice"><option value="full">On</option><option value="reduced">Reduced</option></select><p class="file-hint">These settings are saved on this device.</p></div>';
