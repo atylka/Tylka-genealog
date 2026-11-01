@@ -19,7 +19,7 @@
   function initMap(){
     if(map || !window.L) return;
     map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([48,8],3);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    L.tileLayer(document.documentElement.dataset.theme==="dark"||document.body.dataset.theme==="dark"?"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
   }
   function buildPlaces(records){
@@ -28,7 +28,7 @@
       const name=(record.location||"").trim();
       if(!name)return;
       const key=normalize(name);
-      if(!found.has(key))found.set(key,{name,lat:null,lng:null,context:"",records:[]});
+      if(!found.has(key))found.set(key,{name,lat:null,lng:null,context:name,records:[]});
       found.get(key).records.push(record);
     });
     return [...found.values()].sort((a,b)=>a.name.localeCompare(b.name));
@@ -53,7 +53,7 @@
     const key=normalize(place.name);
     if(coordinateCache.has(key))return coordinateCache.get(key);
     const request=(async()=>{
-      const response=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(place.name),{headers:{"Accept":"application/json"}});
+      const response=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(place.name),{headers:{"Accept":"application/json","Accept-Language":"en"}});
       if(!response.ok)throw new Error("The map service could not find this place right now.");
       const results=await response.json();
       if(!results.length)throw new Error("No map location found. Try adding a more specific town, region, and country to the record.");
