@@ -2704,7 +2704,6 @@ input,select,textarea{padding:.65rem .8rem}
 .detail-download-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:.8rem 0}.detail-download-actions button{padding:.7rem 1rem}
 .chrono-record-card{cursor:pointer}.chrono-record-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 
-/* Header contrast repair: light parchment at the wordmark, rich oxblood toward the right. */
 .site-header{
   background-color:#e7d2aa!important;
   background-image:linear-gradient(90deg,#ead8b7 0%,#d6b17b 24%,#9d5942 57%,#54271f 100%)!important;
@@ -2942,8 +2941,6 @@ body[data-page="archive"] .archive-folder-content.is-opening .records-list{
 @media(max-width:700px){.archive-actions{justify-content:flex-start;flex-wrap:wrap}}
 
 
-/* Refined heirloom palette: soften the deepest header shade and bring the banner
-   closer to the oxblood-red used by active navigation and folder buttons. */
 .dark-mode .site-header,
 .dark-mode .site-footer{
   background-image:linear-gradient(90deg,#493027 0%,#583329 34%,#733b30 66%,#3b2822 100%)!important;
@@ -3017,7 +3014,6 @@ html{scroll-behavior:auto!important}
 .motion-ripple,.archive-scroll-progress:after{display:none!important}
 
 
-/* Header gradient correction: lift the near-black end and keep the header oxblood-brown. */
 html[data-theme="dark"] .site-header,
 html[data-theme="dark"] .site-footer{
   background:
@@ -3026,7 +3022,6 @@ html[data-theme="dark"] .site-footer{
 }
 
 
-/* Research desk and record annotations: compact, theme-aware, reduced-motion friendly. */
 
 
 
@@ -3129,7 +3124,6 @@ html[data-theme="dark"] .site-footer{
 }
 
 
-/* Final dark-header gradient correction: lift the darkest end into warm walnut brown. */
 html[data-theme="dark"] .site-header,
 .dark-mode .site-header{
   background:
@@ -3185,7 +3179,6 @@ html[data-theme="dark"] .site-header,
 }
 
 
-/* Definitive dark header palette — high-contrast walnut, antique gold and oxblood. */
 html[data-theme="dark"] body .site-header{
   background-color:#594033!important;
   background-image:linear-gradient(100deg,rgba(185,128,76,.30) 0%,rgba(89,64,51,.10) 46%,rgba(117,42,43,.34) 100%),linear-gradient(180deg,#684b38 0%,#594033 58%,#4b3429 100%)!important;
