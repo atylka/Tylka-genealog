@@ -3044,3 +3044,95 @@ html.reduce-motion .research-desk-card{animation:none!important;transition:none!
 
 /* Installable Tylka app controls */
 .pwa-install-button{position:fixed;right:18px;bottom:18px;z-index:9998;padding:11px 17px;border:1px solid #b99558;border-radius:3px;background:linear-gradient(145deg,#543323,#2b1c18);color:#f0dfbb;font:600 .88rem Georgia,serif;letter-spacing:.03em;box-shadow:0 4px 16px rgba(0,0,0,.28);cursor:pointer}.pwa-install-button[hidden]{display:none}.pwa-install-button:hover{border-color:#e0c17d;background:#68412b}@media(prefers-reduced-motion:reduce){.pwa-install-button{transition:none!important}}
+
+
+/* Standalone phone app: compact, touch-friendly layouts without changing desktop web. */
+@media (display-mode:standalone) and (max-width:760px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{font-size:14px;line-height:1.48;padding-bottom:env(safe-area-inset-bottom)}
+  .site-header{min-height:58px;padding:.5rem .75rem;gap:.45rem;position:sticky;top:0;z-index:1100}
+  .wordmark{gap:.45rem;min-width:0}
+  .wordmark strong{font-size:1.05rem}
+  .wordmark small{font-size:.53rem;letter-spacing:.11em}
+  .monogram{width:32px;height:32px;font-size:1.25rem;flex:0 0 32px}
+  .site-menu-toggle{width:40px;height:38px;font-size:1.35rem}
+  .site-menu-panel{position:fixed;top:calc(58px + env(safe-area-inset-top));right:.5rem;width:min(300px,calc(100vw - 1rem));max-height:calc(100dvh - 76px);overflow:auto}
+  .site-header .primary-nav{display:none!important}
+  .brand-banner{padding:1.15rem .9rem!important;min-height:0!important}
+  .brand-banner-inner{padding:0!important}
+  .brand-banner-kicker{font-size:.62rem;margin:0 0 .25rem}
+  .brand-banner h1,.brand-banner-inner h1{font-size:clamp(1.65rem,8vw,2.35rem);line-height:1.08;margin:0}
+  .archive-page,.chrono-main,.location-page,.ancestor-page{width:100%;max-width:none;margin:0 auto;padding:1rem .8rem 2rem}
+  .section-intro{margin:.25rem 0 .9rem!important}
+  .section-intro h1,.archive-page>h1,.chrono-main h1,.location-page h1,.ancestor-page h1{font-size:clamp(1.65rem,7vw,2.25rem);line-height:1.12;margin:.1rem 0 .4rem}
+  .section-intro p,.section-intro .intro-text{font-size:.86rem;line-height:1.4;margin:.35rem 0}
+  .eyebrow{font-size:.59rem;letter-spacing:.12em;margin-bottom:.35rem}
+  h2{font-size:1.35rem}
+  h3{font-size:1.08rem}
+  .button,.small-button,.archive-actions button,.archive-actions a{min-height:40px;padding:.55rem .72rem;font-size:.82rem}
+  input,select,textarea{font-size:16px!important;max-width:100%;min-width:0}
+  .archive-actions{gap:.4rem;margin:.35rem 0 .7rem}
+  .archive-actions .owner-tools{gap:.35rem;flex-wrap:wrap}
+  .folder-archive-layout{display:flex;flex-direction:column;gap:.65rem;margin:.7rem 0}
+  .archive-folders{position:static;width:100%;padding:.55rem;overflow:visible}
+  .archive-folders h3{font-size:1.05rem;margin:.1rem 0 .35rem}
+  .archive-folders .eyebrow,.archive-folders .cabinet-hint{display:none}
+  .archive-folder-list,.archive-folders-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem}
+  .archive-folder{min-width:0;margin:0;padding:.62rem .55rem;font-size:.78rem;line-height:1.2;border:1px solid var(--line);overflow-wrap:anywhere}
+  .archive-folder:before{margin-right:.35rem}
+  .archive-folder-content{width:100%;min-width:0;padding:.7rem!important}
+  .records-heading{gap:.4rem;flex-wrap:wrap}
+  .records-heading h2{font-size:1.2rem}
+  .record-filters{display:grid;grid-template-columns:1fr;gap:.4rem}
+  .records-list{grid-template-columns:1fr!important;gap:.6rem}
+  .record-card,.paper-card,.folio-card{min-width:0}
+  .chrono-filter-panel{margin:.65rem 0;padding:.7rem}
+  .chrono-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+  .chrono-filter-grid label{font-size:.72rem}
+  .chrono-filter-grid input,.chrono-filter-grid select{min-height:42px;padding:.5rem;font-size:16px}
+  .chrono-filter-footer{align-items:stretch;flex-direction:column;gap:.45rem}
+  .chrono-timeline{min-height:0;gap:.55rem;padding:.6rem 0 1rem}
+  .chrono-year-column{flex-basis:min(78vw,270px);padding:.65rem}
+  .location-toolbar{display:block;margin:.7rem 0}
+  .location-toolbar h2{font-size:1.3rem}
+  .location-layout{grid-template-columns:minmax(0,1fr);gap:.6rem}
+  .location-sidebar,.map-panel,.location-records-panel{padding:.65rem;min-width:0}
+  .location-list{max-height:190px;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem}
+  .location-item{padding:.55rem;font-size:.8rem;min-width:0}
+  .location-item strong{font-size:.88rem;overflow-wrap:anywhere}
+  #family-map{height: min(48vh,340px);min-height:230px}
+  .location-route-tools{display:flex;flex-wrap:wrap;gap:.35rem}
+  .location-records-panel{margin-top:.1rem}
+  .ancestor-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+  .ancestor-card-body{padding:.55rem}
+  .ancestor-card-body h3{font-size:.95rem}
+  .ancestor-source{font-size:.75rem}
+  .site-footer{padding:1rem .8rem;font-size:.75rem}
+  .site-footer .footer-end{display:none}
+  .site-modal{padding:.4rem!important;align-items:flex-end!important}
+  .modal-card,.modal-wide,.record-detail-card{width:100%!important;max-width:none!important;max-height:92dvh!important;margin:0!important;padding:.85rem!important;overflow:auto!important;border-radius:8px 8px 0 0}
+  .modal-card h2,.record-detail-card h2{font-size:1.35rem}
+  .record-detail-grid,.form-grid{grid-template-columns:minmax(0,1fr)!important;gap:.55rem}
+  .record-form-section{padding:.65rem}
+  .record-form-section-heading{gap:.35rem}
+  .detail-image-viewport{max-height:42vh}
+  .research-desk-button{right:.55rem;bottom:calc(.55rem + env(safe-area-inset-bottom));max-width:calc(100vw - 1.1rem);font-size:.78rem}
+  .research-desk-card{width:calc(100vw - 1rem)!important;max-width:none!important;max-height:86dvh!important;overflow:auto!important;padding:.7rem!important}
+  .research-comparison-table{font-size:.7rem}
+  .pwa-install-button{right:.55rem;bottom:calc(.55rem + env(safe-area-inset-bottom));font-size:.78rem;padding:.6rem .8rem}
+  .connection-status{font-size:.72rem}
+  .activity-log-list{gap:.45rem}
+}
+@media (display-mode:standalone) and (max-width:380px){
+  .archive-folder-list,.archive-folders-list{grid-template-columns:1fr 1fr}
+  .chrono-filter-grid{grid-template-columns:1fr}
+  .location-list{grid-template-columns:1fr}
+  .ancestor-grid{grid-template-columns:1fr 1fr}
+  .wordmark small{letter-spacing:.07em}
+}
+@media (display-mode:standalone) and (orientation:landscape) and (max-height:500px){
+  .site-header{position:relative}
+  .location-layout{grid-template-columns:minmax(180px,35%) minmax(0,1fr)}
+  #family-map{height:55vh;min-height:180px}
+  .modal-card,.modal-wide,.record-detail-card{max-height:88dvh!important}
+}
