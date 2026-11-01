@@ -1607,3 +1607,171 @@ html[data-theme="dark"] .location-item:hover{background:#3b211b!important;border
 body.theme-wave-dark:after{
  background:linear-gradient(180deg,#10090b 0%,#351019 42%,#1d120e 76%,#100c0a 100%)!important
 }
+
+
+/* FINAL DARK THEME OVERRIDES — one walnut, brass, and oxblood system across every page. */
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#130e0c;
+  --paper-light:#211713;
+  --paper-dark:#0b0807;
+  --ink:#f2e5ce;
+  --muted:#c2aa88;
+  --line:#705437;
+  --accent:#d7b16b;
+  --accent-dark:#390d18;
+  --wine:#4a0d1b;
+  --surface-raised:#2d1d15;
+  --surface-soft:#1a120e;
+  background:#130e0c!important;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .archive-page,
+html[data-theme="dark"] .hero,
+html[data-theme="dark"] .section,
+html[data-theme="dark"] .chrono-page,
+html[data-theme="dark"] .ancestor-page{
+  background:#130e0c!important;color:var(--ink)!important;
+}
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .site-footer,
+html[data-theme="dark"] .archive-toolbar,
+html[data-theme="dark"] .records-heading{
+  background:#1a120e!important;color:var(--ink)!important;border-color:var(--line)!important;
+}
+html[data-theme="dark"] .chronology-section,
+html[data-theme="dark"] .activity-log-section{
+  background:#1b120e!important;color:var(--ink)!important;
+}
+html[data-theme="dark"] .research-band,
+html[data-theme="dark"] .ticker{
+  background:#300b15!important;color:#f0d8a9!important;border-color:#76502f!important;
+}
+html[data-theme="dark"] .folio-card,
+html[data-theme="dark"] .paper-card,
+html[data-theme="dark"] .auth-card,
+html[data-theme="dark"] .upload-card,
+html[data-theme="dark"] .home-search-box,
+html[data-theme="dark"] .archive-folders,
+html[data-theme="dark"] .archive-folder-content,
+html[data-theme="dark"] .location-sidebar,
+html[data-theme="dark"] .map-panel,
+html[data-theme="dark"] .modal-card,
+html[data-theme="dark"] .site-menu-panel,
+html[data-theme="dark"] .record-card,
+html[data-theme="dark"] .inbox-item,
+html[data-theme="dark"] .activity-log-item,
+html[data-theme="dark"] .notice,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .generation,
+html[data-theme="dark"] .generation.current,
+html[data-theme="dark"] .record-detail-panel,
+html[data-theme="dark"] .ancestor-card{
+  background:#211713!important;color:var(--ink)!important;border-color:var(--line)!important;
+}
+html[data-theme="dark"] .generation,
+html[data-theme="dark"] .timeline-item,
+html[data-theme="dark"] .location-item,
+html[data-theme="dark"] .archive-folder,
+html[data-theme="dark"] .record-location,
+html[data-theme="dark"] .location-record{
+  background:#291b14!important;color:var(--ink)!important;border-color:var(--line)!important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .search-fields input,
+html[data-theme="dark"] .search-fields select,
+html[data-theme="dark"] .auth-card input,
+html[data-theme="dark"] .upload-card input,
+html[data-theme="dark"] .upload-card select,
+html[data-theme="dark"] .upload-card textarea,
+html[data-theme="dark"] .record-filters input,
+html[data-theme="dark"] .record-filters select,
+html[data-theme="dark"] .modal-card input{
+  background:#100b09!important;color:#f2e5ce!important;border-color:#765a39!important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#a88c68!important}
+html[data-theme="dark"] .button-dark,
+html[data-theme="dark"] .site-header>.site-menu-toggle,
+html[data-theme="dark"] .site-menu-action:hover,
+html[data-theme="dark"] .site-header>.site-menu-toggle[aria-expanded="true"]{
+  background:#390d18!important;color:#f4e4c7!important;border-color:#b58a4b!important;
+}
+html[data-theme="dark"] .small-button,
+html[data-theme="dark"] .button,
+html[data-theme="dark"] button,
+html[data-theme="dark"] .site-menu-action,
+html[data-theme="dark"] .site-menu-nav a{
+  color:var(--ink);border-color:var(--line);
+}
+html[data-theme="dark"] .button:hover,
+html[data-theme="dark"] button:hover,
+html[data-theme="dark"] .small-button:hover,
+html[data-theme="dark"] .archive-folder:hover,
+html[data-theme="dark"] .archive-folder.is-active,
+html[data-theme="dark"] .location-item:hover,
+html[data-theme="dark"] .location-item.is-selected,
+html[data-theme="dark"] .record-card:hover,
+html[data-theme="dark"] .paper-card:hover{
+  background:#451421!important;color:#f7e7c8!important;border-color:#c49a5c!important;
+}
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] .wordmark strong,
+html[data-theme="dark"] .record-title{color:var(--ink)!important}
+html[data-theme="dark"] p,
+html[data-theme="dark"] li,
+html[data-theme="dark"] .wordmark small,
+html[data-theme="dark"] .hero-text,
+html[data-theme="dark"] .section-intro,
+html[data-theme="dark"] .file-hint,
+html[data-theme="dark"] .field-hint,
+html[data-theme="dark"] .connection-status,
+html[data-theme="dark"] .record-card p,
+html[data-theme="dark"] .activity-log-by,
+html[data-theme="dark"] .activity-log-time{color:var(--muted)}
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .folio-label,
+html[data-theme="dark"] .record-category,
+html[data-theme="dark"] .timeline-date,
+html[data-theme="dark"] .folder-number,
+html[data-theme="dark"] .monogram,
+html[data-theme="dark"] .search-label,
+html[data-theme="dark"] .location-record-heading{color:var(--accent)!important}
+html[data-theme="dark"] .rule,
+html[data-theme="dark"] .timeline,
+html[data-theme="dark"] .timeline-item,
+html[data-theme="dark"] .archive-grid,
+html[data-theme="dark"] .site-footer,
+html[data-theme="dark"] .site-header{border-color:var(--line)!important}
+html[data-theme="dark"] #family-map{background:#160f0c!important}
+html[data-theme="dark"] .record-preview{background:#2b1c14!important;border-color:var(--line)!important}
+html[data-theme="dark"] a:hover{color:#e7c47f}
+
+/* The theme reveal travels downward with a soft, irregular wave edge. */
+body.theme-wave-dark:after,
+body.theme-wave-light:after{
+  content:"";position:fixed;z-index:9998;inset:0;pointer-events:none;
+  clip-path:polygon(0 0,100% 0,100% 0,0 0);
+  animation:tylka-theme-wave 1.15s cubic-bezier(.65,0,.25,1) both;
+}
+body.theme-wave-dark:after{
+  background:linear-gradient(180deg,#10090b 0%,#390d18 34%,#251711 72%,#100b09 100%)!important;
+}
+body.theme-wave-light:after{
+  background:linear-gradient(180deg,#fff8ed 0%,#e8d3b2 55%,#fff8ed 100%)!important;
+}
+@keyframes tylka-theme-wave{
+  0%{clip-path:polygon(0 0,100% 0,100% 0,0 0);opacity:1}
+  48%{clip-path:polygon(0 0,100% 0,100% 48%,92% 45%,84% 49%,76% 46%,68% 50%,60% 47%,52% 51%,44% 48%,36% 52%,28% 49%,20% 53%,12% 50%,0 54%);opacity:1}
+  100%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  body.theme-wave-dark:after,body.theme-wave-light:after{display:none!important}
+}
