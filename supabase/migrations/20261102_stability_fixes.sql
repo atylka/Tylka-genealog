@@ -8,8 +8,7 @@ create table if not exists public.ancestor_portraits (
   source_record_id uuid null references public.archive_records(id) on delete set null,
   source_title text,
   updated_at timestamptz not null default now(),
-  created_by uuid null references auth.users(id) on delete set null,
-
+  created_by uuid null references auth.users(id) on delete set null
 );
 alter table public.ancestor_portraits enable row level security;
 drop policy if exists "Public can read ancestor portraits" on public.ancestor_portraits;
