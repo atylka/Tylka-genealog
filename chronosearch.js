@@ -8,13 +8,13 @@
  function recordYear(record){
   const description=record.description||"";
   const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
-  return findYear(labeled?.[1])||findYear(record.title)||findYear(description);
+  return findYear(record.record_date)||findYear(labeled?.[1])||findYear(record.title)||findYear(description);
  }
  function showRecordPopup(r){let modal=document.getElementById("chrono-record-popup");if(!modal){modal=node("section","","site-modal chrono-record-popup");modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.innerHTML=`<div class="modal-card modal-wide"><button type="button" class="modal-close" aria-label="Close">×</button><p class="eyebrow">Record detail</p><h2 class="popup-title"></h2><p class="popup-meta"></p><div class="popup-image"></div><pre class="popup-description"></pre><button type="button" class="small-button popup-download">Download record image</button></div>`;document.body.append(modal);modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".modal-close"))modal.hidden=true;});}modal.querySelector(".popup-title").textContent=r.title||"Untitled record";modal.querySelector(".popup-meta").textContent=[names[r.category]||r.category,r.location||"Location not entered"].filter(Boolean).join(" · ");modal.querySelector(".popup-description").textContent=r.description||"No transcription or notes have been added.";const box=modal.querySelector(".popup-image");box.replaceChildren();const download=modal.querySelector(".popup-download");download.hidden=!(r.file_path&&(r.mime_type||"").startsWith("image/"));download.onclick=async()=>{const url=publicUrl(r.file_path);try{const response=await fetch(url);const blob=await response.blob();const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=r.file_name||"record-image";a.click();URL.revokeObjectURL(a.href);}catch{window.open(url,"_self");}};if(r.file_path&&(r.mime_type||"").startsWith("image/")){const img=node("img");img.src=publicUrl(r.file_path);img.alt=r.title||"Record image";img.style.cssText="max-width:100%;max-height:65vh;object-fit:contain";box.append(img);}else if(r.file_path){box.append(node("p","This attachment is not an image preview."));}modal.hidden=false;}
  function render(records){
   const loc=locationInput.value.trim().toLocaleLowerCase(),person=personInput.value.trim().toLocaleLowerCase(),folder=folderInput.value,year=yearInput.value;
   const filtered=records.filter(r=>{
-   const text=[r.title,r.description,r.file_name].join(" ").toLocaleLowerCase();
+   const text=[r.title,r.description,r.file_name,r.persons_mentioned].join(" ").toLocaleLowerCase();
    return (!loc||(r.location||"").toLocaleLowerCase().includes(loc))&&(!person||text.includes(person))&&(folder==="all"||r.category===folder)&&(year==="all"||String(recordYear(r)||"undated")===year);
   });
   count.textContent=filtered.length+" of "+records.length+" records · "+new Set(filtered.map(recordYear).filter(Boolean)).size+" years represented";
@@ -45,7 +45,7 @@
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
   client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
-  const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
+  const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
   // Deduplicate rows by record id so duplicate database results cannot create duplicate cards or thumbnails.
   const seenIds=new Set();
