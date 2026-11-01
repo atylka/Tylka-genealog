@@ -1906,3 +1906,156 @@ html[data-theme="dark"] body::before{
 @media(prefers-reduced-motion:reduce){
   html[data-theme="dark"] body::before{animation:none!important;opacity:.15}
 }
+
+
+/* Complete dark-mode pass for ChronoSearch and the Location Registry. */
+html[data-theme="dark"] body.chronosearch-page,
+html[data-theme="dark"] body:has(.location-page){
+  color:#f0e2c9!important;
+}
+html[data-theme="dark"] .chronosearch-page .chrono-main,
+html[data-theme="dark"] .location-page,
+html[data-theme="dark"] .location-page #location-workspace{
+  color:#f0e2c9!important;
+}
+html[data-theme="dark"] .chrono-main *,
+html[data-theme="dark"] .location-page *:not(img):not(svg):not(path){
+  color:#f0e2c9!important;
+}
+html[data-theme="dark"] .chrono-filter-panel,
+html[data-theme="dark"] .chrono-year-column,
+html[data-theme="dark"] .chrono-record-card,
+html[data-theme="dark"] .location-sidebar,
+html[data-theme="dark"] .map-panel,
+html[data-theme="dark"] .location-records-panel,
+html[data-theme="dark"] .location-route-tools,
+html[data-theme="dark"] .location-detail,
+html[data-theme="dark"] .location-record,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .notice{
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(177,119,57,.10),transparent 58%),
+    linear-gradient(145deg,#2a1b14 0%,#1c130f 58%,#281319 100%)!important;
+  background-color:#211611!important;
+  border-color:rgba(177,135,78,.48)!important;
+  color:#f0e2c9!important;
+  box-shadow:inset 0 1px rgba(239,203,139,.07),0 8px 22px rgba(0,0,0,.24);
+}
+html[data-theme="dark"] .chrono-filter-grid label,
+html[data-theme="dark"] .chrono-year-heading h2,
+html[data-theme="dark"] .chrono-record-location,
+html[data-theme="dark"] .location-record-heading,
+html[data-theme="dark"] .location-page .eyebrow{
+  color:#dfb86f!important;
+}
+html[data-theme="dark"] .chrono-year-heading span,
+html[data-theme="dark"] .chrono-record-card p,
+html[data-theme="dark"] .chrono-scroll-hint,
+html[data-theme="dark"] .chrono-filter-footer,
+html[data-theme="dark"] .location-page .connection-status,
+html[data-theme="dark"] .location-page .map-caption,
+html[data-theme="dark"] .location-page .location-item small,
+html[data-theme="dark"] .location-page .location-record small,
+html[data-theme="dark"] .location-page .location-record p{
+  color:#c9b99f!important;
+}
+html[data-theme="dark"] .chrono-filter-grid input,
+html[data-theme="dark"] .chrono-filter-grid select,
+html[data-theme="dark"] .location-page input,
+html[data-theme="dark"] .location-page select,
+html[data-theme="dark"] .location-page textarea{
+  background:linear-gradient(145deg,#100b09,#1d120e 72%,#1b0e12)!important;
+  color:#f4e7d1!important;
+  border-color:#8a6840!important;
+  caret-color:#e2bd77;
+}
+html[data-theme="dark"] .chrono-filter-grid input::placeholder,
+html[data-theme="dark"] .location-page input::placeholder{
+  color:#b6a184!important;
+}
+html[data-theme="dark"] .chrono-year-column:before{
+  background:#2a1b14!important;
+  border-color:#d2a45d!important;
+}
+html[data-theme="dark"] .chrono-record-card .record-thumbnail{
+  background:linear-gradient(135deg,#21160f,#32151b)!important;
+  border-color:#765634!important;
+}
+html[data-theme="dark"] .chrono-record-card .record-thumbnail-placeholder{
+  color:#e2c58e!important;
+}
+html[data-theme="dark"] .chrono-record-card .record-filename{
+  border-color:rgba(177,135,78,.4)!important;
+}
+html[data-theme="dark"] .location-page .location-item{
+  background:linear-gradient(135deg,#2c1d15,#241419)!important;
+  border-color:#765634!important;
+  color:#f0e2c9!important;
+}
+html[data-theme="dark"] .location-page .location-item:hover,
+html[data-theme="dark"] .location-page .location-item.is-selected{
+  background:linear-gradient(135deg,#54202a,#35131b)!important;
+  border-color:#c49a5c!important;
+}
+html[data-theme="dark"] .chrono-timeline{
+  scrollbar-color:#a77b45 #211611!important;
+}
+html[data-theme="dark"] .chrono-timeline:before{
+  background:linear-gradient(90deg,#b58b50,#7d2936,#b58b50)!important;
+}
+html[data-theme="dark"] .chrono-ornament,
+html[data-theme="dark"] .chrono-ornament span{
+  color:#d5ae6b!important;
+}
+html[data-theme="dark"] .location-page .text-link,
+html[data-theme="dark"] .chrono-main .text-link{
+  color:#e0b96f!important;
+}
+html[data-theme="dark"] .location-page button,
+html[data-theme="dark"] .chrono-main button{
+  color:#f3e5cd!important;
+  border-color:#947044!important;
+}
+html[data-theme="dark"] .location-page button:hover,
+html[data-theme="dark"] .chrono-main button:hover{
+  background:linear-gradient(135deg,#63202a,#351019)!important;
+  color:#fff0d4!important;
+}
+
+/* Leaflet controls, popups, and attribution use the same dark walnut palette. */
+html[data-theme="dark"] #family-map{
+  background:#120d0b!important;
+  border-color:#765634!important;
+}
+html[data-theme="dark"] #family-map .leaflet-control-zoom a,
+html[data-theme="dark"] #family-map .leaflet-bar a,
+html[data-theme="dark"] #family-map .leaflet-control-layers,
+html[data-theme="dark"] #family-map .leaflet-control-attribution{
+  background:rgba(30,20,15,.96)!important;
+  color:#ead8b8!important;
+  border-color:#765634!important;
+}
+html[data-theme="dark"] #family-map .leaflet-control-zoom a:hover,
+html[data-theme="dark"] #family-map .leaflet-bar a:hover{
+  background:#4a1922!important;
+  color:#ffe9c4!important;
+}
+html[data-theme="dark"] #family-map .leaflet-popup-content-wrapper,
+html[data-theme="dark"] #family-map .leaflet-popup-tip{
+  background:#241711!important;
+  color:#f0e2c9!important;
+  border:1px solid #8a6840!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+html[data-theme="dark"] #family-map .leaflet-popup-content{
+  color:#f0e2c9!important;
+}
+html[data-theme="dark"] #family-map .leaflet-popup-close-button{
+  color:#dfb86f!important;
+}
+html[data-theme="dark"] #family-map .leaflet-control-attribution a{
+  color:#dfb86f!important;
+}
+html[data-theme="dark"] #family-map .leaflet-container{
+  background:#120d0b!important;
+}
