@@ -18,8 +18,8 @@
   function escapeText(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function initMap(){
     if(map || !window.L) return;
-    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:true,markerZoomAnimation:false}).setView([48,8],3);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,keepBuffer:2,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([48,8],3);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
   }
   function buildPlaces(records){
@@ -84,7 +84,7 @@
         .openPopup();
       map.stop();
       map.invalidateSize();
-      map.flyTo([lat,lng],13,{animate:true,duration:0.85});
+      map.setView([lat,lng],13,{animate:false});
       marker.setZIndexOffset(2000);
       const heading=document.createElement("h3");heading.textContent=place.name;
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
@@ -102,8 +102,8 @@
         if(record.description){const note=document.createElement("p");note.textContent=record.description;body.append(note);}
         if(record.file_path && record.mime_type && record.mime_type.startsWith("image/")){
           const preview=document.createElement("div");preview.className="record-preview";
-          const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";preview.append(image);body.append(preview);
-          image.src=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;
+          const image=document.createElement("img");image.alt="Preview of "+record.title;image.loading="lazy";image.decoding="async";image.dataset.pendingSrc=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;preview.append(image);body.append(preview);
+          card.addEventListener("toggle",()=>{if(card.open&&image.dataset.pendingSrc){image.src=image.dataset.pendingSrc;delete image.dataset.pendingSrc;}},{once:false});
         }
         if(record.file_path){
           const link=document.createElement("a");link.className="text-link";link.href=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open original file";body.append(link);
@@ -132,7 +132,8 @@
     client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}));
     const {data:{session}}=await client.auth.getSession();currentUser=session?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?session.user:null;await loadRegistry();
     client.auth.onAuthStateChange((_event,s)=>{currentUser=s?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?s.user:null;loadRegistry();});
-    document.addEventListener("tylka:auth-changed",async()=>{const {data:{session:now}}=await client.auth.getSession();currentUser=now?.user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?now.user:null;loadRegistry();});
+    // The Supabase auth listener above already refreshes owner state.
+    // Avoid a duplicate location query when site-ui broadcasts the same event.
   }
   search.addEventListener("input",renderList);
   start();
