@@ -17,7 +17,7 @@
   const metadata = () => safeRead(KEYS.metadata, {});
   const recent = () => safeRead(KEYS.recent, []);
   const clean = value => String(value || "").trim();
-  const keyFor = record => [record.title, record.category, record.location].map(clean).join("|").toLocaleLowerCase();
+  const keyFor = record => [record.title, record.location].map(clean).join("|").toLocaleLowerCase();
   const recordFromCard = card => {
     const title = clean(card.querySelector("h2,h3,h4,.popup-title")?.textContent) || clean(card.getAttribute("aria-label")).replace(/^Open record:\s*/i, "");
     const text = clean(card.innerText);
@@ -57,12 +57,13 @@
   button.className = "research-desk-button"; button.type = "button"; button.textContent = "Researcher's Desk"; button.setAttribute("aria-haspopup","dialog");
   const overlay = document.createElement("section");
   overlay.className = "research-desk-panel"; overlay.hidden = true; overlay.setAttribute("role","dialog"); overlay.setAttribute("aria-modal","true"); overlay.setAttribute("aria-label","Researcher's Desk");
-  overlay.innerHTML = '<div class="research-desk-card"><div class="research-desk-head"><div><p class="eyebrow">Tylka Genealogical Log</p><h2>Researcher\'s Desk</h2></div><button class="research-desk-close" type="button" aria-label="Close">×</button></div><div class="research-desk-tabs" role="tablist"><button type="button" data-tab="search" aria-pressed="true">Search</button><button type="button" data-tab="pinned" aria-pressed="false">Pinned records</button><button type="button" data-tab="recent" aria-pressed="false">Recently viewed</button><button type="button" data-tab="compare" aria-pressed="false">Compare</button></div><div class="research-desk-content"></div><p class="research-desk-note">Pins, research statuses, source notes, and recent history are saved in this browser only.</p></div>';
+  overlay.innerHTML = '<div class="research-desk-card"><div class="research-desk-head"><div><p class="eyebrow">Tylka Genealogical Log</p><h2>Researcher\'s Desk</h2></div><button class="research-desk-close" type="button" aria-label="Close">×</button></div><div class="research-desk-tabs" role="tablist"><button type="button" data-tab="search" aria-pressed="true">Search</button><button type="button" data-tab="pinned" aria-pressed="false">Pinned records</button><button type="button" data-tab="recent" aria-pressed="false">Recently viewed</button><button type="button" data-tab="compare" aria-pressed="false">Compare</button><button type="button" data-tab="investigations" aria-pressed="false">Investigations</button></div><div class="research-desk-content"></div><p class="research-desk-note">Pins, research statuses, source notes, and recent history are saved in this browser only.</p></div>';
   document.body.append(button, overlay);
   const content = overlay.querySelector(".research-desk-content");
   let tab = "search", allRecords = [], compareKeys = [];
   const el = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
   const action = (label, fn) => { const b=el("button",label);b.type="button";b.addEventListener("click",fn);return b; };
+  function accessionFor(record) { let hash=2166136261; for(const ch of record.key){hash^=ch.charCodeAt(0);hash=Math.imul(hash,16777619);}return (hash>>>0).toString(10).padStart(10,"0").slice(-6); }
   function noteFor(record) { return metadata()[record.key] || {status:"Needs Research", repository:"", sourceUrl:"", archiveRef:"", notes:"", people:""}; }
   function updateMeta(record, patch) { const all=metadata(); all[record.key]={...noteFor(record),...patch,title:record.title,category:record.category,location:record.location};safeWrite(KEYS.metadata,all); }
   function remember(record) { if(!record.title)return;const list=recent().filter(x=>x.key!==record.key);list.unshift({...record,visitedAt:new Date().toISOString()});safeWrite(KEYS.recent,list.slice(0,8)); }
@@ -77,7 +78,9 @@
     const status=action("Research status",()=>{openDesk("status",record);});
     const source=action("Source details",()=>{openDesk("source",record);});
     const compare=action("Compare",()=>{const keys=compareKeys.filter(k=>k!==record.key);if(keys.length>=2)keys.shift();compareKeys=[...keys,record.key];renderDesk("compare");overlay.hidden=false;});
-    tools.append(pin,status,source,compare);card.append(tools);
+    const copy=action("Copy citation",async()=>{const m=noteFor(record);const citation=[record.title,record.category,record.location,m.repository,m.archiveRef,m.sourceUrl].filter(Boolean).join(". ")+ ".";try{await navigator.clipboard.writeText(citation);copy.textContent="Citation copied";}catch(_){window.prompt("Copy this citation:",citation);}});
+    const accession=el("span","TYLKA · "+accessionFor(record),"research-accession");
+    tools.append(pin,status,source,compare,copy);card.append(accession,tools);
     card.addEventListener("click",event=>{if(event.target.closest(".research-card-tools"))return;remember(record);},{capture:true});
   }
   function renderCards() {
@@ -115,6 +118,7 @@
   }
   function renderPinned(){content.replaceChildren();const records=pins();if(!records.length){content.append(el("p","No pinned records yet. Use ☆ Pin on a record card to save it here.","empty-state"));return;}const list=el("div",undefined,"research-desk-results");records.forEach(r=>list.append(itemFor(r)));content.append(list);}
   function renderRecent(){content.replaceChildren();const records=recent();if(!records.length){content.append(el("p","Records you open will appear here.","empty-state"));return;}const list=el("div",undefined,"research-desk-results");records.forEach(r=>list.append(itemFor(r)));content.append(list);}
+  function renderInvestigations(){content.replaceChildren();const records=allRecords.filter(r=>["Uncertain","Needs Research","Probable"].includes(noteFor(r).status));if(!records.length){content.append(el("p","No active investigations yet. Add a status to a record to track follow-up research.","empty-state"));return;}const list=el("div",undefined,"research-desk-results");records.forEach(r=>list.append(itemFor(r)));content.append(list);}
   function renderCompare(){content.replaceChildren();const records=compareKeys.map(k=>allRecords.find(r=>r.key===k)||pins().find(r=>r.key===k)||recent().find(r=>r.key===k)).filter(Boolean);if(records.length<2){content.append(el("p","Choose up to two records using Compare to see their details side by side.","empty-state"));const list=el("div",undefined,"research-desk-results");allRecords.slice(0,20).forEach(r=>list.append(itemFor(r)));content.append(list);return;}const table=el("table");table.className="research-comparison-table";const fields=[["Title",r=>r.title],["Record type",r=>r.category],["Location",r=>r.location],["Persons mentioned",r=>r.persons_mentioned||noteFor(r).people],["Date / year",r=>{const m=(r.text||r.description||"").match(/\b(?:1[5-9]\d{2}|20\d{2})\b/);return m?m[0]:"Not recorded"}],["Research status",r=>noteFor(r).status],["Repository",r=>noteFor(r).repository],["Archive reference",r=>noteFor(r).archiveRef],["Research notes",r=>noteFor(r).notes]];fields.forEach(([label,get])=>{const row=table.insertRow();row.insertCell().textContent=label;records.forEach(r=>row.insertCell().textContent=get(r)||"—");});content.append(table);}
   function renderEditor(record,mode) {
     content.replaceChildren();const heading=el("h3",record.title||"Record details");content.append(heading);
@@ -135,7 +139,7 @@
   }
   function renderDesk(forceTab) {
     if(forceTab)tab=forceTab;overlay.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tab===tab)));
-    if(tab==="search")renderSearch();else if(tab==="pinned")renderPinned();else if(tab==="recent")renderRecent();else if(tab==="compare")renderCompare();
+    if(tab==="search")renderSearch();else if(tab==="pinned")renderPinned();else if(tab==="recent")renderRecent();else if(tab==="compare")renderCompare();else if(tab==="investigations")renderInvestigations();
   }
   function openDesk(mode,record) {
     if(record){remember(record);renderEditor(record,mode==="source"?"source":"status");}
