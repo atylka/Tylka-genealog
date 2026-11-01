@@ -3142,3 +3142,15 @@ html.reduce-motion .research-desk-card{animation:none!important;transition:none!
   .archive-folders>h3,.archive-folders>.eyebrow,.archive-folders>.cabinet-hint{grid-column:1/-1}
   .archive-folders>.archive-folder{width:100%;min-width:0}
 }
+
+
+/* Final dark-header gradient correction: lift the darkest end into warm walnut brown. */
+html[data-theme="dark"] .site-header,
+.dark-mode .site-header{
+  background:
+    linear-gradient(105deg,rgba(164,103,62,.22),transparent 44%,rgba(125,48,47,.22)),
+    linear-gradient(180deg,#594033 0%,#50372b 52%,#493126 100%)!important;
+  background-color:#493126!important;
+  border-bottom-color:#96734d!important;
+  color:#f3e3c4!important;
+}
