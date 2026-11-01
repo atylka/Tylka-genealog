@@ -76,7 +76,7 @@
         document.body.classList.add("page-leaving","page-leave");
         const veil=document.getElementById("tylka-page-veil");
         if(veil)veil.classList.add("is-active");
-        setTimeout(()=>{location.href=link.href;},880);
+        setTimeout(()=>{location.href=link.href;},720);
       });
     });
   }
