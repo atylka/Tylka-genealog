@@ -2994,3 +2994,24 @@ html[data-theme="dark"] .site-header .primary-nav a[aria-current="page"],
 html[data-theme="dark"] .site-header .primary-nav a:hover,
 .dark-mode .site-header .primary-nav a[aria-current="page"],
 .dark-mode .site-header .primary-nav a:hover{background:#8d3b30!important;color:#fff0d2!important}
+
+
+/* Performance pass: keep the parchment design, remove costly ambient effects. */
+html{scroll-behavior:auto!important}
+*,*::before,*::after{
+ animation:none!important;
+ transition-duration:.12s!important;
+ scroll-behavior:auto!important;
+}
+.site-header,.site-menu-panel,.site-modal,.modal-card,.map-panel,.location-sidebar,
+.paper-card,.folio-card,.record-card,.activity-log-item,.generation,.notice,
+.archive-folder,.chrono-year-column,.chrono-record-card,.location-item,
+.button,.small-button,.primary-nav a,button,input,select,textarea{
+ will-change:auto!important;
+}
+.site-header,.site-modal,.modal-card,.map-panel,.location-sidebar{
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important;
+}
+.motion-reveal,.reveal{opacity:1!important;transform:none!important;filter:none!important}
+.motion-ripple,.archive-scroll-progress:after{display:none!important}
