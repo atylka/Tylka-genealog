@@ -64,7 +64,7 @@
   const el = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
   const action = (label, fn) => { const b=el("button",label);b.type="button";b.addEventListener("click",fn);return b; };
   function accessionFor(record) { let hash=2166136261; for(const ch of record.key){hash^=ch.charCodeAt(0);hash=Math.imul(hash,16777619);}return (hash>>>0).toString(10).padStart(10,"0").slice(-6); }
-  function noteFor(record) { return metadata()[record.key] || {status:"Needs Research", repository:"", sourceUrl:"", archiveRef:"", notes:"", people:""}; }
+  function noteFor(record) { return metadata()[record.key] || {status:"Unreviewed", repository:"", sourceUrl:"", archiveRef:"", notes:"", people:""}; }
   function updateMeta(record, patch) { const all=metadata(); all[record.key]={...noteFor(record),...patch,title:record.title,category:record.category,location:record.location};safeWrite(KEYS.metadata,all); }
   function remember(record) { if(!record.title)return;const list=recent().filter(x=>x.key!==record.key);list.unshift({...record,visitedAt:new Date().toISOString()});safeWrite(KEYS.recent,list.slice(0,8)); }
   function togglePin(record) { const list=pins();const exists=list.some(x=>x.key===record.key);safeWrite(KEYS.pins,exists?list.filter(x=>x.key!==record.key):[{...record,pinnedAt:new Date().toISOString()},...list].slice(0,100));renderCards();if(tab==="pinned")renderDesk(); }
@@ -125,7 +125,7 @@
     const form=el("form");form.addEventListener("submit",e=>e.preventDefault());
     const addField=(labelText,name,value,kind="text")=>{const label=el("label",labelText);let field;if(kind==="textarea"){field=el("textarea");field.rows=3;}else{field=el("input");field.type=kind;}field.name=name;field.value=value||"";label.htmlFor="research-"+name;field.id="research-"+name;form.append(label,field);return field;};
     const current=noteFor(record);
-    const status=el("select");status.id="research-status";status.name="status";["Verified","Probable","Uncertain","Needs Research"].forEach(v=>status.add(new Option(v,v)));status.value=current.status||"Needs Research";const label=el("label","Research status");label.htmlFor=status.id;form.append(label,status);
+    const status=el("select");status.id="research-status";status.name="status";["Unreviewed","Verified","Probable","Uncertain","Needs Research"].forEach(v=>status.add(new Option(v,v)));status.value=current.status||"Unreviewed";const label=el("label","Research status");label.htmlFor=status.id;form.append(label,status);
     const people=addField("Associated people (separate names with commas)","people",current.people||record.persons_mentioned||"","text");
     const repository=addField("Repository / collection","repository",current.repository);
     const sourceUrl=addField("Original record URL","sourceUrl",current.sourceUrl,"url");
