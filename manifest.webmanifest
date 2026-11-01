@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Tylka Genealogical Log",
+  "short_name": "Tylka Log",
+  "description": "A family genealogy archive preserving the Tylka family story.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#2b1c18",
+  "theme_color": "#38241d",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
