@@ -5,27 +5,47 @@
  const node=(tag,text,cls)=>{const e=document.createElement(tag);e.textContent=text||"";if(cls)e.className=cls;return e;};const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
  function ensureDetailModal(){
   let modal=document.getElementById("home-record-detail-modal");if(modal)return modal;
-  modal=document.createElement("section");modal.id="home-record-detail-modal";modal.className="site-modal home-record-detail-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-labelledby","home-detail-title");
-  const panel=node("div","","modal-card modal-wide home-record-detail-card");
+  modal=document.createElement("section");modal.id="home-record-detail-modal";modal.className="site-modal record-detail-modal home-record-detail-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-labelledby","home-detail-title");
+  const panel=node("div","","modal-card modal-wide record-detail-card home-record-detail-card");
   const close=node("button","×","modal-close");close.type="button";close.setAttribute("aria-label","Close record");close.addEventListener("click",()=>modal.hidden=true);
-  const eyebrow=node("p","Record detail","eyebrow"),title=node("h2","","home-detail-title"),meta=node("div","","detail-meta"),imageBox=node("div","","home-detail-attachment"),details=node("section","","home-detail-metadata"),description=node("pre","","home-detail-description");
-  panel.append(close,eyebrow,title,meta,imageBox,details,description);modal.append(panel);modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)modal.hidden=true;});document.body.append(modal);return modal;
+  const eyebrow=node("p","Record detail","eyebrow");
+  const title=node("h2","","");title.id="home-detail-title";
+  const meta=node("div","","detail-meta");meta.id="home-detail-meta";
+  const grid=node("div","","record-detail-grid home-detail-grid");
+  const source=node("section","","detail-source");source.append(node("h3","Original source"));
+  const viewport=node("div","","detail-image-viewport home-detail-attachment");viewport.id="home-detail-viewport";
+  const img=document.createElement("img");img.id="home-detail-image";img.alt="Original record scan";viewport.append(img);
+  const fallback=node("div","","detail-file-fallback");fallback.id="home-detail-fallback";
+  source.append(viewport,fallback);
+  const notes=node("section","","detail-transcription");notes.append(node("h3","Transcription & research notes"));
+  const description=node("pre","","");description.id="home-detail-description";notes.append(description);
+  grid.append(source,notes);
+  const metadata=node("section","","home-detail-metadata");metadata.setAttribute("aria-label","Record information");
+  panel.append(close,eyebrow,title,meta,grid,metadata);modal.append(panel);
+  modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)modal.hidden=true;});
+  document.body.append(modal);return modal;
  }
  function openRecord(record){
   const modal=ensureDetailModal(),panel=modal.querySelector(".home-record-detail-card");
   modal.querySelector("#home-detail-title").textContent=record.title||"Untitled record";
-  modal.querySelector(".detail-meta").textContent=[names[record.category]||record.category,record.location||"Location not entered",new Date(record.created_at).toLocaleDateString()].join(" · ");
-  const attachment=modal.querySelector(".home-detail-attachment");attachment.replaceChildren();
+  modal.querySelector("#home-detail-meta").textContent=[names[record.category]||record.category,record.location||"Location not entered",new Date(record.created_at).toLocaleDateString()].join(" · ");
+  const img=modal.querySelector("#home-detail-image"),fallback=modal.querySelector("#home-detail-fallback");
+  img.hidden=true;img.removeAttribute("src");fallback.replaceChildren();
   if(record.file_path){
    const url=publicUrl(record.file_path);
-   if((record.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=url;img.alt="Original attachment for "+record.title;img.loading="eager";attachment.append(img);}
-   else if(record.mime_type==="application/pdf"){const frame=document.createElement("iframe");frame.src=url;frame.title="PDF attachment for "+record.title;attachment.append(frame);}
-   else{const link=node("a","Open original attachment","text-link");link.href=url;link.target="_blank";link.rel="noopener noreferrer";attachment.append(link);}
-  }else attachment.append(node("p","No attachment is saved for this record.","empty-state"));
+   if((record.mime_type||"").startsWith("image/")){img.src=url;img.alt=(record.title||"Record")+" original scan";img.hidden=false;}
+   else if(record.mime_type==="application/pdf"){const frame=document.createElement("iframe");frame.src=url;frame.title="Original PDF for "+record.title;frame.style.cssText="width:100%;height:60vh;border:0";fallback.append(frame);}
+   else{const link=node("a","Open original attachment","text-link");link.href=url;link.target="_blank";link.rel="noopener noreferrer";fallback.append(link);}
+  }else fallback.append(node("p","No attachment is saved for this record.","empty-state"));
   const metadata=modal.querySelector(".home-detail-metadata");metadata.replaceChildren();
   const addField=(label,value)=>{if(!value)return;const row=node("p");const strong=node("strong",label+": ");row.append(strong,document.createTextNode(String(value)));metadata.append(row);};
-  addField("Record type",names[record.category]||record.category);addField("Date",record.record_date||record.event_date||"");addField("Location",record.location);addField("People mentioned",record.persons_mentioned);addField("File name",record.file_name);addField("Added to archive",new Date(record.created_at).toLocaleString());
-  modal.querySelector(".home-detail-description").textContent=record.description||"No transcription or research notes have been added.";
+  addField("Record type",names[record.category]||record.category);
+  addField("Date",record.record_date||record.event_date||"");
+  addField("Location",record.location);
+  addField("People mentioned",record.persons_mentioned);
+  addField("Added to archive",new Date(record.created_at).toLocaleString());
+  modal.querySelector("#home-detail-description").textContent=record.description||"No transcription or research notes have been added.";
   const oldLink=panel.querySelector(".home-open-attachment");if(oldLink)oldLink.remove();
   if(record.file_path){const link=node("a","Open original attachment in new tab","text-link home-open-attachment");link.href=publicUrl(record.file_path);link.target="_blank";link.rel="noopener noreferrer";panel.append(link);}
   modal.hidden=false;
