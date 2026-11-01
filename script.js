@@ -25,7 +25,14 @@
   const applyTheme=theme=>{
     document.documentElement.dataset.theme=theme;
     const meta=document.querySelector('meta[name="theme-color"]');
-    if(meta)meta.content=theme==="dark"?"#211e1a":"#541522";
+    if(meta)meta.content=theme==="dark"?"#21130f":"#541522";
+    document.body.classList.remove("theme-wave-dark","theme-wave-light");
+    if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches&&getPref(motionKey,"full")!=="reduced"){
+      const wave=theme==="dark"?"theme-wave-dark":"theme-wave-light";
+      void document.body.offsetWidth;
+      document.body.classList.add(wave);
+      window.setTimeout(()=>document.body.classList.remove(wave),1250);
+    }
   };
   const applyFormat=()=>{
     document.documentElement.dataset.textSize=getPref(sizeKey,"normal");
