@@ -69,13 +69,15 @@
         iconAnchor:[17,42],
         popupAnchor:[0,-40]
       });
-      const marker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:1000,keyboard:true,title:place.name,alt:"Selected location: "+place.name})
+      const marker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:2000,keyboard:true,title:place.name,alt:"Selected location: "+place.name})
         .addTo(markerLayer)
         .bindPopup("<strong>"+escapeText(place.name)+"</strong>")
+        .bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-38],className:"registry-location-label"})
         .openPopup();
-      map.invalidateSize({pan:false});
-      map.setView([lat,lng],11,{animate:true});
-      marker.setZIndexOffset(1000);
+      map.stop();
+      map.invalidateSize();
+      map.flyTo([lat,lng],13,{animate:true,duration:0.85});
+      marker.setZIndexOffset(2000);
       const heading=document.createElement("h3");heading.textContent=place.name;
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
       const recordsHeading=document.createElement("p");recordsHeading.className="location-record-heading";recordsHeading.textContent="Associated records";
