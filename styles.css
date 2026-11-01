@@ -2474,3 +2474,17 @@ body,.site-header,.brand-banner,.brand-banner:before,.brand-banner-inner>*,.site
 .record-card,.activity-log-item,.location-item,.archive-folder,.chrono-year-column,.chrono-record-card,.ticker i{
   animation:none!important;
 }
+
+
+/* Final responsiveness pass: keep long lists cheap to paint and scroll. */
+.record-card,.activity-log-item,.chrono-record-card,.location-item,.ancestor-card{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 190px;
+}
+.chrono-year-column{content-visibility:auto;contain-intrinsic-size:auto 420px}
+.location-record-body img{content-visibility:auto}
+@media(prefers-reduced-motion:reduce){
+  .record-card,.activity-log-item,.chrono-record-card,.location-item,.ancestor-card{
+    content-visibility:visible;
+  }
+}
