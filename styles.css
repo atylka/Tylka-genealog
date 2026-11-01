@@ -2769,3 +2769,29 @@ input,select,textarea{padding:.65rem .8rem}
 }
 .dark-mode .leaflet-popup-content,.dark-mode .leaflet-popup-content-wrapper,
 .dark-mode .leaflet-popup-tip{color:#f0dfbf!important;background:#30221c!important}
+
+/* Header nav contrast states: dark ink when idle, ivory when active/red. */
+.site-header .primary-nav a{
+  color:#35231a!important;
+  text-shadow:none!important;
+}
+.site-header .primary-nav a:hover,
+.site-header .primary-nav a:focus-visible,
+.site-header .primary-nav a[aria-current="page"],
+.site-header .primary-nav a.active,
+.site-header .primary-nav a.selected{
+  color:#fff0d2!important;
+  background-color:#8d3b30!important;
+  text-shadow:0 1px 2px rgba(35,14,10,.35)!important;
+}
+.dark-mode .site-header .primary-nav a{
+  color:#35231a!important;
+}
+.dark-mode .site-header .primary-nav a:hover,
+.dark-mode .site-header .primary-nav a:focus-visible,
+.dark-mode .site-header .primary-nav a[aria-current="page"],
+.dark-mode .site-header .primary-nav a.active,
+.dark-mode .site-header .primary-nav a.selected{
+  color:#fff0d2!important;
+  background-color:#8d3b30!important;
+}
