@@ -155,24 +155,31 @@
   function finishFaceDrag(){faceDragStart=null;}
   faceCanvas?.addEventListener("pointerup",finishFaceDrag);faceCanvas?.addEventListener("pointercancel",finishFaceDrag);
   $("face-crop-reset")?.addEventListener("click",()=>{faceSelection=null;drawFaceCanvas();setMessage($("face-crop-status"),"Selection cleared.");});
-  $("save-face-portrait")?.addEventListener("click",()=>{
+  $("save-face-portrait")?.addEventListener("click",async()=>{
     const name=$("face-person-name").value.trim();
     if(!name)return setMessage($("face-crop-status"),"Enter the ancestor's name.",true);
     if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return setMessage($("face-crop-status"),"Drag a box around the face first.",true);
+    if(!client||!currentUser)return setMessage($("face-crop-status"),"Sign in as the archive owner before saving portraits.",true);
     const side=Math.min(Math.max(faceSelection.w,faceSelection.h),faceCanvas.width,faceCanvas.height),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
     const sx=Math.max(0,Math.min(faceCanvas.width-side,cx-side/2)),sy=Math.max(0,Math.min(faceCanvas.height-side,cy-side/2));
     const output=document.createElement("canvas");output.width=512;output.height=512;
     output.getContext("2d").drawImage(faceSourceImage,sx,sy,side,side,0,0,512,512);
-    let portrait;const key="tylkaAncestorPortraits";
+    const button=$("save-face-portrait");button.disabled=true;setMessage($("face-crop-status"),"Saving portrait to the shared archive…");
     try{
-      portrait=output.toDataURL("image/jpeg",.88);
-      const people=JSON.parse(localStorage.getItem(key)||"[]");
-      const existing=people.findIndex(p=>p.name.toLocaleLowerCase()===name.toLocaleLowerCase());
-      const person={id:existing>=0?people[existing].id:crypto.randomUUID(),name,portrait,sourceRecordId:window.tylkaActiveDetailRecord.id,sourceTitle:window.tylkaActiveDetailRecord.title,updatedAt:new Date().toISOString()};
-      if(existing>=0)people[existing]=person;else people.push(person);
-      localStorage.setItem(key,JSON.stringify(people));
-      setMessage($("face-crop-status"),"Portrait saved. Open Ancestors to view it.");setTimeout(()=>{closeModals();},700);
-    }catch(error){setMessage($("face-crop-status"),"Could not save in this browser. Try a smaller face selection or free up browser storage.",true);}
+      const blob=await new Promise((resolve,reject)=>output.toBlob(value=>value?resolve(value):reject(new Error("Could not prepare the portrait image.")),"image/jpeg",.88));
+      const path=currentUser.id+"/ancestor-portraits/"+crypto.randomUUID()+".jpg";
+      const uploaded=await client.storage.from("family-archive").upload(path,blob,{contentType:"image/jpeg",upsert:false});
+      if(uploaded.error)throw uploaded.error;
+      const portraitUrl=client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
+      const {data:existingRows,error:lookupError}=await client.from("ancestor_portraits").select("id,name").ilike("name",name);
+      if(lookupError)throw lookupError;
+      const existing=existingRows?.find(person=>person.name.toLocaleLowerCase()===name.toLocaleLowerCase());
+      const values={name,portrait_url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
+      const result=existing?await client.from("ancestor_portraits").update(values).eq("id",existing.id):await client.from("ancestor_portraits").insert(values);
+      if(result.error)throw result.error;
+      setMessage($("face-crop-status"),"Portrait saved to the shared archive. It will be available on other devices.");setTimeout(()=>{closeModals();},700);
+    }catch(error){setMessage($("face-crop-status"),error.message||"Could not save portrait. Run the supplied Supabase migration and check storage permissions.",true);}
+    finally{button.disabled=false;}
   });
   function syncFaceButton(){const record=window.tylkaActiveDetailRecord;const button=$("mark-face");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);}
   const activeDetailObserver=new MutationObserver(syncFaceButton);
