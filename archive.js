@@ -57,7 +57,7 @@
   function populatePersonFilter(){const select=$("person-filter");if(!select)return;const selected=select.value;const people=new Map();records.forEach(record=>String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>people.set(name.toLocaleLowerCase(),name)));select.replaceChildren(new Option("All people",""));[...people.values()].sort((a,b)=>a.localeCompare(b)).forEach(name=>select.add(new Option(name,name.toLocaleLowerCase())));if([...select.options].some(option=>option.value===selected))select.value=selected;}
   async function loadRecords(){
     recordsList.textContent="Loading records…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){recordsList.textContent="Could not load records. "+error.message;return;}
     records=data||[];populatePersonFilter();renderRecords();
   }
@@ -88,7 +88,7 @@
     const notes=raw.replace(/^Date on record:\s*[^\r\n]+\s*/im,"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").trim();
     $("record-title").value=record.title||"";
     $("record-category").value=canonical(record.category)||"notes";
-    $("record-date").value=dateMatch?dateMatch[1].trim():"";
+    $("record-date").value=record.record_date|| (dateMatch?dateMatch[1].trim():"");
     $("record-location").value=record.location||"";
     $("record-persons").value=record.persons_mentioned||"";
     $("record-confidence").value=confidence;
@@ -110,7 +110,7 @@
     try{
       const existing=editingRecordId?records.find(r=>r.id===editingRecordId):null;
       if(file){const siteName=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);newFilePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+siteName;const {error}=await client.storage.from("family-archive").upload(newFilePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
-      const values={title,category,description,location,persons_mentioned:personsMentioned};
+      const values={title,category,description,location,persons_mentioned:personsMentioned,record_date:recordDate||null};
       if(file){values.file_path=newFilePath;values.file_name=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);values.mime_type=file.type;values.file_size=file.size;}
       let result;
       if(editingRecordId)result=await client.from("archive_records").update(values).eq("id",editingRecordId);
