@@ -3036,3 +3036,7 @@ html[data-theme="dark"] .site-footer{
 .research-desk-panel a{color:inherit;text-decoration:underline}
 @media(max-width:600px){.research-desk-button{right:.65rem;bottom:.65rem}.research-desk-card{padding:.8rem}.research-comparison-table{font-size:.75rem}.research-comparison-table tr>td:first-child{width:24%}}
 html.reduce-motion .research-desk-card{animation:none!important;transition:none!important}
+
+.research-accession{display:inline-block;margin-top:.45rem;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;opacity:.72;font-variant-numeric:tabular-nums}
+.research-card-tools button{transition:background-color .12s ease,border-color .12s ease}
+@media(prefers-reduced-motion:reduce){.research-card-tools button{transition:none}}
