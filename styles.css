@@ -2703,3 +2703,69 @@ input,select,textarea{padding:.65rem .8rem}
 
 .detail-download-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:.8rem 0}.detail-download-actions button{padding:.7rem 1rem}
 .chrono-record-card{cursor:pointer}.chrono-record-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* Header contrast repair: light parchment at the wordmark, rich oxblood toward the right. */
+.site-header{
+  background-color:#e7d2aa!important;
+  background-image:linear-gradient(90deg,#ead8b7 0%,#d6b17b 24%,#9d5942 57%,#54271f 100%)!important;
+  color:#2d1c16!important;
+  border-bottom:1px solid #b18a50!important;
+}
+.site-header .wordmark,.site-header .wordmark strong,.site-header .wordmark small{
+  color:#302018!important;
+  text-shadow:0 1px rgba(255,240,208,.38);
+}
+.site-header .monogram{
+  background:#f1dfbb!important;
+  color:#653126!important;
+  border-color:#a77a42!important;
+}
+.site-header .primary-nav a{
+  color:#fff0d2!important;
+  text-shadow:0 1px 2px rgba(25,12,8,.5);
+}
+.site-header .primary-nav a:hover,.site-header .primary-nav a[aria-current="page"]{
+  color:#ffe0a0!important;
+}
+.site-header .menu-toggle{
+  color:#3a2118!important;
+  background:rgba(255,239,207,.88)!important;
+  border-color:#a87a43!important;
+}
+.site-header .owner-sign-in-button{
+  color:#fff0d2!important;
+  background:#673126!important;
+  border-color:#d0a45b!important;
+}
+/* Global contrast guard: dark surfaces always use light text; pale surfaces use dark text. */
+.dark-mode .site-header,.dark-mode .site-footer{
+  background-image:linear-gradient(90deg,#3a271f 0%,#4b2b22 34%,#6e3428 66%,#251714 100%)!important;
+  color:#f3e3c4!important;
+}
+.dark-mode .site-header .wordmark,.dark-mode .site-header .wordmark strong,
+.dark-mode .site-header .wordmark small,.dark-mode .site-header .primary-nav a,
+.dark-mode .site-header .menu-toggle{color:#f3e3c4!important}
+.dark-mode .site-header .menu-toggle{background:#38251e!important;border-color:#9a7040!important}
+.dark-mode .paper-card,.dark-mode .record-card,.dark-mode .ancestor-card,.dark-mode .folio-card,
+.dark-mode .archive-folder,.dark-mode .location-item,.dark-mode .chrono-year-column,
+.dark-mode .chrono-record-card,.dark-mode .modal-card,.dark-mode .search-panel,.dark-mode .registry-panel,
+.dark-mode .chrono-filter-panel,.dark-mode .site-modal .modal-card{
+  color:#f0dfbf!important;
+}
+.dark-mode .paper-card p,.dark-mode .record-card p,.dark-mode .ancestor-card p,
+.dark-mode .folio-card p,.dark-mode .archive-folder p,.dark-mode .location-item p,
+.dark-mode .chrono-year-column p,.dark-mode .chrono-record-card p,
+.dark-mode .modal-card p,.dark-mode .search-panel p,.dark-mode .registry-panel p,
+.dark-mode .paper-card h1,.dark-mode .paper-card h2,.dark-mode .paper-card h3,
+.dark-mode .record-card h1,.dark-mode .record-card h2,.dark-mode .record-card h3,
+.dark-mode .modal-card h1,.dark-mode .modal-card h2,.dark-mode .modal-card h3{color:#f0dfbf!important}
+.dark-mode input,.dark-mode select,.dark-mode textarea{
+  color:#f0dfbf!important;background-color:#211815!important;border-color:#765238!important;
+}
+.dark-mode input::placeholder,.dark-mode textarea::placeholder{color:#c3a785!important;opacity:1}
+.dark-mode label,.dark-mode small,.dark-mode .muted,.dark-mode .connection-status{color:#d7bd99}
+.dark-mode button,.dark-mode .button,.dark-mode .small-button,.dark-mode .owner-sign-in-button{
+  color:#fff0d2!important;
+}
+.dark-mode .leaflet-popup-content,.dark-mode .leaflet-popup-content-wrapper,
+.dark-mode .leaflet-popup-tip{color:#f0dfbf!important;background:#30221c!important}
