@@ -3136,3 +3136,9 @@ html.reduce-motion .research-desk-card{animation:none!important;transition:none!
   #family-map{height:55vh;min-height:180px}
   .modal-card,.modal-wide,.record-detail-card{max-height:88dvh!important}
 }
+
+@media (display-mode:standalone) and (max-width:760px){
+  .archive-folders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem}
+  .archive-folders>h3,.archive-folders>.eyebrow,.archive-folders>.cabinet-hint{grid-column:1/-1}
+  .archive-folders>.archive-folder{width:100%;min-width:0}
+}
