@@ -2059,3 +2059,15 @@ html[data-theme="dark"] #family-map .leaflet-control-attribution a{
 html[data-theme="dark"] #family-map .leaflet-container{
   background:#120d0b!important;
 }
+
+
+/* API-key-free OSM tiles with a dark-study treatment. Keep controls and markers untouched. */
+html[data-theme="dark"] #family-map .leaflet-tile-pane{
+  filter:invert(1) hue-rotate(180deg) brightness(.72) contrast(1.12) saturate(.72);
+}
+html[data-theme="dark"] #family-map .leaflet-overlay-pane,
+html[data-theme="dark"] #family-map .leaflet-marker-pane,
+html[data-theme="dark"] #family-map .leaflet-tooltip-pane,
+html[data-theme="dark"] #family-map .leaflet-popup-pane{
+  filter:none!important;
+}
