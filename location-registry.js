@@ -10,14 +10,16 @@
   let currentUser = null;
 
   let client = null, map = null, markerLayer = null, places = [], selected = null;
+  const coordinateCache=new Map();
+  let selectionSequence=0;
 
   const normalize = value => (value || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   function setMessage(node,text,isError=false){node.textContent=text;node.classList.toggle("message-error",isError);}
   function escapeText(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function initMap(){
     if(map || !window.L) return;
-    map = L.map("family-map",{scrollWheelZoom:false}).setView([48,8],3);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:true,markerZoomAnimation:false}).setView([48,8],3);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,keepBuffer:2,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
   }
   function buildPlaces(records){
@@ -48,19 +50,25 @@
   }
   async function coordinatesFor(place){
     if(Number.isFinite(place.lat)&&Number.isFinite(place.lng)) return [place.lat,place.lng];
-    const query=place.name;
-    const response=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(query),{headers:{"Accept":"application/json"}});
-    if(!response.ok) throw new Error("The map service could not find this place right now.");
-    const results=await response.json();
-    if(!results.length) throw new Error("No map location found. Try adding a more specific town, region, and country to the record.");
-    place.lat=Number(results[0].lat);place.lng=Number(results[0].lon);
-    return [place.lat,place.lng];
+    const key=normalize(place.name);
+    if(coordinateCache.has(key))return coordinateCache.get(key);
+    const request=(async()=>{
+      const response=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(place.name),{headers:{"Accept":"application/json"}});
+      if(!response.ok)throw new Error("The map service could not find this place right now.");
+      const results=await response.json();
+      if(!results.length)throw new Error("No map location found. Try adding a more specific town, region, and country to the record.");
+      place.lat=Number(results[0].lat);place.lng=Number(results[0].lon);
+      return [place.lat,place.lng];
+    })();
+    coordinateCache.set(key,request);
+    try{return await request;}catch(error){coordinateCache.delete(key);throw error;}
   }
   async function selectPlace(place){
-    selected=place;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
+    selected=place;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
       initMap();
       const [lat,lng]=await coordinatesFor(place);
+      if(sequence!==selectionSequence)return;
       markerLayer.clearLayers();
       const pinIcon=L.divIcon({
         className:"registry-pin-icon",
@@ -103,7 +111,7 @@
         card.append(body);detail.append(card);
       });
       marker.openPopup();
-    }catch(error){detail.textContent=error.message;}
+    }catch(error){if(sequence===selectionSequence)detail.textContent=error.message;}
   }
 
   const yearOf=record=>{const text=[record.title,record.description].join(" ");const m=text.match(/(?:18|19|20)\d{2}/);return m?Number(m[0]):9999;};
@@ -112,7 +120,7 @@
 
   async function loadRegistry(){
     count.textContent="Loading public family locations…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false}).limit(1000);
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
