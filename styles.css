@@ -3027,19 +3027,7 @@ html[data-theme="dark"] .site-footer{
 
 
 /* Research desk and record annotations: compact, theme-aware, reduced-motion friendly. */
-.research-comparison-table{width:100%;border-collapse:collapse;table-layout:fixed;overflow-wrap:anywhere;font-size:.88rem}
-.research-comparison-table th,.research-comparison-table td,.research-comparison-table tr>td{border:1px solid rgba(157,120,65,.5);padding:.5rem;text-align:left;vertical-align:top}
-.research-comparison-table tr>td:first-child{font-weight:700;width:28%}
-.research-desk-content{min-width:0}
-.research-desk-content form{display:grid;gap:.25rem}
-.research-desk-content .research-desk-actions{margin:.4rem 0}
-.research-desk-panel a{color:inherit;text-decoration:underline}
-@media(max-width:600px){.research-desk-button{right:.65rem;bottom:.65rem}.research-desk-card{padding:.8rem}.research-comparison-table{font-size:.75rem}.research-comparison-table tr>td:first-child{width:24%}}
-html.reduce-motion .research-desk-card{animation:none!important;transition:none!important}
 
-.research-accession{display:inline-block;margin-top:.45rem;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;opacity:.72;font-variant-numeric:tabular-nums}
-.research-card-tools button{transition:background-color .12s ease,border-color .12s ease}
-@media(prefers-reduced-motion:reduce){.research-card-tools button{transition:none}}
 
 
 /* Installable Tylka app controls */
@@ -3116,9 +3104,6 @@ html.reduce-motion .research-desk-card{animation:none!important;transition:none!
   .record-form-section{padding:.65rem}
   .record-form-section-heading{gap:.35rem}
   .detail-image-viewport{max-height:42vh}
-  .research-desk-button{right:.55rem;bottom:calc(.55rem + env(safe-area-inset-bottom));max-width:calc(100vw - 1.1rem);font-size:.78rem}
-  .research-desk-card{width:calc(100vw - 1rem)!important;max-width:none!important;max-height:86dvh!important;overflow:auto!important;padding:.7rem!important}
-  .research-comparison-table{font-size:.7rem}
   .pwa-install-button{right:.55rem;bottom:calc(.55rem + env(safe-area-inset-bottom));font-size:.78rem;padding:.6rem .8rem}
   .connection-status{font-size:.72rem}
   .activity-log-list{gap:.45rem}
