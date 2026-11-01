@@ -2468,3 +2468,9 @@ input:focus,select:focus,textarea:focus{transform:none!important;box-shadow:0 0 
 @media(prefers-reduced-motion:reduce){
   body.page-leaving main,body.page-leaving .site-header,body.page-leaving .site-footer{opacity:1!important}
 }
+
+/* Disable staggered per-card entrance work on large archive result sets. */
+body,.site-header,.brand-banner,.brand-banner:before,.brand-banner-inner>*,.site-footer,
+.record-card,.activity-log-item,.location-item,.archive-folder,.chrono-year-column,.chrono-record-card,.ticker i{
+  animation:none!important;
+}
