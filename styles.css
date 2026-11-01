@@ -2660,3 +2660,43 @@ body.dark-mode{
 @media(max-width:700px){
   .archive-toolbar .add-record-trigger{margin:.25rem .25rem .25rem 0}
 }
+
+/* Global comfort spacing: nothing should touch the edges of its parent or viewport. */
+:root{--edge-breathing-room:clamp(12px,2.4vw,28px)}
+*,*::before,*::after{box-sizing:border-box}
+img,video,canvas,iframe,svg{max-width:100%}
+main{width:min(100% - 2*var(--edge-breathing-room),1200px);margin-inline:auto}
+.site-header,.site-footer{padding-inline:var(--edge-breathing-room)}
+main>section,main>.section,main>.paper-card,main>.panel,main>.content-panel{margin-inline:auto;max-width:100%}
+.paper-card,.record-card,.ancestor-card,.folio-card,.archive-folder,.location-item,
+.chrono-year-column,.chrono-record-card,.modal-card,.search-panel,.registry-panel,
+.archive-toolbar,.archive-grid,.record-grid,.ancestor-grid,.chrono-results,.location-layout,
+form,.form-section,.detail-source,.detail-transcription{
+  min-width:0;
+}
+.paper-card,.record-card,.ancestor-card,.folio-card,.modal-card,.search-panel,.registry-panel,
+.archive-toolbar,.archive-grid,.record-grid,.ancestor-grid,.chrono-results,.location-layout{
+  padding-inline:clamp(12px,2vw,24px);
+}
+button,.button,.small-button,.owner-sign-in-button,input,select,textarea{
+  max-width:100%;
+}
+button,.button,.small-button,.owner-sign-in-button{margin-block:2px}
+input,select,textarea{padding:.65rem .8rem}
+.archive-toolbar{gap:1rem;padding-block:.75rem}
+.archive-toolbar .add-record-trigger{margin:.45rem .5rem}
+.site-modal{padding:clamp(12px,3vw,32px)}
+.site-modal .modal-card{width:min(100%,1100px);margin:0 auto}
+.record-detail-grid,.location-layout,.archive-grid,.ancestor-grid{gap:clamp(12px,2vw,24px)}
+.record-detail-grid>* ,.location-layout>* ,.archive-grid>* ,.ancestor-grid>*{min-width:0}
+@media(max-width:700px){
+  main{width:calc(100% - 24px)}
+  .site-header,.site-footer{padding-inline:12px}
+  .paper-card,.record-card,.ancestor-card,.folio-card,.modal-card,.search-panel,.registry-panel,
+  .archive-toolbar,.archive-grid,.record-grid,.ancestor-grid,.chrono-results,.location-layout{
+    padding-inline:12px;
+  }
+  .site-modal{padding:10px}
+  button,.button,.small-button,.owner-sign-in-button{white-space:normal}
+  pre,code,.record-detail-grid,.location-layout{overflow-wrap:anywhere}
+}
