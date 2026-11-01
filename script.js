@@ -66,7 +66,15 @@
     document.querySelectorAll('a[href]').forEach(link=>{
       const href=link.getAttribute("href")||"";
       if(!href||href.startsWith("#")||link.target==="_blank"||link.hasAttribute("download")||link.origin!==location.origin||!/\.html(?:$|[?#])/.test(href))return;
-      link.addEventListener("click",event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();document.body.classList.add("page-leave");setTimeout(()=>{location.href=link.href;},150);});
+      link.addEventListener("click",event=>{
+        if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.defaultPrevented)return;
+        event.preventDefault();
+        if(document.body.classList.contains("page-leaving"))return;
+        document.body.classList.add("page-leaving","page-leave");
+        const veil=document.getElementById("tylka-page-veil");
+        if(veil)veil.classList.add("is-active");
+        setTimeout(()=>{location.href=link.href;},880);
+      });
     });
   }
 })();
