@@ -3468,3 +3468,26 @@ html[data-theme="dark"] body header.site-header .monogram{background:#70472f!imp
 @media(prefers-reduced-motion:reduce){
  .site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}
 }
+
+/* Stability pass: consistent antique dark theme, restrained motion, compact desktop layout */
+html[data-theme="dark"],body[data-theme="dark"],html.theme-dark,body.theme-dark{
+ --paper:#211811;--paper-light:#302318;--paper-dark:#3d2a1b;--ink:#ead9b7;--muted:#c0a77d;--line:#715332;--accent:#c29a53;--accent-dark:#180f0b;
+ color-scheme:dark;background:var(--paper);color:var(--ink)
+}
+html[data-theme="dark"] body,body[data-theme="dark"],html.theme-dark body,body.theme-dark{
+ background:radial-gradient(ellipse at 50% 0%,rgba(112,68,25,.18),transparent 55%),linear-gradient(180deg,#1a100c 0%,#271a12 48%,#1d120e 100%);color:var(--ink)
+}
+html[data-theme="dark"] .site-header,body[data-theme="dark"] .site-header,html.theme-dark .site-header,body.theme-dark .site-header{background:linear-gradient(100deg,#2b1a12,#402318 55%,#27150f);border-color:#76542e}
+html[data-theme="dark"] .archive-folders,body[data-theme="dark"] .archive-folders,html.theme-dark .archive-folders,body.theme-dark .archive-folders,
+html[data-theme="dark"] .archive-folder-content,body[data-theme="dark"] .archive-folder-content,html.theme-dark .archive-folder-content,body.theme-dark .archive-folder-content,
+html[data-theme="dark"] .location-sidebar,body[data-theme="dark"] .location-sidebar,html.theme-dark .location-sidebar,body.theme-dark .location-sidebar,
+html[data-theme="dark"] .map-panel,body[data-theme="dark"] .map-panel,html.theme-dark .map-panel,body.theme-dark .map-panel,
+html[data-theme="dark"] .chrono-filter-panel,body[data-theme="dark"] .chrono-filter-panel,html.theme-dark .chrono-filter-panel,body.theme-dark .chrono-filter-panel,
+html[data-theme="dark"] .chrono-year-column,body[data-theme="dark"] .chrono-year-column,html.theme-dark .chrono-year-column,body.theme-dark .chrono-year-column,
+html[data-theme="dark"] .record-card,body[data-theme="dark"] .record-card,html.theme-dark .record-card,body.theme-dark .record-card,
+html[data-theme="dark"] .modal-card,body[data-theme="dark"] .modal-card,html.theme-dark .modal-card,body.theme-dark .modal-card{background-color:#302117;color:var(--ink);border-color:#715332}
+html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select,body[data-theme="dark"] input,body[data-theme="dark"] textarea,body[data-theme="dark"] select,html.theme-dark input,html.theme-dark textarea,html.theme-dark select,body.theme-dark input,body.theme-dark textarea,body.theme-dark select{background:#241810!important;color:#ead9b7!important;border-color:#765832!important}
+html[data-theme="dark"] .eyebrow,body[data-theme="dark"] .eyebrow,html.theme-dark .eyebrow,body.theme-dark .eyebrow{color:#d1ad68}
+html[data-theme="dark"] #family-map,body[data-theme="dark"] #family-map,html.theme-dark #family-map,body.theme-dark #family-map{background:#211811}
+@media(min-width:1000px){.archive-page{max-width:1560px;margin-inline:auto;padding:clamp(2rem,4vw,4rem) clamp(1.5rem,4vw,4rem)}.chrono-main,.location-page{max-width:1560px}.record-card-expanded .record-preview img{max-height:420px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
