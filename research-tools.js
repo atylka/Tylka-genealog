@@ -65,7 +65,7 @@
     button.classList.add("research-desk-button-inline");
     archiveActions.append(button);
   } else {
-    document.body.append(button);
+    button.hidden = true;
   }
   document.body.append(overlay);
   const content = overlay.querySelector(".research-desk-content");
