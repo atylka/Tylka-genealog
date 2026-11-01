@@ -2434,3 +2434,37 @@ body.page-enter-active main>*:nth-child(5){animation-delay:.14s!important}
   .location-record-body{animation:none}
   .location-record-bar,.location-record-chevron{transition:none}
 }
+
+/* Performance pass: keep the archive's visual identity while avoiding costly always-on effects. */
+html{scroll-behavior:auto}
+body:after{display:none!important;animation:none!important}
+.site-header{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+#tylka-page-veil{display:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;mix-blend-mode:normal!important}
+#tylka-page-veil:before,#tylka-page-veil:after{display:none!important;animation:none!important}
+body.page-leaving main,body.page-leaving .site-header,body.page-leaving .site-footer{
+  filter:none!important;transform:translateY(-2px)!important;opacity:.12!important;
+  transition:opacity .3s ease,transform .3s ease!important;
+}
+body.page-enter{opacity:0!important;transform:none!important;filter:none!important}
+body.page-enter-active{opacity:1!important;transform:none!important;filter:none!important;transition:opacity .3s ease!important}
+body.page-enter-active main>*{animation:archive-fast-arrive .32s ease both!important;filter:none!important;clip-path:none!important}
+body.page-enter-active main>*:nth-child(n){animation-delay:0s!important}
+@keyframes archive-fast-arrive{from{opacity:.72;transform:translateY(4px)}to{opacity:1;transform:none}}
+.site-header:after,.ticker:after,.site-footer:before,.back-to-top:before{animation:none!important}
+h1:after,h2:after{animation:none!important}
+button,.button,.small-button,.owner-sign-in-button,.archive-folder,.location-item,.paper-card,.record-card,.ancestor-card,.folio-card,.modal-card{
+  will-change:auto!important;filter:none!important;
+  transition:background-color .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
+}
+button:hover,.button:hover,.small-button:hover,.owner-sign-in-button:hover,.archive-folder:hover,.location-item:hover,.paper-card:hover,.record-card:hover,.ancestor-card:hover,.folio-card:hover{
+  filter:none!important;box-shadow:0 5px 14px rgba(62,34,22,.09)!important;
+}
+.paper-card:before,.record-card:before,.ancestor-card:before,.archive-folder:before,.location-item:before,.folio-card:before{display:none!important;animation:none!important}
+input,select,textarea{transition:border-color .16s ease,box-shadow .16s ease!important}
+input:focus,select:focus,textarea:focus{transform:none!important;box-shadow:0 0 0 2px rgba(196,151,83,.13)!important}
+.site-modal:not([hidden]),.site-modal:not([hidden]) .modal-card{animation-duration:.22s!important;backdrop-filter:none!important}
+.motion-reveal,.reveal{filter:none!important;transition:opacity .22s ease,transform .22s ease!important}
+.motion-ripple{display:none!important}
+@media(prefers-reduced-motion:reduce){
+  body.page-leaving main,body.page-leaving .site-header,body.page-leaving .site-footer{opacity:1!important}
+}
