@@ -2700,3 +2700,6 @@ input,select,textarea{padding:.65rem .8rem}
   button,.button,.small-button,.owner-sign-in-button{white-space:normal}
   pre,code,.record-detail-grid,.location-layout{overflow-wrap:anywhere}
 }
+
+.detail-download-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:.8rem 0}.detail-download-actions button{padding:.7rem 1rem}
+.chrono-record-card{cursor:pointer}.chrono-record-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
