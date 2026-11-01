@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="p" x2="0" y2="1"><stop stop-color="#4a3023"/><stop offset="1" stop-color="#211713"/></linearGradient><radialGradient id="g"><stop stop-color="#b99558"/><stop offset="1" stop-color="#76502d"/></radialGradient></defs>
+<rect width="512" height="512" rx="92" fill="url(#p)"/>
+<rect x="24" y="24" width="464" height="464" rx="76" fill="none" stroke="url(#g)" stroke-width="8"/>
+<rect x="43" y="43" width="426" height="426" rx="62" fill="none" stroke="#b99558" stroke-opacity=".42" stroke-width="2"/>
+<path d="M256 82c-70 0-119 43-119 107 0 48 27 76 67 91-50 13-82 50-82 99v40h268v-40c0-49-32-86-82-99 40-15 67-43 67-91 0-64-49-107-119-107z" fill="none" stroke="#a98149" stroke-width="4" opacity=".75"/>
+<text x="256" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="226" fill="#ead7ad" stroke="#80552f" stroke-width="2">T</text>
+<path d="M112 392h288M150 414h212" stroke="#b99558" stroke-width="3" opacity=".8"/>
+<text x="256" y="450" text-anchor="middle" font-family="Georgia,serif" font-size="25" letter-spacing="5" fill="#d6bd8d">TYLKA</text>
+</svg>
