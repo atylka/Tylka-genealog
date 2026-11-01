@@ -3571,3 +3571,22 @@ main[id] { scroll-margin-top: 1rem; }
     scroll-behavior: auto !important; transition-duration: .01ms !important;
   }
 }
+
+/* Mobile navigation remains separate from the settings gear. */
+.mobile-nav-toggle { display: none; }
+@media (max-width: 800px) {
+  .mobile-nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 5rem; padding: .5rem .75rem; color: var(--ink);
+    background: var(--paper-light); border: 1px solid var(--line);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .site-header .primary-nav.is-open {
+    display: flex !important; width: 100%; flex-direction: column; gap: 0;
+    padding: .5rem 0; border-top: 1px solid var(--line);
+  }
+  .site-header .primary-nav.is-open a,
+  .site-header .primary-nav.is-open button {
+    min-height: 44px; padding: .65rem .25rem; text-align: left;
+  }
+}
