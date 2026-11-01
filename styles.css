@@ -2822,3 +2822,60 @@ input,select,textarea{padding:.65rem .8rem}
 @media(prefers-reduced-motion:reduce){
   .archive-folder-content.is-opening .records-list{animation:none!important}
 }
+
+
+/* Keep the header navigation compact and tucked beside the settings gear. */
+.site-header .primary-nav{
+  gap:clamp(.25rem,.65vw,.6rem)!important;
+  margin-right:.35rem!important;
+  align-items:center;
+}
+.site-header .primary-nav a,
+.site-header .primary-nav .owner-sign-in-button{
+  padding:.48rem .62rem!important;
+  border:1px solid transparent!important;
+  border-radius:3px;
+  line-height:1.25;
+  white-space:nowrap;
+}
+.site-header .primary-nav a:hover,
+.site-header .primary-nav a:focus-visible,
+.site-header .primary-nav a[aria-current="page"],
+.site-header .primary-nav a.active,
+.site-header .primary-nav a.selected,
+.site-header .primary-nav .owner-sign-in-button:hover{
+  color:#fff0d2!important;
+  background:#8d3b30!important;
+  border-color:#b47755!important;
+}
+.site-header .site-menu-toggle{margin-left:0!important;flex-shrink:0}
+@media(max-width:1000px){
+  .site-header .primary-nav{gap:.3rem!important;margin-right:.2rem!important}
+  .site-header .primary-nav a,.site-header .primary-nav .owner-sign-in-button{padding:.42rem .48rem!important;font-size:.74rem}
+}
+@media(max-width:800px){
+  .site-header .primary-nav{margin-right:0!important;gap:0!important}
+  .site-header .primary-nav a,.site-header .primary-nav .owner-sign-in-button{padding:.7rem .6rem!important}
+}
+
+/* Selected archive folder uses the same oxblood-red active state as header buttons. */
+.archive-folders .archive-folder.is-active,
+.archive-folders .archive-folder[aria-pressed="true"]{
+  color:#fff0d2!important;
+  background:#8d3b30!important;
+  border-color:#b47755!important;
+  box-shadow:inset 3px 0 0 #d4aa69,0 3px 10px rgba(55,20,15,.12);
+}
+.archive-folders .archive-folder.is-active:before,
+.archive-folders .archive-folder[aria-pressed="true"]:before{
+  background:#d4aa69!important;
+  border-color:#f0d6a0!important;
+}
+.archive-folders .archive-folder.is-active:hover,
+.archive-folders .archive-folder[aria-pressed="true"]:hover{
+  background:#9c4437!important;
+}
+html[data-theme="dark"] .archive-folders .archive-folder.is-active,
+html[data-theme="dark"] .archive-folders .archive-folder[aria-pressed="true"]{
+  color:#fff0d2!important;background:#8d3b30!important;border-color:#d0a45b!important;
+}
