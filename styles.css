@@ -2879,3 +2879,30 @@ html[data-theme="dark"] .archive-folders .archive-folder.is-active,
 html[data-theme="dark"] .archive-folders .archive-folder[aria-pressed="true"]{
   color:#fff0d2!important;background:#8d3b30!important;border-color:#d0a45b!important;
 }
+
+
+/* Archive folder interaction: one deliberate top-to-bottom contents reveal only.
+   Neutralize older cabinet/slide/ink animations on the right-hand panel so they
+   cannot override or compete with the records-list unfolding motion. */
+body[data-page="archive"] .archive-folder-content,
+body[data-page="archive"] .archive-folder-content.is-opening{
+  animation:none!important;
+  transform:none!important;
+  clip-path:none!important;
+}
+body[data-page="archive"] .archive-folder-content.is-opening .records-heading{
+  animation:none!important;
+  transform:none!important;
+}
+body[data-page="archive"] .archive-folder-content .records-list,
+body[data-page="archive"] .archive-folder-content.is-opening .records-list{
+  animation:none!important;
+  transition:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-page="archive"] .archive-folder-content,
+  body[data-page="archive"] .archive-folder-content.is-opening,
+  body[data-page="archive"] .archive-folder-content .records-list{
+    animation:none!important;transition:none!important;transform:none!important;clip-path:none!important;
+  }
+}
