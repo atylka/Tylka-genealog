@@ -2334,3 +2334,103 @@ body.page-enter-active main>*:nth-child(5){animation-delay:.14s!important}
   #tylka-page-veil{display:none!important}
   body.page-enter,body.page-enter-active{opacity:1!important;transform:none!important;filter:none!important}
 }
+
+
+/* Desktop reading scale: slightly tighter typography and spacing across the archive. */
+@media(min-width:900px){
+  html{font-size:15px}
+  body{font-size:15px;line-height:1.58}
+  .site-header{min-height:74px;padding-top:.8rem;padding-bottom:.8rem;gap:1.5rem}
+  .wordmark strong{font-size:1.27rem}
+  .monogram{width:34px;height:34px;font-size:1.35rem}
+  .primary-nav{gap:clamp(.65rem,1.5vw,1.45rem)}
+  .primary-nav a{font-size:.74rem}
+  .hero{min-height:500px;padding-top:clamp(3.4rem,7vw,6.8rem);padding-bottom:clamp(3.4rem,7vw,6.8rem);gap:clamp(2rem,5vw,5rem)}
+  h1{font-size:clamp(2.65rem,5.2vw,5.15rem)}
+  h2{font-size:clamp(2.1rem,3.8vw,3.65rem)}
+  .section{padding-top:clamp(3.3rem,6.5vw,5.8rem);padding-bottom:clamp(3.3rem,6.5vw,5.8rem)}
+  .archive-page{padding-top:clamp(2.6rem,5.5vw,5rem);padding-bottom:clamp(2.6rem,5.5vw,5rem)}
+  .archive-page h1{font-size:clamp(2.55rem,4.6vw,4.2rem)}
+  .button{min-height:42px;padding:.65rem 1rem}
+  .paper-card{min-height:215px;padding:1.3rem}
+  .location-toolbar{margin:2.4rem 0 1.1rem}
+  .location-layout{grid-template-columns:minmax(220px,300px) minmax(0,1fr) minmax(245px,300px);gap:1rem}
+  #family-map{height:470px}
+  .location-sidebar,.map-panel{padding:.85rem}
+  .location-item{padding:.72rem .85rem}
+  .location-detail h3{font-size:1.45rem}
+}
+
+/* Associated location records: compact closed bars that expand in place. */
+.location-record{
+  margin:0;
+  padding:0;
+  border-top:1px solid var(--line);
+}
+.location-record-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+  min-height:46px;
+  padding:.55rem .65rem;
+  cursor:pointer;
+  list-style:none;
+  border-radius:2px;
+  transition:background .25s ease,color .25s ease,padding .25s ease;
+}
+.location-record-bar::-webkit-details-marker{display:none}
+.location-record-bar:hover,
+.location-record[open]>.location-record-bar{
+  background:rgba(174,137,83,.13);
+}
+.location-record-labels{display:flex;align-items:center;gap:.65rem;min-width:0;flex-wrap:wrap}
+.location-record-labels strong{
+  display:block;
+  font:1rem var(--serif);
+  line-height:1.25;
+}
+.location-record-labels small{
+  display:inline-block;
+  color:var(--muted);
+  font-size:.65rem;
+  letter-spacing:.04em;
+  text-transform:capitalize;
+}
+.location-record-chevron{
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:25px;height:25px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  color:var(--accent);
+  font-size:.95rem;
+  transition:transform .3s ease,background .3s ease,color .3s ease;
+}
+.location-record[open] .location-record-chevron{
+  transform:rotate(45deg);
+  background:var(--accent-dark);
+  color:var(--paper-light);
+}
+.location-record-body{
+  padding:.1rem .8rem 1rem;
+  animation:location-record-expand .32s ease both;
+}
+.location-record-body>p{
+  margin:.45rem 0 .8rem;
+  color:var(--muted);
+  font-size:.86rem;
+  white-space:pre-wrap;
+}
+.location-record-body .record-preview{max-width:100%;margin:.65rem 0}
+.location-record-body .record-preview img{max-height:420px}
+.location-record-body .text-link{font-size:.82rem}
+@keyframes location-record-expand{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .location-record-body{animation:none}
+  .location-record-bar,.location-record-chevron{transition:none}
+}
