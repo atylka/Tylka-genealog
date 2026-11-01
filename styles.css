@@ -1775,3 +1775,104 @@ body.theme-wave-light:after{
 @media(prefers-reduced-motion:reduce){
   body.theme-wave-dark:after,body.theme-wave-light:after{display:none!important}
 }
+
+
+/* Candlelit atmosphere: layered amber pools, smoked walnut shadows, and aged burgundy. */
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(171,105,43,.16) 0,rgba(115,57,28,.075) 24rem,transparent 48rem),
+    radial-gradient(ellipse at 88% 32%,rgba(116,31,39,.13) 0,transparent 42rem),
+    radial-gradient(ellipse at 48% 92%,rgba(157,96,39,.10) 0,transparent 50rem),
+    linear-gradient(145deg,#100b09 0%,#1a110d 38%,#120c0a 72%,#0b0807 100%)!important;
+  background-attachment:fixed!important;
+}
+html[data-theme="dark"] main,
+html[data-theme="dark"] .archive-page,
+html[data-theme="dark"] .hero,
+html[data-theme="dark"] .section{
+  background:linear-gradient(135deg,rgba(42,27,18,.48),rgba(19,14,12,.28) 48%,rgba(48,18,22,.16))!important;
+}
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .site-footer{
+  background:
+    linear-gradient(105deg,rgba(110,65,30,.20),transparent 42%,rgba(71,15,27,.20)),
+    linear-gradient(180deg,#21160f,#17100d)!important;
+  box-shadow:0 5px 24px rgba(0,0,0,.28),inset 0 1px rgba(226,185,112,.07);
+}
+html[data-theme="dark"] .folio-card,
+html[data-theme="dark"] .paper-card,
+html[data-theme="dark"] .auth-card,
+html[data-theme="dark"] .upload-card,
+html[data-theme="dark"] .home-search-box,
+html[data-theme="dark"] .archive-folders,
+html[data-theme="dark"] .archive-folder-content,
+html[data-theme="dark"] .location-sidebar,
+html[data-theme="dark"] .map-panel,
+html[data-theme="dark"] .modal-card,
+html[data-theme="dark"] .site-menu-panel,
+html[data-theme="dark"] .record-card,
+html[data-theme="dark"] .inbox-item,
+html[data-theme="dark"] .activity-log-item,
+html[data-theme="dark"] .notice,
+html[data-theme="dark"] .generation,
+html[data-theme="dark"] .ancestor-card{
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(190,130,65,.105),transparent 58%),
+    linear-gradient(135deg,#2a1c15 0%,#211611 52%,#241418 100%)!important;
+  box-shadow:inset 0 1px rgba(239,203,139,.075),0 10px 28px rgba(0,0,0,.22);
+}
+html[data-theme="dark"] .chronology-section,
+html[data-theme="dark"] .activity-log-section,
+html[data-theme="dark"] .research-band{
+  background:
+    radial-gradient(ellipse at 78% 0%,rgba(166,103,47,.13),transparent 55%),
+    linear-gradient(115deg,#24170f 0%,#1a110e 54%,#2b1018 100%)!important;
+}
+html[data-theme="dark"] .ticker{
+  background:linear-gradient(90deg,#250b12 0%,#4a1a1d 28%,#382015 65%,#250b12 100%)!important;
+  box-shadow:inset 0 1px rgba(232,190,119,.13),inset 0 -1px rgba(0,0,0,.4);
+}
+html[data-theme="dark"] .button-dark,
+html[data-theme="dark"] .site-header>.site-menu-toggle,
+html[data-theme="dark"] .site-menu-action:hover{
+  background:linear-gradient(145deg,#63202a 0%,#3b101a 58%,#260b12 100%)!important;
+  box-shadow:inset 0 1px rgba(246,211,151,.17),0 4px 14px rgba(0,0,0,.3),0 0 18px rgba(174,112,57,.08);
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .search-fields input,
+html[data-theme="dark"] .search-fields select,
+html[data-theme="dark"] .auth-card input,
+html[data-theme="dark"] .upload-card input,
+html[data-theme="dark"] .upload-card select,
+html[data-theme="dark"] .upload-card textarea,
+html[data-theme="dark"] .record-filters input,
+html[data-theme="dark"] .record-filters select,
+html[data-theme="dark"] .modal-card input{
+  background:linear-gradient(145deg,#100b09,#19100c 72%,#160c10)!important;
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.35);
+}
+html[data-theme="dark"] .folio-card{
+  box-shadow:inset 0 1px rgba(245,209,147,.12),0 0 28px rgba(174,111,48,.07),8px 10px 28px rgba(0,0,0,.28);
+}
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .folio-label,
+html[data-theme="dark"] .record-category,
+html[data-theme="dark"] .timeline-date,
+html[data-theme="dark"] .folder-number,
+html[data-theme="dark"] .search-label,
+html[data-theme="dark"] .location-record-heading{
+  text-shadow:0 0 14px rgba(221,174,96,.16);
+}
+html[data-theme="dark"] .monogram,
+html[data-theme="dark"] .site-header>.site-menu-toggle{
+  filter:drop-shadow(0 0 8px rgba(208,159,83,.16));
+}
+html[data-theme="dark"] .rule,
+html[data-theme="dark"] .timeline,
+html[data-theme="dark"] .timeline-item,
+html[data-theme="dark"] .archive-grid{
+  border-color:rgba(177,135,78,.48)!important;
+}
