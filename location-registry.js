@@ -62,8 +62,20 @@
       initMap();
       const [lat,lng]=await coordinatesFor(place);
       markerLayer.clearLayers();
-      const marker=L.marker([lat,lng]).addTo(markerLayer).bindPopup("<strong>"+escapeText(place.name)+"</strong>").openPopup();
-      map.setView([lat,lng],Math.max(map.getZoom(),8),{animate:true});
+      const pinIcon=L.divIcon({
+        className:"registry-pin-icon",
+        html:'<span class="registry-map-pin" aria-hidden="true"><span></span></span>',
+        iconSize:[34,44],
+        iconAnchor:[17,42],
+        popupAnchor:[0,-40]
+      });
+      const marker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:1000,keyboard:true,title:place.name,alt:"Selected location: "+place.name})
+        .addTo(markerLayer)
+        .bindPopup("<strong>"+escapeText(place.name)+"</strong>")
+        .openPopup();
+      map.invalidateSize({pan:false});
+      map.setView([lat,lng],11,{animate:true});
+      marker.setZIndexOffset(1000);
       const heading=document.createElement("h3");heading.textContent=place.name;
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
       const recordsHeading=document.createElement("p");recordsHeading.className="location-record-heading";recordsHeading.textContent="Associated records";
