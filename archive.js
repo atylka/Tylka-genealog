@@ -70,7 +70,7 @@
   }
   function setOwner(user){
     currentUser=user?.id==="7a8cd586-c68f-4078-b61d-a87f3842b07e"?user:null;
-    user=currentUser;if($("owner-tools"))$("owner-tools").hidden=!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
+    user=currentUser;if($("open-add-record"))$("open-add-record").hidden=!user;if($("owner-tools"))$("owner-tools").hidden=!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if(recordsList)renderRecords();
