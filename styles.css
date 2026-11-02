@@ -3908,3 +3908,20 @@ body.dark-mode #private-archive .archive-folder-content .record-card .record-thu
 @media(max-width:380px){
   #private-archive .archive-folder-content .records-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.35rem!important}
 }
+
+
+/* Home hero banner: slightly shorter while preserving the existing red design. */
+body:has(#brand-banner-title) .brand-banner{
+  min-height:205px!important;
+  padding:2.45rem 1.3rem!important;
+}
+body:has(#brand-banner-title) .brand-banner-kicker{margin-bottom:.7rem!important}
+body:has(#brand-banner-title) .brand-banner-inner>p:last-child{margin-top:.8rem!important}
+@media(max-width:600px){
+  body:has(#brand-banner-title) .brand-banner{
+    min-height:180px!important;
+    padding:2rem 1rem!important;
+  }
+  body:has(#brand-banner-title) .brand-banner:before{inset:9px!important}
+  body:has(#brand-banner-title) .brand-banner:after{inset:16px!important}
+}
