@@ -4955,3 +4955,90 @@ html { scroll-behavior: auto; }
 }
 
 @media (min-width: 761px) { html:not(.reduce-motion) body *, html:not(.reduce-motion) body *::before, html:not(.reduce-motion) body *::after { animation-iteration-count: 1 !important; } }
+
+
+/* Header layout guard: keep the brand and navigation in normal flow,
+   and allow the navigation to wrap rather than collide with page content. */
+.site-header{
+  position:relative!important;
+  inset:auto!important;
+  display:flex!important;
+  flex-flow:row wrap!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:.85rem 1.25rem!important;
+  width:100%;
+  min-width:0;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  z-index:20;
+}
+.site-header>.wordmark{
+  position:relative;
+  flex:0 1 auto;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+}
+.site-header>.primary-nav{
+  position:relative!important;
+  inset:auto!important;
+  flex:1 1 560px;
+  min-width:0;
+  width:auto;
+  max-width:100%;
+  display:flex;
+  flex-flow:row wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.35rem .8rem;
+  margin:0;
+  padding:0;
+  transform:none;
+}
+.site-header>.primary-nav>*{
+  position:relative;
+  flex:0 1 auto;
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+}
+.site-header+.brand-banner,
+.site-header+main,
+.site-header+#main-content{
+  position:relative;
+  margin-top:0!important;
+  clear:both;
+}
+@media(max-width:800px){
+  .site-header{
+    align-items:center!important;
+    gap:.65rem .8rem!important;
+    padding:.8rem 1rem!important;
+  }
+  .site-header>.wordmark{flex:1 1 auto}
+  .site-header>.primary-nav{
+    flex:1 0 100%;
+    width:100%;
+    display:none;
+    flex-flow:column nowrap;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap:.25rem;
+    padding:.4rem 0 .65rem;
+  }
+  .site-header>.primary-nav.is-open{display:flex}
+  .site-header>.primary-nav>*{width:100%;max-width:none}
+  .site-header>.primary-nav a,
+  .site-header>.primary-nav .owner-sign-in-button{
+    box-sizing:border-box;
+    min-height:42px;
+    padding:.65rem .85rem;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+}
+@media(min-width:801px) and (max-width:1100px){
+  .site-header>.primary-nav{flex-basis:100%;justify-content:flex-start}
+}
