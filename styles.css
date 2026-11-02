@@ -4821,3 +4821,33 @@ body:after,
 
 /* Keep manual selection canvases at the exact displayed image ratio for pointer accuracy. */
 .face-crop-canvas-wrap{overflow:auto}.face-crop-canvas-wrap canvas{flex:none;object-fit:fill}
+
+
+/* PERFORMANCE: reduce off-screen layout and paint work on long archive pages. */
+@media (min-width: 700px) {
+  .home-record-tile,
+  .activity-log-item,
+  .record-card,
+  .archive-record-card,
+  .chrono-record-card,
+  .location-record-item,
+  .ancestor-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 230px;
+  }
+}
+.home-record-tile img,
+.record-card img,
+.archive-record-card img,
+.chrono-record-card img,
+.ancestor-card img {
+  content-visibility: auto;
+}
+html { scroll-behavior: auto; }
+.site-header, .site-footer, .home-search-box, .home-record-tile,
+.activity-log-item, .modal-card, .site-modal {
+  transition-duration: .12s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
