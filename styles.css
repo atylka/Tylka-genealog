@@ -7686,3 +7686,29 @@ body.chronosearch-page .chrono-search-layout .chrono-filter-panel{
 body.chronosearch-page .chrono-search-layout .chrono-filter-panel:before{color:#f5d8c9!important}
 body.chronosearch-page .chrono-search-layout .chrono-filter-panel label{color:#fff5ed!important}
 body.chronosearch-page .chrono-search-layout .chrono-filter-panel .connection-status{color:#ffede2!important}
+
+
+/* 2026-11-02: Ancestors masthead full-bleed alignment and readable contrast. */
+body:has(main.ancestor-page) .ancestor-page-header{
+  width:100vw!important;
+  max-width:100vw!important;
+  margin-left:calc(50% - 50vw)!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+}
+body:has(main.ancestor-page) .ancestor-page-header .section-intro{
+  width:min(100%,900px)!important;
+  max-width:900px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+body:has(main.ancestor-page) .ancestor-page-header .section-intro>p{
+  color:#fff1e8!important;
+  text-shadow:0 1px 3px rgba(20,0,5,.72)!important;
+  line-height:1.65!important;
+}
+body:has(main.ancestor-page) .ancestor-page-header .section-intro>p strong{
+  color:#fffaf5!important;
+}
