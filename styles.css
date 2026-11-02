@@ -5895,3 +5895,17 @@ html body header.site-header .primary-nav{display:flex!important;flex-wrap:wrap!
 .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{margin:0!important}
 html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date,body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date{color:#e0c18e!important;border-bottom-color:rgba(205,170,111,.52)!important}
 html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date:after,body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date:after{background:linear-gradient(to bottom,#c39a5c,rgba(195,154,92,.25))!important}
+
+
+/* Remove the surrounding year-column panel: only the individual record cards
+   remain surfaced on the horizontal timeline. */
+.chrono-main #chrono-timeline>.chrono-year-column{
+  background:transparent!important;background-color:transparent!important;
+  border:0!important;border-color:transparent!important;border-radius:0!important;
+  box-shadow:none!important;outline:0!important;padding:.25rem .1rem!important;
+}
+html[data-theme="dark"] .chrono-main #chrono-timeline>.chrono-year-column,
+body[data-theme="dark"] .chrono-main #chrono-timeline>.chrono-year-column{
+  background:transparent!important;background-color:transparent!important;
+  border:0!important;box-shadow:none!important;
+}
