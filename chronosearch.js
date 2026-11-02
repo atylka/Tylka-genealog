@@ -75,7 +75,6 @@
     headingBox.append(node("h3",r.title||"Untitled record"));
     details.append(headingBox);
     const facts=node("div","","chrono-facts-grid");
-    appendInfoBox(facts,"Record date",formatRecordDate(r),"chrono-date-box");
     appendInfoBox(facts,"Location",r.location,"chrono-place-box");
     if(facts.childElementCount)details.append(facts);
     const family=familyValues(r);
