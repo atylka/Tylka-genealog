@@ -94,8 +94,16 @@
  }
  async function load(){
   if(!client){count.textContent="Archive connection unavailable";return;}
-  const {data,error}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").order("name");
-  if(error){count.textContent=error.message.includes("portraits")?"Run the multiple-face portraits migration in Supabase.":"Could not load shared portraits.";return;}
+  let {data,error}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").order("name");
+  // Backward compatibility: older Supabase tables may not yet have the
+  // multi-portrait JSON column. Load their original single-portrait rows
+  // rather than returning early and leaving the entire people grid blank.
+  if(error&&/column .*portraits.* does not exist|could not find .*portraits.* column|schema cache/i.test(error.message||"")){
+   const legacy=await client.from("ancestor_portraits").select("id,name,portrait_url,source_title,source_record_id,updated_at").order("name");
+   data=legacy.data;error=legacy.error;
+   if(!error)data=(data||[]).map(person=>({...person,portraits:person.portrait_url?[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id}]:[]}));
+  }
+  if(error){console.error("Ancestor people query failed:",error);count.textContent="Could not load people: "+error.message;empty.hidden=false;empty.textContent="The ancestor list could not be loaded. Check the Supabase ancestor_portraits table permissions and schema.";return;}
   const people=data||[];
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
   if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
@@ -104,5 +112,5 @@
   const lifeDates=personDates(lifeError?[]:lifeRecords,people);
   render(people,lifeDates);
  }
- load();window.addEventListener("tylka:auth-changed",load);
+ load().catch(error=>{console.error("Ancestor page failed to load:",error);count.textContent="Could not load ancestor cards.";empty.hidden=false;empty.textContent="The ancestor list encountered an error while loading. Please check the browser console.";});window.addEventListener("tylka:auth-changed",load);
 })();
