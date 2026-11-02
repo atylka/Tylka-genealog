@@ -6158,3 +6158,13 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event .chrono-subp
  .chrono-main #chrono-timeline .chrono-event .chrono-record-details>h3{font-size:.94rem!important}
  .chrono-main #chrono-timeline .chrono-event .chrono-info-value{font-size:.68rem!important}
 }
+
+.chrono-main #chrono-timeline .chrono-event .chrono-heading-box{
+ display:grid!important;gap:.12rem!important;min-width:0!important;padding:.4rem .5rem!important;
+ border:1px solid rgba(139,118,88,.55)!important;border-radius:3px!important;
+ background:rgba(135,99,54,.075)!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-heading-box>.record-category{margin:0!important}
+.chrono-main #chrono-timeline .chrono-event .chrono-heading-box>h3{margin:0!important}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event .chrono-heading-box,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event .chrono-heading-box{background:rgba(195,154,92,.09)!important;border-color:#715332!important}
