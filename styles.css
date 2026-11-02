@@ -5839,3 +5839,21 @@ html body header.site-header .wordmark:hover .monogram{
 @media(max-width:420px){
   html body footer.site-footer .footer-mark .wordmark-title{gap:.28rem!important}
 }
+
+
+/* Ancestor profile cards: compact life-event facts and documented family links. */
+#ancestor-grid .ancestor-profile-card{display:grid;grid-template-columns:minmax(105px,34%) minmax(0,1fr);align-items:stretch;overflow:hidden;min-width:0}
+#ancestor-grid .ancestor-profile-photo{padding:0;border:0;border-right:1px solid var(--line);border-radius:0;background:rgba(110,78,45,.08);min-width:0;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+#ancestor-grid .ancestor-profile-photo:disabled{cursor:default;opacity:1}
+#ancestor-grid .ancestor-profile-photo .ancestor-portrait{width:100%;height:100%;min-height:190px;max-height:280px;object-fit:cover}
+#ancestor-grid .ancestor-profile-photo .ancestor-portrait-placeholder{width:100%;height:100%;min-height:190px;padding:.5rem;display:grid;place-items:center;text-align:center;font:italic .85rem Georgia,serif;color:var(--muted,#725b43)}
+#ancestor-grid .ancestor-profile-body{padding:.9rem!important;min-width:0;display:flex;flex-direction:column;gap:.45rem}
+#ancestor-grid .ancestor-profile-body h3{margin:0!important;font-size:1.12rem!important;line-height:1.2;overflow-wrap:anywhere}
+#ancestor-grid .ancestor-profile-life{padding:.45rem .55rem;border-block:1px solid var(--line);font-size:.78rem;line-height:1.5}
+#ancestor-grid .ancestor-profile-life p{margin:.12rem 0!important;overflow-wrap:anywhere}
+#ancestor-grid .ancestor-profile-life strong{font-variant:small-caps;letter-spacing:.04em}
+#ancestor-grid .ancestor-profile-relations h4{margin:0 0 .12rem!important;font:600 .72rem Georgia,serif;letter-spacing:.09em;text-transform:uppercase;color:var(--accent,#80552f)}
+#ancestor-grid .ancestor-profile-relations p{margin:0!important;font-size:.78rem;line-height:1.4;overflow-wrap:anywhere}
+#ancestor-grid .ancestor-profile-body .ancestor-source{margin:auto 0 0!important;font-size:.68rem;opacity:.75}
+@media(max-width:760px){#ancestor-grid.ancestor-grid{grid-template-columns:1fr!important}#ancestor-grid .ancestor-profile-card{grid-template-columns:112px minmax(0,1fr)}#ancestor-grid .ancestor-profile-photo .ancestor-portrait,#ancestor-grid .ancestor-profile-photo .ancestor-portrait-placeholder{min-height:170px;max-height:none}}
+@media(max-width:390px){#ancestor-grid .ancestor-profile-card{grid-template-columns:92px minmax(0,1fr)}#ancestor-grid .ancestor-profile-body{padding:.65rem!important}}
