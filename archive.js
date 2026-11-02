@@ -69,8 +69,8 @@
   function renderPageNameList(record){
     const section=$("detail-family-information"),list=$("page-name-list"),familyList=$("detail-family-list"),otherNames=$("other-page-names");
     if(!section||!list||!familyList)return;
-    familyList.replaceChildren();list.replaceChildren();
-    const family=readFamilyRelationships(record),pageNames=readPageNames(record);
+    familyList.replaceChildren();list.replaceChildren();activePageNameHighlight=null;
+    const family=readFamilyRelationships(record),pageNames=readPageNames(record),matchedPageNameIndexes=new Set();
     const groups=[{title:"Parents",roles:["Mother","Father"]},{title:"Grandparents",roles:["Mother’s father","Mother’s mother","Father’s father","Father’s mother"]}];
     groups.forEach(group=>{
       const entries=family.filter(([role])=>group.roles.includes(role));
@@ -79,7 +79,7 @@
       wrapper.className="identified-family-group";heading.textContent=group.title;grid.className="identified-family-grid";wrapper.append(heading,grid);
       entries.forEach(([role,name])=>{
         const card=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong"),actions=document.createElement("div");
-        const matchIndex=pageNames.findIndex(entry=>entry.name.trim().toLocaleLowerCase()===name.trim().toLocaleLowerCase());
+        const matchIndex=pageNames.findIndex(entry=>entry.name.trim().toLocaleLowerCase()===name.trim().toLocaleLowerCase());if(matchIndex>=0)matchedPageNameIndexes.add(matchIndex);
         card.className="identified-family-card";label.textContent=role;value.textContent=name;actions.className="identified-name-actions";
         card.append(label,value);
         card.tabIndex=0;card.setAttribute("role","group");card.setAttribute("aria-label",role+": "+name);
@@ -97,8 +97,7 @@
       });
       familyList.append(wrapper);
     });
-    const familyKeys=new Set(family.map(([,name])=>name.trim().toLocaleLowerCase()));
-    const other=pageNames.map((entry,index)=>({entry,index})).filter(({entry})=>!familyKeys.has(entry.name.trim().toLocaleLowerCase()));
+    const other=pageNames.map((entry,index)=>({entry,index})).filter(({index})=>!matchedPageNameIndexes.has(index));
     other.forEach(({entry,index})=>{
       const li=document.createElement("li"),label=document.createElement("span"),actions=document.createElement("div");
       li.className="identified-name-row";label.textContent=entry.name;actions.className="identified-name-actions";
