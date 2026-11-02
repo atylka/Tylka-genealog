@@ -7168,10 +7168,6 @@ body.dark-mode .location-page-header::before{
 .chrono-main{
   overflow:visible!important;
 }
-.home-search-page,
-.chrono-main{
-  overflow-x:clip!important;
-}
 .home-search-header .home-search-intro,
 .home-search-header .home-search-box,
 .chrono-search-layout .chrono-search-intro,
