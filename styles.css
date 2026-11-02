@@ -6374,3 +6374,127 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
 .chrono-main #chrono-timeline .chrono-info-box{
  min-width:0!important;overflow:hidden!important;
 }
+
+
+/* Page title and search banners: fitted parchment panels with restrained antique edging. */
+:root{
+ --title-banner-ink:#3b241b;
+ --title-banner-edge:rgba(111,67,43,.38);
+ --title-banner-glow:rgba(214,177,115,.18);
+}
+.home-search-intro,
+.chrono-search-intro,
+.ancestor-page>.section-intro,
+.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow,
+.archive-page:not(.home-search-page):not(.chrono-main) > h1,
+.location-registry-page > .location-page-heading{
+ position:relative;
+ isolation:isolate;
+}
+.home-search-intro,
+.chrono-search-intro,
+.ancestor-page>.section-intro{
+ padding:clamp(1rem,2.2vw,1.65rem) clamp(1rem,2.6vw,2rem)!important;
+ border:1px solid var(--title-banner-edge)!important;
+ border-radius:5px!important;
+ background:
+   radial-gradient(ellipse at 12% 15%,var(--title-banner-glow),transparent 58%),
+   linear-gradient(105deg,rgba(230,211,174,.78),rgba(246,235,210,.55) 54%,rgba(210,180,133,.45))!important;
+ box-shadow:inset 0 1px rgba(255,250,230,.72),0 5px 16px rgba(65,39,23,.08)!important;
+}
+.home-search-intro h1,
+.chrono-search-intro h1,
+.ancestor-page>.section-intro h1{
+ text-wrap:balance;
+}
+.home-search-box,
+.chrono-filter-panel,
+.location-tool-box{
+ position:relative!important;
+ isolation:isolate!important;
+ border:1px solid var(--title-banner-edge)!important;
+ border-radius:5px!important;
+ background:
+   radial-gradient(ellipse at 90% 0%,rgba(214,177,115,.16),transparent 52%),
+   linear-gradient(120deg,rgba(238,222,190,.82),rgba(249,240,220,.72) 58%,rgba(220,194,151,.55))!important;
+ box-shadow:inset 0 1px rgba(255,250,230,.72),0 5px 16px rgba(65,39,23,.08)!important;
+ padding:clamp(.85rem,1.8vw,1.35rem)!important;
+}
+.home-search-box .search-fields,
+.chrono-filter-grid{gap:clamp(.65rem,1.4vw,1rem)!important}
+.home-search-box input,
+.home-search-box select,
+.chrono-filter-panel input,
+.chrono-filter-panel select,
+.location-tool-box input,
+.location-tool-box select,
+.location-tool-box .person-picker-trigger{
+ border-color:rgba(105,69,45,.45)!important;
+ box-shadow:inset 0 1px 2px rgba(70,45,28,.07)!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main) > h1{
+ width:fit-content!important;
+ max-width:min(100%,1000px)!important;
+ padding:.45rem clamp(.8rem,2vw,1.35rem)!important;
+ margin:.1rem 0 .55rem!important;
+ border:1px solid var(--title-banner-edge)!important;
+ border-left:4px solid #874b38!important;
+ border-radius:3px!important;
+ background:linear-gradient(100deg,rgba(225,203,163,.82),rgba(244,231,202,.55) 72%,rgba(207,170,118,.42))!important;
+ box-shadow:inset 0 1px rgba(255,250,230,.68),0 4px 12px rgba(65,39,23,.07)!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
+ width:fit-content!important;
+ max-width:100%!important;
+ padding:.24rem .75rem!important;
+ margin-bottom:.25rem!important;
+ border:1px solid rgba(111,67,43,.2)!important;
+ border-radius:3px!important;
+ background:rgba(217,188,143,.38)!important;
+}
+.records-heading,
+.section-heading{
+ border-radius:4px!important;
+}
+.location-layout .location-tool-box{
+ padding:clamp(.8rem,1.5vw,1.15rem)!important;
+}
+.location-records-panel{
+ border:1px solid var(--title-banner-edge)!important;
+ border-radius:5px!important;
+ background:linear-gradient(145deg,rgba(238,222,190,.76),rgba(249,240,220,.62))!important;
+ box-shadow:inset 0 1px rgba(255,250,230,.65),0 5px 16px rgba(65,39,23,.07)!important;
+ padding:clamp(.8rem,1.5vw,1.15rem)!important;
+}
+body.dark-mode .home-search-intro,
+body.dark-mode .chrono-search-intro,
+body.dark-mode .ancestor-page>.section-intro,
+body.dark-mode .home-search-box,
+body.dark-mode .chrono-filter-panel,
+body.dark-mode .location-tool-box,
+body.dark-mode .location-records-panel,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
+ border-color:rgba(190,145,83,.42)!important;
+ background:
+   radial-gradient(ellipse at 12% 15%,rgba(180,125,58,.16),transparent 58%),
+   linear-gradient(110deg,rgba(49,32,24,.98),rgba(66,43,29,.96) 58%,rgba(39,25,21,.98))!important;
+ color:#f0dfbf!important;
+ box-shadow:inset 0 1px rgba(229,193,130,.1),0 6px 18px rgba(0,0,0,.18)!important;
+}
+body.dark-mode .home-search-intro h1,
+body.dark-mode .chrono-search-intro h1,
+body.dark-mode .ancestor-page>.section-intro h1,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
+ color:#f0dfbf!important;
+}
+@media(max-width:700px){
+ .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+  padding:.9rem!important;
+ }
+ .home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
+  padding:.8rem!important;
+ }
+ .archive-page:not(.home-search-page):not(.chrono-main) > h1{
+  width:100%!important;
+ }
+}
