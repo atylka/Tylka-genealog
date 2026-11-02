@@ -3910,18 +3910,26 @@ body.dark-mode #private-archive .archive-folder-content .record-card .record-thu
 }
 
 
-/* Home hero banner: slightly shorter while preserving the existing red design. */
-body:has(#brand-banner-title) .brand-banner{
-  min-height:205px!important;
-  padding:2.45rem 1.3rem!important;
+
+
+/* Definitive homepage banner sizing override; min-height:0 avoids adding an oversized content box. */
+body .brand-banner[aria-label="Tylka Genealogical Log banner"]{
+  box-sizing:border-box!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:2rem 1.3rem!important;
 }
-body:has(#brand-banner-title) .brand-banner-kicker{margin-bottom:.7rem!important}
-body:has(#brand-banner-title) .brand-banner-inner>p:last-child{margin-top:.8rem!important}
+body .brand-banner[aria-label="Tylka Genealogical Log banner"] .brand-banner-kicker{
+  margin:0 0 .55rem!important;
+}
+body .brand-banner[aria-label="Tylka Genealogical Log banner"] .brand-banner-inner>p:last-child{
+  margin:.65rem auto 0!important;
+}
 @media(max-width:600px){
-  body:has(#brand-banner-title) .brand-banner{
-    min-height:180px!important;
-    padding:2rem 1rem!important;
+  body .brand-banner[aria-label="Tylka Genealogical Log banner"]{
+    min-height:0!important;
+    padding:1.55rem 1rem!important;
   }
-  body:has(#brand-banner-title) .brand-banner:before{inset:9px!important}
-  body:has(#brand-banner-title) .brand-banner:after{inset:16px!important}
+  body .brand-banner[aria-label="Tylka Genealogical Log banner"]:before{inset:9px!important}
+  body .brand-banner[aria-label="Tylka Genealogical Log banner"]:after{inset:16px!important}
 }
