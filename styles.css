@@ -6257,3 +6257,16 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
   flex-basis:104px!important;height:104px!important;min-height:104px!important;max-height:104px!important;
  }
 }
+
+
+/* Owner-only controls for custom ChronoSearch card thumbnails. */
+.chrono-main #chrono-timeline .chrono-thumbnail-controls{
+ display:flex!important;flex:0 0 auto!important;flex-wrap:wrap!important;align-items:center!important;
+ gap:.35rem!important;padding:.42rem 0 0!important;margin-top:auto!important;
+ border-top:1px solid rgba(139,118,88,.42)!important;
+}
+.chrono-main #chrono-timeline .chrono-thumbnail-controls .small-button{
+ min-height:28px!important;padding:.24rem .55rem!important;font-size:.68rem!important;line-height:1.2!important;
+}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-thumbnail-controls,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-thumbnail-controls{border-color:#715332!important}
