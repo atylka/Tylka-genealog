@@ -26,7 +26,7 @@
  };
  const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\s*([^\r\n]+)$/im);return m?m[1].trim():"";};
  const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").trim();return (raw?raw+"\n\n":"")+"Chrono thumbnail: "+path;};
- const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").replace(/\\n{3,}/g,"\\n\\n").trim();
+ const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").replace(/\n{3,}/g,"\n\n").trim();
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
   const box=node("div","",("chrono-info-box "+cls).trim());
