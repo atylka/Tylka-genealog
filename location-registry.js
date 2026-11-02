@@ -130,6 +130,21 @@
     coordinateCache.set(key,request);
     try{return await request;}catch(error){coordinateCache.delete(key);throw error;}
   }
+  function makeLocationPopup(place){
+    const popup=document.createElement("div");popup.className="registry-pin-popup";
+    const heading=document.createElement("strong");heading.className="registry-pin-popup-title";heading.textContent=place.name;popup.append(heading);
+    const strip=document.createElement("div");strip.className="registry-pin-popup-images";
+    place.records.slice(0,2).forEach(record=>{
+      const tile=document.createElement("div");tile.className="registry-pin-popup-image";
+      if(record.file_path&&(record.mime_type||"").startsWith("image/")){
+        const img=document.createElement("img");img.src=client.storage.from("family-archive").getPublicUrl(record.file_path).data.publicUrl;img.alt=record.title||"Associated family record";img.loading="lazy";tile.append(img);
+      }else{const label=document.createElement("span");label.textContent=(record.category||"Record").slice(0,18);tile.append(label);}
+      strip.append(tile);
+    });
+    if(place.records.length>2){const more=document.createElement("span");more.className="registry-pin-popup-more";more.textContent="+"+(place.records.length-2);strip.append(more);}
+    popup.append(strip);return popup;
+  }
+
   async function selectPlace(place,preserveMarkers=false){
     selected=place;const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
@@ -146,7 +161,7 @@
       });
       const marker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:2000,keyboard:true,title:place.name,alt:"Selected location: "+place.name})
         .addTo(markerLayer)
-        .bindPopup("<strong>"+escapeText(place.name)+"</strong>")
+        .bindPopup(makeLocationPopup(place),{className:"registry-pin-popup-container"})
         .bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-38],className:"registry-location-label"})
         .openPopup();
       map.stop();
