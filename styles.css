@@ -4247,3 +4247,19 @@ html body header.site-header .primary-nav{margin-left:auto!important;}
  html body header.site-header .wordmark .wordmark-title small{font-size:.48rem!important;letter-spacing:.025em!important;}
  html body header.site-header .pwa-install-button{font-size:.61rem!important;padding:.4rem .42rem!important;}
 }
+
+
+/* Refined antique-brass settings medallion and crisp custom gear artwork. */
+.site-header>.site-menu-toggle{
+  width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;
+  flex:0 0 48px!important;border:1px solid #b58a50!important;border-radius:14px!important;
+  background:linear-gradient(145deg,#54202a 0%,#35151b 58%,#241512 100%)!important;
+  color:#e7c58a!important;box-shadow:inset 0 1px rgba(255,235,190,.2),inset 0 -3px 8px rgba(0,0,0,.28),0 3px 12px rgba(54,26,17,.2)!important;
+  position:relative;overflow:hidden;
+}
+.site-header>.site-menu-toggle:before{content:"";position:absolute;inset:4px;border:1px solid rgba(218,181,117,.3);border-radius:10px;pointer-events:none}
+.site-header>.site-menu-toggle .settings-gear-art{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px rgba(0,0,0,.45));transition:transform .35s ease,color .25s}
+.site-header>.site-menu-toggle:hover,.site-header>.site-menu-toggle:focus-visible,.site-header>.site-menu-toggle[aria-expanded=true]{background:linear-gradient(145deg,#70402a 0%,#4b1b21 65%,#2c1714 100%)!important;color:#ffe0a1!important;border-color:#d2aa6c!important;box-shadow:0 0 0 3px rgba(181,138,80,.16),inset 0 1px rgba(255,235,190,.25),0 5px 16px rgba(35,15,12,.28)!important;outline:none}
+.site-header>.site-menu-toggle:hover .settings-gear-art{transform:rotate(45deg)}
+.site-header>.site-menu-toggle[aria-expanded=true] .settings-gear-art{transform:rotate(30deg)}
+@media(max-width:560px){.site-header>.site-menu-toggle{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex-basis:42px!important}.site-header>.site-menu-toggle .settings-gear-art{width:22px;height:22px}}
