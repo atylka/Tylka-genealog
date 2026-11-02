@@ -5694,3 +5694,114 @@ body[data-theme="dark"] .chrono-main .chrono-filter-grid input,
 body[data-theme="dark"] .chrono-main .chrono-filter-grid select{
   background:#38271b!important;color:#f0dfc0!important;border-color:#765936!important;
 }
+
+
+/* SITE-WIDE AGED ARCHIVAL PAPER FINISH
+   Subtle fibers, foxing, uneven parchment tone and worn edges.
+   Texture stays behind content and never intercepts interaction. */
+:root{
+  --paper-light:#f0e3c9;
+  --paper:#e5d2ae;
+  --paper-dark:#cbb28b;
+  --line:#a98b68;
+}
+html,body{
+  background-color:#d8c39e!important;
+  background-image:
+    radial-gradient(ellipse at 13% 8%,rgba(255,249,226,.58),transparent 38%),
+    radial-gradient(ellipse at 88% 24%,rgba(133,88,48,.13),transparent 42%),
+    radial-gradient(ellipse at 48% 92%,rgba(112,72,39,.12),transparent 48%),
+    linear-gradient(112deg,rgba(255,255,255,.12),transparent 28%,rgba(105,68,38,.07) 78%,transparent)!important;
+  background-attachment:fixed!important;
+}
+body{position:relative;isolation:isolate}
+body:before{
+  content:"";position:fixed;inset:0;z-index:9000;pointer-events:none;
+  opacity:.22;mix-blend-mode:multiply;
+  background-image:
+    radial-gradient(ellipse at 7% 16%,rgba(117,70,34,.22) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 83% 37%,rgba(126,79,39,.18) 0 1px,transparent 2.4px),
+    radial-gradient(ellipse at 31% 78%,rgba(117,70,34,.16) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 94% 88%,rgba(139,91,45,.15) 0 1.2px,transparent 2.8px),
+    repeating-linear-gradient(2deg,rgba(104,74,42,.035) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(91deg,rgba(255,255,255,.11) 0 1px,transparent 1px 5px),
+    radial-gradient(ellipse at center,transparent 54%,rgba(92,57,29,.12) 100%);
+  background-size:137px 113px,181px 157px,211px 173px,163px 197px,auto,auto,100% 100%;
+}
+body:after{
+  content:"";position:fixed;inset:0;z-index:8999;pointer-events:none;
+  opacity:.24;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(111,68,35,.17),transparent 23%),
+    radial-gradient(ellipse at 100% 0%,rgba(111,68,35,.13),transparent 22%),
+    radial-gradient(ellipse at 0% 100%,rgba(111,68,35,.16),transparent 25%),
+    radial-gradient(ellipse at 100% 100%,rgba(111,68,35,.18),transparent 24%);
+}
+main,.archive-page,.home-search-page,.ancestor-page{
+  background-color:transparent;
+}
+:is(.home-search-box,.chrono-filter-panel,.location-sidebar,.map-panel,
+.location-records-panel,.archive-folder-content,.archive-folder,
+.record-card,.home-search-record-card,.ancestor-card,.activity-log-item,
+.inbox-item,.modal-content,.dialog-content,.settings-panel,.search-panel){
+  background-image:
+    radial-gradient(ellipse at 12% 8%,rgba(255,250,231,.28),transparent 58%),
+    repeating-linear-gradient(0deg,rgba(118,82,45,.018) 0 1px,transparent 1px 4px);
+}
+:is(.home-search-box,.chrono-filter-panel,.location-sidebar,.map-panel,
+.location-records-panel,.archive-folder-content,.record-card,
+.home-search-record-card,.ancestor-card){
+  box-shadow:inset 0 1px rgba(255,250,229,.38),0 2px 8px rgba(67,43,25,.07);
+}
+.archive-folder-content,.home-search-box,.chrono-filter-panel{
+  border-color:rgba(125,91,57,.58)!important;
+}
+.record-thumbnail,.record-preview,.face-crop-canvas-wrap{
+  background-color:#d8c5a2;
+}
+.record-thumbnail img,.record-preview img{
+  /* Preserve original archival scans without tinting or texture overlays. */
+  filter:none!important;
+}
+html[data-theme="dark"],body[data-theme="dark"],html.theme-dark,body.theme-dark,body.dark-mode{
+  background-color:#241910!important;
+  background-image:
+    radial-gradient(ellipse at 14% 12%,rgba(157,111,57,.12),transparent 38%),
+    radial-gradient(ellipse at 88% 32%,rgba(91,43,28,.18),transparent 44%),
+    radial-gradient(ellipse at 50% 100%,rgba(12,8,5,.45),transparent 58%),
+    linear-gradient(115deg,rgba(197,151,82,.035),transparent 48%,rgba(0,0,0,.16))!important;
+}
+html[data-theme="dark"] body:before,body[data-theme="dark"]:before,
+html.theme-dark body:before,body.theme-dark:before,body.dark-mode:before{
+  opacity:.18;mix-blend-mode:screen;
+  background-image:
+    radial-gradient(ellipse at 7% 16%,rgba(221,177,111,.12) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 83% 37%,rgba(190,133,71,.12) 0 1px,transparent 2.4px),
+    radial-gradient(ellipse at 31% 78%,rgba(221,177,111,.10) 0 1px,transparent 2px),
+    repeating-linear-gradient(2deg,rgba(224,185,123,.025) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(91deg,rgba(255,225,172,.035) 0 1px,transparent 1px 5px);
+  background-size:137px 113px,181px 157px,211px 173px,auto,auto;
+}
+html[data-theme="dark"] body:after,body[data-theme="dark"]:after,
+html.theme-dark body:after,body.theme-dark:after,body.dark-mode:after{
+  opacity:.3;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(0,0,0,.38),transparent 25%),
+    radial-gradient(ellipse at 100% 0%,rgba(0,0,0,.32),transparent 24%),
+    radial-gradient(ellipse at 0% 100%,rgba(0,0,0,.4),transparent 26%),
+    radial-gradient(ellipse at 100% 100%,rgba(0,0,0,.4),transparent 25%);
+}
+html[data-theme="dark"] :is(.home-search-box,.chrono-filter-panel,.location-sidebar,
+.map-panel,.location-records-panel,.archive-folder-content,.record-card,
+.home-search-record-card,.ancestor-card),
+body[data-theme="dark"] :is(.home-search-box,.chrono-filter-panel,.location-sidebar,
+.map-panel,.location-records-panel,.archive-folder-content,.record-card,
+.home-search-record-card,.ancestor-card){
+  background-image:
+    radial-gradient(ellipse at 12% 8%,rgba(208,166,103,.055),transparent 58%),
+    repeating-linear-gradient(0deg,rgba(226,190,133,.018) 0 1px,transparent 1px 4px);
+  box-shadow:inset 0 1px rgba(255,220,164,.06),0 3px 10px rgba(0,0,0,.18);
+}
+@media(prefers-reduced-motion:reduce){
+  body:before,body:after{scroll-behavior:auto}
+}
