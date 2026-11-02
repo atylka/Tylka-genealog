@@ -4764,3 +4764,6 @@ html[data-theme="dark"] .detail-family-information,body[data-theme="dark"] .deta
 html[data-theme="dark"] .identified-family-card,body[data-theme="dark"] .identified-family-card{background:#342318;border-color:#715332;color:#ead9b7}
 @media(max-width:760px){.identified-family-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:420px){.identified-family-grid{grid-template-columns:1fr}}
+
+/* Keep owner-only research assessment controls hidden for public visitors. */
+#confidence-editor[hidden]{display:none!important}
