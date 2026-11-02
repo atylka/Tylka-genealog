@@ -316,33 +316,53 @@
   function finishFaceDrag(event){if(event)event.preventDefault();faceDragStart=null;}
   faceCanvas?.addEventListener("pointerup",finishFaceDrag);faceCanvas?.addEventListener("pointercancel",finishFaceDrag);faceCanvas?.addEventListener("lostpointercapture",finishFaceDrag);
   $("face-crop-reset")?.addEventListener("click",()=>{faceSelection=null;drawFaceCanvas();setMessage($("face-crop-status"),"Selection cleared.");});
+  function selectedFaceCropBlob(){
+    return new Promise((resolve,reject)=>{
+      if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return reject(new Error("Drag a box around the face first."));
+      const side=Math.min(Math.max(faceSelection.w,faceSelection.h),faceCanvas.width,faceCanvas.height),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
+      const sx=Math.max(0,Math.min(faceCanvas.width-side,cx-side/2)),sy=Math.max(0,Math.min(faceCanvas.height-side,cy-side/2));
+      const output=document.createElement("canvas");output.width=512;output.height=512;
+      output.getContext("2d").drawImage(faceSourceImage,sx,sy,side,side,0,0,512,512);
+      output.toBlob(blob=>blob?resolve(blob):reject(new Error("Could not prepare the portrait image.")),"image/jpeg",.88);
+    });
+  }
   $("save-face-portrait")?.addEventListener("click",async()=>{
-    const name=$("face-person-name").value.trim();
+    const name=$("face-person-name").value.trim(),record=window.tylkaActiveDetailRecord;
+    if(!name)return setMessage($("face-crop-status"),"Enter the person's name.",true);
+    if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return setMessage($("face-crop-status"),"Drag a box around the face first.",true);
+    if(!client||!currentUser)return setMessage($("face-crop-status"),"Sign in as the archive owner before saving identifications.",true);
+    const button=$("save-face-portrait");button.disabled=true;setMessage($("face-crop-status"),"Saving face identification to this record…");
+    try{
+      const entries=readFaceIdentifications(record);
+      entries.push({name,rect:{x:faceSelection.x/faceCanvas.width,y:faceSelection.y/faceCanvas.height,w:faceSelection.w/faceCanvas.width,h:faceSelection.h/faceCanvas.height}});
+      const description=writeRecordMetadata(record,"Face identifications",entries);
+      const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;
+      record.description=description;renderFaceIdentificationList(record);drawPageNameOverlay(record);
+      setMessage($("face-crop-status"),"Face identification saved to this record only. Use the separate portrait action only if you want a portrait in Ancestors.");
+      setTimeout(()=>{closeModals();},900);
+    }catch(error){setMessage($("face-crop-status"),error.message||"Could not save this face identification.",true);}
+    finally{button.disabled=false;}
+  });
+  $("save-ancestor-portrait")?.addEventListener("click",async()=>{
+    const name=$("face-person-name").value.trim(),record=window.tylkaActiveDetailRecord;
     if(!name)return setMessage($("face-crop-status"),"Enter the ancestor's name.",true);
     if(!faceSelection||faceSelection.w<12||faceSelection.h<12)return setMessage($("face-crop-status"),"Drag a box around the face first.",true);
     if(!client||!currentUser)return setMessage($("face-crop-status"),"Sign in as the archive owner before saving portraits.",true);
-    const side=Math.min(Math.max(faceSelection.w,faceSelection.h),faceCanvas.width,faceCanvas.height),cx=faceSelection.x+faceSelection.w/2,cy=faceSelection.y+faceSelection.h/2;
-    const sx=Math.max(0,Math.min(faceCanvas.width-side,cx-side/2)),sy=Math.max(0,Math.min(faceCanvas.height-side,cy-side/2));
-    const output=document.createElement("canvas");output.width=512;output.height=512;
-    output.getContext("2d").drawImage(faceSourceImage,sx,sy,side,side,0,0,512,512);
-    const button=$("save-face-portrait");button.disabled=true;setMessage($("face-crop-status"),"Saving portrait to the shared archive…");
+    const button=$("save-ancestor-portrait");button.disabled=true;setMessage($("face-crop-status"),"Saving separate ancestor portrait…");
     try{
-      const blob=await new Promise((resolve,reject)=>output.toBlob(value=>value?resolve(value):reject(new Error("Could not prepare the portrait image.")),"image/jpeg",.88));
-      const path=currentUser.id+"/ancestor-portraits/"+crypto.randomUUID()+".jpg";
-      const uploaded=await client.storage.from("family-archive").upload(path,blob,{contentType:"image/jpeg",upsert:false});
-      if(uploaded.error)throw uploaded.error;
+      const blob=await selectedFaceCropBlob(),path=currentUser.id+"/ancestor-portraits/"+crypto.randomUUID()+".jpg";
+      const uploaded=await client.storage.from("family-archive").upload(path,blob,{contentType:"image/jpeg",upsert:false});if(uploaded.error)throw uploaded.error;
       const portraitUrl=client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
-      const {data:existingRows,error:lookupError}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").ilike("name",name);
-      if(lookupError)throw lookupError;
-      const existing=existingRows?.find(person=>person.name.toLocaleLowerCase()===name.toLocaleLowerCase());
-      const face={url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,source_year:(String(window.tylkaActiveDetailRecord.record_date||"").match(/(?:18|19|20)\d{2}/)||[])[0]||null,created_at:new Date().toISOString()};
-      const prior=Array.isArray(existing?.portraits)?existing.portraits:(existing?.portrait_url?[{url:existing.portrait_url,source_record_id:existing.source_record_id,source_title:existing.source_title,created_at:existing.updated_at}]:[]);
-      const values={name,portrait_url:existing?.portrait_url||portraitUrl,portraits:[...prior,face],source_record_id:existing?.source_record_id||window.tylkaActiveDetailRecord.id,source_title:existing?.source_title||window.tylkaActiveDetailRecord.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
-      const result=existing?await client.from("ancestor_portraits").update(values).eq("id",existing.id):await client.from("ancestor_portraits").insert(values);
-      if(result.error)throw result.error;
-      const record=window.tylkaActiveDetailRecord,faceEntries=readFaceIdentifications(record);faceEntries.push({name,rect:{x:faceSelection.x/faceCanvas.width,y:faceSelection.y/faceCanvas.height,w:faceSelection.w/faceCanvas.width,h:faceSelection.h/faceCanvas.height}});const updatedDescription=writeRecordMetadata(record,"Face identifications",faceEntries);const recordUpdate=await client.from("archive_records").update({description:updatedDescription}).eq("id",record.id);if(recordUpdate.error)throw recordUpdate.error;record.description=updatedDescription;renderFaceIdentificationList(record);drawPageNameOverlay(record);
-      setMessage($("face-crop-status"),"Portrait and photograph identification saved to the shared archive.");setTimeout(()=>{closeModals();},700);
-    }catch(error){setMessage($("face-crop-status"),error.message||"Could not save portrait. Run the supplied Supabase migration and check storage permissions.",true);}
+      const {data:rows,error:lookupError}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").ilike("name",name);if(lookupError)throw lookupError;
+      const existing=rows?.find(person=>person.name.toLocaleLowerCase()===name.toLocaleLowerCase());
+      const rawDate=String(record?.record_date||"").trim()||((String(record?.description||"").match(/^Date on record:\s*([^\r\n]+)/im)||[])[1]||"");
+      const year=(rawDate.match(/(?:17|18|19|20)\d{2}/)||[])[0]||null;
+      const face={url:portraitUrl,source_record_id:record.id,source_title:record.title,source_year:year,created_at:new Date().toISOString()};
+      const prior=Array.isArray(existing?.portraits)?existing.portraits:(existing?.portrait_url?[{url:existing.portrait_url,source_record_id:existing.source_record_id,source_title:existing.source_title,source_year:year,created_at:existing.updated_at}]:[]);
+      const values={name,portrait_url:existing?.portrait_url||portraitUrl,portraits:[...prior,face],source_record_id:existing?.source_record_id||record.id,source_title:existing?.source_title||record.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
+      const result=existing?await client.from("ancestor_portraits").update(values).eq("id",existing.id):await client.from("ancestor_portraits").insert(values);if(result.error)throw result.error;
+      setMessage($("face-crop-status"),"Ancestor portrait saved separately. It was not added as a face identification on the record.");setTimeout(()=>{closeModals();},900);
+    }catch(error){setMessage($("face-crop-status"),error.message||"Could not save the ancestor portrait.",true);}
     finally{button.disabled=false;}
   });
   function syncFaceButton(){const record=window.tylkaActiveDetailRecord;syncPageNameButton();const button=$("mark-face");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);}
