@@ -1,4 +1,4 @@
-const VERSION='tylka-app-20261102-marriage-auto-title-1';
+const VERSION='tylka-app-20261102-marriage-hide-title-1';
 const SHELL=[ './','./index.html','./archive.html','./ancestors.html','./chronosearch.html','./location-registry.html','./styles.css?v=20261102-leaflet-original-smooth-1','./site-accessibility.js?v=20261102-a11y2','./icon.svg','./manifest.webmanifest' ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL.map(path=>new URL(path,self.registration.scope).href).filter(url=>new URL(url).origin===self.location.origin))).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==VERSION).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
