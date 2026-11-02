@@ -3435,40 +3435,6 @@ html[data-theme="dark"] body .site-header .site-menu-toggle{background:#38251e!i
 html[data-theme="dark"] body .site-header{background-color:#49352b!important;background-image:linear-gradient(100deg,#684c39 0%,#5d4232 43%,#51392d 72%,#493229 100%)!important;border-bottom:2px solid #c09a60!important;color:#f7e8ca!important}
 html[data-theme="dark"] body .site-header .wordmark,html[data-theme="dark"] body .site-header .wordmark strong,html[data-theme="dark"] body .site-header .wordmark small,html[data-theme="dark"] body .site-header .primary-nav a{color:#f7e8ca!important}
 html[data-theme="dark"] body .site-header .site-menu-toggle{background:#51392d!important;color:#f7e8ca!important;border-color:#c09a60!important}
-/* Match the header's complete logo animation to the footer's antique-ink animation. */
-.site-header .wordmark,.site-footer .footer-mark{animation:antique-ink 8s ease-in-out infinite!important}
-.site-header .wordmark .monogram,.site-footer .footer-mark .monogram{position:relative;overflow:hidden;animation:antique-ink 8s ease-in-out infinite!important}
-@media(prefers-reduced-motion:reduce){.site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}}
-
-
-/* Definitive header palette and logo motion: override the global performance reset intentionally. */
-html[data-theme="dark"] body header.site-header{
-  background:#594033!important;
-  background-image:linear-gradient(105deg,#72543f 0%,#674a37 42%,#5b4031 72%,#52392d 100%)!important;
-  background-color:#594033!important;
-  border-bottom:2px solid #c09a60!important;
-  color:#fff0d2!important;
-}
-html[data-theme="dark"] body header.site-header .wordmark,
-html[data-theme="dark"] body header.site-header .wordmark strong,
-html[data-theme="dark"] body header.site-header .wordmark small,
-html[data-theme="dark"] body header.site-header .primary-nav a{color:#fff0d2!important}
-html[data-theme="dark"] body header.site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
-.site-header .wordmark,.site-footer .footer-mark{
-  animation:antique-ink 8s ease-in-out infinite!important;
-}
-.site-header .wordmark .monogram,.site-footer .footer-mark .monogram{
-  animation:antique-ink 8s ease-in-out infinite!important;
-}
-.site-header .wordmark strong{
-  font-family:"Great Vibes",cursive!important;
-  font-size:2.15rem!important;
-  font-weight:400!important;
-}
-@media(prefers-reduced-motion:reduce){
- .site-header .wordmark,.site-header .wordmark .monogram{animation:none!important}
-}
-
 /* Stability pass: consistent antique dark theme, restrained motion, compact desktop layout */
 html[data-theme="dark"],body[data-theme="dark"],html.theme-dark,body.theme-dark{
  --paper:#211811;--paper-light:#302318;--paper-dark:#3d2a1b;--ink:#ead9b7;--muted:#c0a77d;--line:#715332;--accent:#c29a53;--accent-dark:#180f0b;
@@ -3662,82 +3628,6 @@ html[data-theme="dark"] .small-button,html.theme-dark .small-button,body.dark-mo
 html[data-theme="dark"] .small-button:hover,html.theme-dark .small-button:hover,body.dark-mode .small-button:hover{background:#573625!important;color:#fff0d2!important}
 html[data-theme="dark"] .notice,html.theme-dark .notice,body.dark-mode .notice{background:#302116!important;color:#f0dfbd!important;border-color:#765936!important}
 html[data-theme="dark"] .detail-file-fallback,html.theme-dark .detail-file-fallback,body.dark-mode .detail-file-fallback{color:#e9d5ad!important}
-
-
-/* Header visual treatment mirrors the footer; navigation and behavior remain unchanged. */
-.site-header{
-  background:linear-gradient(110deg,rgba(223,208,179,.96),rgba(203,185,154,.96) 48%,rgba(223,208,179,.96))!important;
-  border-bottom:3px double var(--line)!important;
-  box-shadow:inset 0 1px rgba(255,248,224,.42),0 5px 18px rgba(42,25,13,.08)!important;
-  color:var(--ink);
-}
-.site-header:before{
-  content:"";
-  position:absolute;
-  left:-45%;
-  top:0;
-  width:35%;
-  height:1px;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,var(--accent),#d7a66f,var(--accent),transparent);
-  animation:footer-glint 8s ease-in-out infinite;
-}
-.site-header .wordmark strong{color:var(--accent-dark)!important}
-.site-header .wordmark small{color:var(--muted)!important}
-.site-header .primary-nav a{color:var(--muted)!important}
-.site-header .primary-nav a:hover,
-.site-header .primary-nav a:focus-visible,
-.site-header .primary-nav a[aria-current="page"]{color:var(--accent-dark)!important}
-.site-header .monogram{
-  background:var(--accent-dark)!important;
-  color:var(--paper-light)!important;
-  border-color:var(--line)!important;
-}
-html[data-theme="dark"] .site-header,
-body[data-theme="dark"] .site-header,
-html.theme-dark .site-header,
-body.theme-dark .site-header,
-body.dark-mode .site-header{
-  background:linear-gradient(110deg,#211710 0%,#302116 48%,#211710 100%)!important;
-  border-bottom:3px double #765936!important;
-  box-shadow:inset 0 1px rgba(205,161,89,.12),0 6px 20px rgba(0,0,0,.28)!important;
-  color:#f0dfbd!important;
-}
-html[data-theme="dark"] .site-header .wordmark strong,
-html[data-theme="dark"] .site-header .wordmark small,
-html[data-theme="dark"] .site-header .primary-nav a,
-body[data-theme="dark"] .site-header .wordmark strong,
-body[data-theme="dark"] .site-header .wordmark small,
-body[data-theme="dark"] .site-header .primary-nav a,
-html.theme-dark .site-header .wordmark strong,
-html.theme-dark .site-header .wordmark small,
-html.theme-dark .site-header .primary-nav a,
-body.theme-dark .site-header .wordmark strong,
-body.theme-dark .site-header .wordmark small,
-body.theme-dark .site-header .primary-nav a,
-body.dark-mode .site-header .wordmark strong,
-body.dark-mode .site-header .wordmark small,
-body.dark-mode .site-header .primary-nav a{color:#e9d5ad!important}
-html[data-theme="dark"] .site-header .primary-nav a:hover,
-html[data-theme="dark"] .site-header .primary-nav a[aria-current="page"],
-body[data-theme="dark"] .site-header .primary-nav a:hover,
-body[data-theme="dark"] .site-header .primary-nav a[aria-current="page"],
-html.theme-dark .site-header .primary-nav a:hover,
-html.theme-dark .site-header .primary-nav a[aria-current="page"],
-body.theme-dark .site-header .primary-nav a:hover,
-body.theme-dark .site-header .primary-nav a[aria-current="page"],
-body.dark-mode .site-header .primary-nav a:hover,
-body.dark-mode .site-header .primary-nav a[aria-current="page"]{
-  color:#fff0d2!important;
-}
-html[data-theme="dark"] .site-header .monogram,
-body[data-theme="dark"] .site-header .monogram,
-html.theme-dark .site-header .monogram,
-body.theme-dark .site-header .monogram,
-body.dark-mode .site-header .monogram{
-  background:#3b281b!important;color:#f0dfbd!important;border-color:#765936!important;
-}
-@media(prefers-reduced-motion:reduce){.site-header:before{animation:none!important}}
 
 
 /* Archive folder records use the same compact square-card visual language as Home search. */
@@ -4064,74 +3954,33 @@ body.dark-mode #private-archive .archive-folder-content .record-card .record-thu
 }
 
 
-/* HEADER FIX — final theme-specific rules with stronger specificity than earlier header styles. */
-html body header.site-header{
-  background:#d5c19d!important;
-  background-image:linear-gradient(105deg,#e1d0ad 0%,#c9b18a 45%,#bda07a 100%)!important;
-  background-color:#d5c19d!important;
-  border-bottom:3px double #80603b!important;
-  box-shadow:inset 0 1px rgba(255,248,224,.65),0 5px 16px rgba(42,25,13,.18)!important;
-  color:#38251a!important;
-}
-html body header.site-header .wordmark,
-html body header.site-header .wordmark strong,
-html body header.site-header .wordmark small,
-html body header.site-header .primary-nav a{color:#38251a!important;text-shadow:none!important}
-html body header.site-header .monogram{background:#6f342b!important;color:#fff0d2!important;border:1px solid #b99558!important}
-html body header.site-header .primary-nav a:hover,
-html body header.site-header .primary-nav a[aria-current="page"],
-html body header.site-header .owner-sign-in-button{background:#6f342b!important;color:#fff0d2!important;border-color:#b99558!important}
-html[data-theme="dark"] body header.site-header,
-body[data-theme="dark"] header.site-header,
-html.theme-dark body header.site-header,
-body.theme-dark header.site-header,
-body.dark-mode header.site-header{
-  background:#49352b!important;
-  background-image:linear-gradient(105deg,#684c39 0%,#5d4232 43%,#51392d 72%,#493229 100%)!important;
-  background-color:#49352b!important;
-  border-bottom:3px double #c09a60!important;
-  box-shadow:inset 0 1px rgba(231,190,116,.2),0 6px 20px rgba(0,0,0,.3)!important;
-  color:#fff0d2!important;
-}
-html[data-theme="dark"] body header.site-header .wordmark,
-html[data-theme="dark"] body header.site-header .wordmark strong,
-html[data-theme="dark"] body header.site-header .wordmark small,
-html[data-theme="dark"] body header.site-header .primary-nav a,
-body[data-theme="dark"] header.site-header .wordmark,
-body[data-theme="dark"] header.site-header .wordmark strong,
-body[data-theme="dark"] header.site-header .wordmark small,
-body[data-theme="dark"] header.site-header .primary-nav a,
-html.theme-dark body header.site-header .wordmark,
-html.theme-dark body header.site-header .wordmark strong,
-html.theme-dark body header.site-header .wordmark small,
-html.theme-dark body header.site-header .primary-nav a,
-body.theme-dark header.site-header .wordmark,
-body.theme-dark header.site-header .wordmark strong,
-body.theme-dark header.site-header .wordmark small,
-body.theme-dark header.site-header .primary-nav a,
-body.dark-mode header.site-header .wordmark,
-body.dark-mode header.site-header .wordmark strong,
-body.dark-mode header.site-header .wordmark small,
-body.dark-mode header.site-header .primary-nav a{color:#fff0d2!important;text-shadow:none!important}
-html[data-theme="dark"] body header.site-header .monogram,
-body[data-theme="dark"] header.site-header .monogram,
-html.theme-dark body header.site-header .monogram,
-body.theme-dark header.site-header .monogram,
-body.dark-mode header.site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
-html[data-theme="dark"] body header.site-header .primary-nav a:hover,
-html[data-theme="dark"] body header.site-header .primary-nav a[aria-current="page"],
-html[data-theme="dark"] body header.site-header .owner-sign-in-button,
-body[data-theme="dark"] header.site-header .primary-nav a:hover,
-body[data-theme="dark"] header.site-header .primary-nav a[aria-current="page"],
-body[data-theme="dark"] header.site-header .owner-sign-in-button,
-html.theme-dark body header.site-header .primary-nav a:hover,
-html.theme-dark body header.site-header .primary-nav a[aria-current="page"],
-body.theme-dark header.site-header .primary-nav a:hover,
-body.theme-dark header.site-header .primary-nav a[aria-current="page"],
-body.dark-mode header.site-header .primary-nav a:hover,
-body.dark-mode header.site-header .primary-nav a[aria-current="page"]{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
-@media(prefers-reduced-motion:reduce){html body header.site-header:before{animation:none!important}}
 
+/* SINGLE AUTHORITATIVE HEADER STYLE — older duplicate visual override blocks removed. */
+html body header.site-header{
+  position:relative!important;z-index:20!important;isolation:isolate;min-height:78px!important;
+  background:linear-gradient(105deg,#e1d0ad 0%,#c9b18a 45%,#bda07a 100%)!important;
+  background-color:#d5c19d!important;border-bottom:3px double #80603b!important;
+  box-shadow:inset 0 1px rgba(255,248,224,.65),0 5px 16px rgba(42,25,13,.18)!important;color:#38251a!important;
+}
+html body header.site-header .wordmark{display:flex!important;align-items:center!important;gap:.85rem!important;flex-shrink:0!important;text-decoration:none!important}
+html body header.site-header .wordmark strong{color:#38251a!important;font-family:"Great Vibes",cursive!important;font-size:2.15rem!important;font-weight:400!important;letter-spacing:0!important;line-height:1.15!important}
+html body header.site-header .wordmark small{color:#5a4330!important;font-size:.62rem!important;letter-spacing:.13em!important}
+html body header.site-header .monogram{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;background:#6f342b!important;color:#fff0d2!important;border:1px solid #b99558!important;border-radius:3px!important}
+html body header.site-header .primary-nav{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:.5rem .65rem}
+html body header.site-header .primary-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:.55rem .85rem;border:1px solid rgba(128,96,59,.55);border-radius:3px;background:rgba(255,244,220,.24)!important;color:#38251a!important;text-shadow:none!important;text-decoration:none!important;transition:background .25s ease,color .25s ease,border-color .25s ease,transform .25s ease!important}
+html body header.site-header .primary-nav a:hover,html body header.site-header .primary-nav a:focus-visible,html body header.site-header .primary-nav a[aria-current="page"],html body header.site-header .owner-sign-in-button{background:#6f342b!important;color:#fff0d2!important;border-color:#b99558!important}
+html body header.site-header .primary-nav a:hover{transform:translateY(-2px)}
+html body header.site-header .site-menu-toggle{background:#f1dfbb!important;color:#4a2b20!important;border:1px solid #b99558!important}
+html[data-theme="dark"] body header.site-header,body[data-theme="dark"] header.site-header,html.theme-dark body header.site-header,body.theme-dark header.site-header,body.dark-mode header.site-header{background:linear-gradient(105deg,#684c39 0%,#5d4232 43%,#51392d 72%,#493229 100%)!important;background-color:#49352b!important;border-bottom:3px double #c09a60!important;box-shadow:inset 0 1px rgba(231,190,116,.2),0 6px 20px rgba(0,0,0,.3)!important;color:#fff0d2!important}
+html[data-theme="dark"] body header.site-header .wordmark strong,html[data-theme="dark"] body header.site-header .wordmark small,html[data-theme="dark"] body header.site-header .primary-nav a,body[data-theme="dark"] header.site-header .wordmark strong,body[data-theme="dark"] header.site-header .wordmark small,body[data-theme="dark"] header.site-header .primary-nav a,html.theme-dark body header.site-header .wordmark strong,html.theme-dark body header.site-header .wordmark small,html.theme-dark body header.site-header .primary-nav a,body.theme-dark header.site-header .wordmark strong,body.theme-dark header.site-header .wordmark small,body.theme-dark header.site-header .primary-nav a,body.dark-mode header.site-header .wordmark strong,body.dark-mode header.site-header .wordmark small,body.dark-mode header.site-header .primary-nav a{color:#fff0d2!important;text-shadow:none!important}
+html[data-theme="dark"] body header.site-header .monogram,body[data-theme="dark"] header.site-header .monogram,html.theme-dark body header.site-header .monogram,body.theme-dark header.site-header .monogram,body.dark-mode header.site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body header.site-header .primary-nav a:hover,html[data-theme="dark"] body header.site-header .primary-nav a[aria-current="page"],html[data-theme="dark"] body header.site-header .owner-sign-in-button,body[data-theme="dark"] header.site-header .primary-nav a:hover,body[data-theme="dark"] header.site-header .primary-nav a[aria-current="page"],body[data-theme="dark"] header.site-header .owner-sign-in-button,html.theme-dark body header.site-header .primary-nav a:hover,html.theme-dark body header.site-header .primary-nav a[aria-current="page"],body.theme-dark header.site-header .primary-nav a:hover,body.theme-dark header.site-header .primary-nav a[aria-current="page"],body.dark-mode header.site-header .primary-nav a:hover,body.dark-mode header.site-header .primary-nav a[aria-current="page"]{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body header.site-header .site-menu-toggle,body[data-theme="dark"] header.site-header .site-menu-toggle,html.theme-dark body header.site-header .site-menu-toggle,body.theme-dark header.site-header .site-menu-toggle,body.dark-mode header.site-header .site-menu-toggle{background:#38251e!important;color:#f7e8ca!important;border-color:#c09a60!important}
+html body header.site-header:before{content:"";position:absolute;left:-45%;top:0;width:35%;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,#80603b,#d7a66f,#80603b,transparent);animation:footer-glint 8s ease-in-out infinite}
+html body header.site-header .wordmark,html body header.site-header .wordmark .monogram{animation:antique-ink 8s ease-in-out infinite!important}
+@media(max-width:800px){html body header.site-header{gap:.65rem!important;flex-wrap:wrap!important}html body header.site-header .primary-nav{display:none!important;width:100%!important;flex-direction:column!important;align-items:stretch!important;gap:0!important}html body header.site-header .primary-nav.is-open{display:flex!important;padding:.45rem 0 .8rem!important;border-top:1px solid #80603b}html body header.site-header .primary-nav a{justify-content:flex-start!important;width:100%!important;min-height:44px!important;margin:.18rem 0!important;padding:.7rem .9rem!important}html body header.site-header .wordmark strong{font-size:1.65rem!important}}
+@media(max-width:420px){html body header.site-header .wordmark strong{font-size:1.35rem!important}html body header.site-header .wordmark small{font-size:.52rem!important}}
+@media(prefers-reduced-motion:reduce){html body header.site-header:before,html body header.site-header .wordmark,html body header.site-header .wordmark .monogram{animation:none!important}html body header.site-header .primary-nav a{transition:none!important}}
 
 /* PAGE SWITCH SCOPE FIX: transitions belong to main content only, never the shared header or footer. */
 body.page-leaving main{
