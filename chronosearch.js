@@ -4,6 +4,20 @@
  const $=id=>document.getElementById(id);let client=null;const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
  const timeline=$("chrono-timeline"),count=$("chrono-count"),locationInput=$("chrono-location"),personInput=$("chrono-person"),folderInput=$("chrono-folder"),yearInput=$("chrono-year");
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
+ const cleanChronoDescription=value=>{
+  return String(value||"").split(/\r?\n/).filter(line=>{
+   const s=line.trim();
+   if(!s)return false;
+   return !/(?:face|name)[\s_-]*(?:identif(?:y|ication|ied|ier)|recognition|detection)[\s_-]*(?:coordinates?|coords?|points?|regions?|boxes?|bounds?)/i.test(s)
+    &&!/(?:coordinates?|coords?|bounding[\s_-]*boxes?|normalized[\s_-]*(?:x|y)|face[\s_-]*(?:box|region|landmark)|name[\s_-]*(?:box|region|landmark))/i.test(s)
+    &&!/^[\s{}[\](),.:;"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
+  }).join("\n").replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").replace(/\n{3,}/g,"\n\n").trim();
+ };
+ const displayPeople=value=>{
+  if(Array.isArray(value))return value.map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
+  if(value&&typeof value==="object")return Object.values(value).flat().map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
+  return String(value||"").replace(/^\s*\[|\]\s*$/g,"").replace(/["{}]/g,"").trim();
+ };
  const dateText=record=>{const description=record.description||"";const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);return String(labeled?.[1]||record.record_date||"").trim();};
  function parseRecordDate(record){
   const raw=dateText(record);if(!raw)return null;
@@ -46,8 +60,13 @@
     card.append(thumb);
     details.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     details.append(node("h3",r.title||"Untitled record"));
-    if(r.location)details.append(node("p","Location: "+r.location,"chrono-record-location"));
-    if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)details.append(node("p",excerpt.length>180?excerpt.slice(0,177)+"…":excerpt,"chrono-record-notes"));}
+    if(r.location)details.append(node("p","Place: "+r.location,"chrono-record-location"));
+    const people=displayPeople(r.persons_mentioned);
+    if(people)details.append(node("p","People: "+people,"chrono-record-people"));
+    const excerpt=cleanChronoDescription(r.description||"");
+    if(excerpt)details.append(node("p",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-record-notes"));
+    const sourceLabel=r.file_name||(r.mime_type==="application/pdf"?"PDF document":r.mime_type?.startsWith("image/")?"Image scan":r.file_path?"Attached source":"No digital source attached");
+    if(sourceLabel)details.append(node("span",sourceLabel,"chrono-record-source"));
     card.append(details);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
    });
