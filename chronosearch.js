@@ -39,6 +39,19 @@
   if(match){const a=+match[1],b=+match[2],y=+match[3],month=a>12?b:a,day=a>12?a:b;if(month<1||month>12||day<1||day>31)return null;const d=new Date(y,month-1,day);return d.getFullYear()===y&&d.getMonth()===month-1&&d.getDate()===day?d:null;}
   const parsed=new Date(raw);return Number.isNaN(parsed.getTime())?null:new Date(parsed.getUTCFullYear(),parsed.getUTCMonth(),parsed.getUTCDate());
  }
+ const eventDescription=record=>{
+  const title=String(record.title||"Untitled record").trim();
+  const category=record.category||"";
+  if(category==="births")return /^birth\b/i.test(title)?title:"Birth of "+title;
+  if(category==="deaths")return /^(death|burial)\b/i.test(title)?title:"Death of "+title;
+  if(category==="marriages"){
+   if(/\bmarriage\b/i.test(title))return title;
+   return "Marriage between "+title;
+  }
+  if(category==="immigration")return /\b(immigration|naturalization|arrival)\b/i.test(title)?title:"Immigration of "+title;
+  if(category==="photos")return "Family photograph: "+title;
+  return title;
+ };
  const findYear=value=>{const match=String(value||"").match(/\b(1[5-9]\d{2}|20\d{2}|21\d{2})\b/);return match?Number(match[1]):null;};
  function recordYear(record){return parseRecordDate(record)?.getFullYear()||findYear(dateText(record))||findYear(record.title)||findYear(record.description);}
  function formatRecordDate(record){const raw=dateText(record),yearOnly=raw.match(/^(\d{4})$/),date=parseRecordDate(record);if(yearOnly)return yearOnly[1];return date?new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric",year:"numeric"}).format(date):raw;}
@@ -61,7 +74,11 @@
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
     const event=node("div","","chrono-event");
     const dateLabel=formatRecordDate(r)||"Date not recorded";
-    event.append(node("div",dateLabel,"chrono-record-date"));
+    const dateLocation=node("div","","chrono-event-meta");
+    dateLocation.append(node("span",dateLabel,"chrono-record-date"));
+    if(r.location)dateLocation.append(node("span",r.location,"chrono-event-location"));
+    event.append(dateLocation);
+    event.append(node("p",eventDescription(r),"chrono-event-description"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
     const imageFile=!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
@@ -75,7 +92,6 @@
     headingBox.append(node("h3",r.title||"Untitled record"));
     details.append(headingBox);
     const facts=node("div","","chrono-facts-grid");
-    appendInfoBox(facts,"Location",r.location,"chrono-place-box");
     if(facts.childElementCount)details.append(facts);
     const family=familyValues(r);
     const hasFamily=Object.values(family).some(Boolean);
