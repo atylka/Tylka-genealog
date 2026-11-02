@@ -176,7 +176,7 @@
       const {data:existingRows,error:lookupError}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").ilike("name",name);
       if(lookupError)throw lookupError;
       const existing=existingRows?.find(person=>person.name.toLocaleLowerCase()===name.toLocaleLowerCase());
-      const face={url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,created_at:new Date().toISOString()};
+      const face={url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,source_year:(String(window.tylkaActiveDetailRecord.record_date||"").match(/(?:18|19|20)\\d{2}/)||[])[0]||null,created_at:new Date().toISOString()};
       const prior=Array.isArray(existing?.portraits)?existing.portraits:(existing?.portrait_url?[{url:existing.portrait_url,source_record_id:existing.source_record_id,source_title:existing.source_title,created_at:existing.updated_at}]:[]);
       const values={name,portrait_url:existing?.portrait_url||portraitUrl,portraits:[...prior,face],source_record_id:existing?.source_record_id||window.tylkaActiveDetailRecord.id,source_title:existing?.source_title||window.tylkaActiveDetailRecord.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
       const result=existing?await client.from("ancestor_portraits").update(values).eq("id",existing.id):await client.from("ancestor_portraits").insert(values);
