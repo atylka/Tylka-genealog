@@ -4214,3 +4214,8 @@ html body main.ancestor-page>.section-intro>p{
   margin-left:0!important;
   margin-right:0!important;
 }
+
+
+/* Reliable touch and mouse selection in the ancestor portrait cropper. */
+.face-crop-canvas-wrap{position:relative;overflow:auto;overscroll-behavior:contain;}
+.face-crop-canvas-wrap canvas#face-crop-canvas{display:block;max-width:100%;height:auto;touch-action:none!important;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;cursor:crosshair;pointer-events:auto;}
