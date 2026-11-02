@@ -5978,3 +5978,9 @@ html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>article.chro
  .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{grid-template-columns:minmax(76px,32%) minmax(0,1fr)!important;gap:.55rem!important;padding:.55rem!important}
  .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail{height:94px!important;min-height:94px!important;max-height:94px!important}
 }
+
+
+/* Site-wide typography: use the same IM Fell English face as the page titles. */
+html body,html body *:not(svg):not(svg *){
+ font-family:'IM Fell English',Georgia,'Times New Roman',serif!important;
+}
