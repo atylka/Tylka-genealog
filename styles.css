@@ -4281,3 +4281,19 @@ html body header.site-header .primary-nav{margin-left:auto!important;}
 .ancestor-face-thumb.is-active{border:2px solid #b58a50;box-shadow:0 0 0 2px rgba(181,138,80,.2)}
 html[data-theme="dark"] .ancestor-face-viewer{background:#211713;color:var(--ink);border-color:#9a7445}
 @media(max-width:560px){.ancestor-card-open .ancestor-portrait{height:175px}.ancestor-viewer-stage{grid-template-columns:34px minmax(0,1fr) 34px;gap:.3rem}.ancestor-face-arrow{width:32px;height:38px}.ancestor-viewer-image{max-height:52vh}}
+
+
+/* Ancestor portrait card refinement: generous inset spacing and balanced content. */
+.ancestor-grid{padding:0!important;gap:clamp(14px,2.2vw,24px)!important;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))!important;align-items:stretch}
+.ancestor-multi-card{display:flex;flex-direction:column;min-width:0;padding:10px!important;overflow:hidden;border:1px solid rgba(181,138,80,.62)!important;border-radius:7px!important;background:linear-gradient(145deg,#f0e3c8,#dfcba6)!important;box-shadow:0 7px 20px rgba(50,29,17,.13),inset 0 1px rgba(255,250,231,.75)!important}
+.ancestor-card-open{gap:0;border-radius:4px;overflow:hidden}
+.ancestor-card-open .ancestor-portrait{width:100%;height:clamp(170px,20vw,230px);object-fit:cover;border:1px solid rgba(116,78,44,.35);border-radius:3px;background:#241811}
+.ancestor-card-open .ancestor-card-body{display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:100%;padding:15px 8px 8px!important}
+.ancestor-card-open .ancestor-card-body h3{margin:0!important;font:1.45rem/1.2 Georgia,serif;overflow-wrap:anywhere}
+.ancestor-card-open .ancestor-source{margin:0!important;font-size:.82rem;opacity:.82}
+.ancestor-card-open .small-button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;margin-top:7px;padding:.5rem .85rem;border:1px solid #9b7445;border-radius:3px;background:rgba(255,248,229,.55);color:#4b3021}
+.ancestor-face-viewer .ancestor-set-thumbnail{display:block;width:fit-content;min-height:42px;margin:.85rem auto .2rem;padding:.55rem 1rem;border:1px solid #b58a50;border-radius:3px;background:#4a2b20;color:#f5dfb5;font:600 .9rem Georgia,serif;cursor:pointer}
+.ancestor-face-viewer .ancestor-set-thumbnail:disabled{opacity:.75;cursor:default}
+html[data-theme="dark"] .ancestor-multi-card,body[data-theme="dark"] .ancestor-multi-card,html.theme-dark .ancestor-multi-card,body.dark-mode .ancestor-multi-card{background:linear-gradient(145deg,#35251b,#261914)!important;border-color:#80603a!important}
+html[data-theme="dark"] .ancestor-card-open .small-button,body[data-theme="dark"] .ancestor-card-open .small-button,html.theme-dark .ancestor-card-open .small-button,body.dark-mode .ancestor-card-open .small-button{background:#3b281e;color:#f0dfbf;border-color:#927044}
+@media(max-width:560px){.ancestor-grid{gap:11px!important}.ancestor-multi-card{padding:7px!important}.ancestor-card-open .ancestor-portrait{height:150px}.ancestor-card-open .ancestor-card-body{padding:11px 5px 6px!important}.ancestor-card-open .ancestor-card-body h3{font-size:1.16rem}}
