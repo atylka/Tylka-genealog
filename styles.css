@@ -6376,157 +6376,20 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
 }
 
 
-/* Page title and search banners: fitted parchment panels with restrained antique edging. */
-:root{
- --title-banner-ink:#3b241b;
- --title-banner-edge:rgba(111,67,43,.38);
- --title-banner-glow:rgba(214,177,115,.18);
-}
-.home-search-intro,
-.chrono-search-intro,
-.ancestor-page>.section-intro,
-.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow,
-.archive-page:not(.home-search-page):not(.chrono-main) > h1,
-.location-registry-page > .location-page-heading{
- position:relative;
- isolation:isolate;
-}
-.home-search-intro,
-.chrono-search-intro,
-.ancestor-page>.section-intro{
- padding:clamp(1rem,2.2vw,1.65rem) clamp(1rem,2.6vw,2rem)!important;
- border:1px solid var(--title-banner-edge)!important;
- border-radius:5px!important;
- background:
-   radial-gradient(ellipse at 12% 15%,var(--title-banner-glow),transparent 58%),
-   linear-gradient(105deg,rgba(230,211,174,.78),rgba(246,235,210,.55) 54%,rgba(210,180,133,.45))!important;
- box-shadow:inset 0 1px rgba(255,250,230,.72),0 5px 16px rgba(65,39,23,.08)!important;
-}
-.home-search-intro h1,
-.chrono-search-intro h1,
-.ancestor-page>.section-intro h1{
- text-wrap:balance;
-}
-.home-search-box,
-.chrono-filter-panel,
-.location-tool-box{
- position:relative!important;
- isolation:isolate!important;
- border:1px solid var(--title-banner-edge)!important;
- border-radius:5px!important;
- background:
-   radial-gradient(ellipse at 90% 0%,rgba(214,177,115,.16),transparent 52%),
-   linear-gradient(120deg,rgba(238,222,190,.82),rgba(249,240,220,.72) 58%,rgba(220,194,151,.55))!important;
- box-shadow:inset 0 1px rgba(255,250,230,.72),0 5px 16px rgba(65,39,23,.08)!important;
- padding:clamp(.85rem,1.8vw,1.35rem)!important;
-}
-.home-search-box .search-fields,
-.chrono-filter-grid{gap:clamp(.65rem,1.4vw,1rem)!important}
-.home-search-box input,
-.home-search-box select,
-.chrono-filter-panel input,
-.chrono-filter-panel select,
-.location-tool-box input,
-.location-tool-box select,
-.location-tool-box .person-picker-trigger{
- border-color:rgba(105,69,45,.45)!important;
- box-shadow:inset 0 1px 2px rgba(70,45,28,.07)!important;
-}
-.archive-page:not(.home-search-page):not(.chrono-main) > h1{
- width:fit-content!important;
- max-width:min(100%,1000px)!important;
- padding:.45rem clamp(.8rem,2vw,1.35rem)!important;
- margin:.1rem 0 .55rem!important;
- border:1px solid var(--title-banner-edge)!important;
- border-left:4px solid #874b38!important;
- border-radius:3px!important;
- background:linear-gradient(100deg,rgba(225,203,163,.82),rgba(244,231,202,.55) 72%,rgba(207,170,118,.42))!important;
- box-shadow:inset 0 1px rgba(255,250,230,.68),0 4px 12px rgba(65,39,23,.07)!important;
-}
-.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
- width:fit-content!important;
- max-width:100%!important;
- padding:.24rem .75rem!important;
- margin-bottom:.25rem!important;
- border:1px solid rgba(111,67,43,.2)!important;
- border-radius:3px!important;
- background:rgba(217,188,143,.38)!important;
-}
-.records-heading,
-.section-heading{
- border-radius:4px!important;
-}
-.location-layout .location-tool-box{
- padding:clamp(.8rem,1.5vw,1.15rem)!important;
-}
-.location-records-panel{
- border:1px solid var(--title-banner-edge)!important;
- border-radius:5px!important;
- background:linear-gradient(145deg,rgba(238,222,190,.76),rgba(249,240,220,.62))!important;
- box-shadow:inset 0 1px rgba(255,250,230,.65),0 5px 16px rgba(65,39,23,.07)!important;
- padding:clamp(.8rem,1.5vw,1.15rem)!important;
-}
-body.dark-mode .home-search-intro,
-body.dark-mode .chrono-search-intro,
-body.dark-mode .ancestor-page>.section-intro,
-body.dark-mode .home-search-box,
-body.dark-mode .chrono-filter-panel,
-body.dark-mode .location-tool-box,
-body.dark-mode .location-records-panel,
-body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
- border-color:rgba(190,145,83,.42)!important;
- background:
-   radial-gradient(ellipse at 12% 15%,rgba(180,125,58,.16),transparent 58%),
-   linear-gradient(110deg,rgba(49,32,24,.98),rgba(66,43,29,.96) 58%,rgba(39,25,21,.98))!important;
- color:#f0dfbf!important;
- box-shadow:inset 0 1px rgba(229,193,130,.1),0 6px 18px rgba(0,0,0,.18)!important;
-}
-body.dark-mode .home-search-intro h1,
-body.dark-mode .chrono-search-intro h1,
-body.dark-mode .ancestor-page>.section-intro h1,
-body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
- color:#f0dfbf!important;
-}
-@media(max-width:700px){
- .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
-  padding:.9rem!important;
- }
- .home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
-  padding:.8rem!important;
- }
- .archive-page:not(.home-search-page):not(.chrono-main) > h1{
-  width:100%!important;
- }
-}
-
-
-/* Corrected banner treatment: one broad header-like field behind each page's
-   title and search controls, not separate cards around individual elements. */
-.home-search-intro,
-.chrono-search-intro,
-.ancestor-page>.section-intro,
-.home-search-box,
-.chrono-filter-panel,
-.location-tool-box,
-.location-records-panel,
-.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow,
-.archive-page:not(.home-search-page):not(.chrono-main) > h1{
- border:0!important;
- border-radius:0!important;
- box-shadow:none!important;
-}
+/* Classic single-piece Tylka banner.
+   Keep the banner as one background layer; no nested panels or overlapping frames. */
 .home-search-layout,
 .chrono-search-layout,
 .ancestor-page,
-.location-registry-page,
+.location-page,
 .archive-page:not(.home-search-page):not(.chrono-main){
- position:relative!important;
- isolation:isolate!important;
+ position:relative;
+ isolation:isolate;
 }
 .home-search-layout::before,
 .chrono-search-layout::before,
-.ancestor-page>.section-intro::before,
-.location-registry-page::before,
+.ancestor-page::before,
+.location-page::before,
 .archive-page:not(.home-search-page):not(.chrono-main)::before{
  content:"";
  position:absolute;
@@ -6536,25 +6399,86 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
  left:50%;
  transform:translateX(-50%);
  width:100vw;
- height:clamp(255px,30vw,390px);
+ height:clamp(300px,36vw,390px);
  background:
-  radial-gradient(ellipse at 18% 8%,rgba(210,171,107,.22),transparent 54%),
-  linear-gradient(105deg,rgba(222,198,153,.88),rgba(239,222,188,.82) 48%,rgba(206,170,119,.74));
- border-bottom:1px solid rgba(111,67,43,.24);
- box-shadow:inset 0 1px rgba(255,250,230,.45);
+  radial-gradient(ellipse at 80% 15%,rgba(199,123,118,.25),transparent 48%),
+  linear-gradient(120deg,rgba(56,13,26,.98),rgba(126,31,53,.96) 58%,rgba(151,62,70,.93));
+ border-bottom:5px solid #c69a78;
+}
+.home-search-layout::after,
+.chrono-search-layout::after,
+.ancestor-page::after,
+.location-page::after,
+.archive-page:not(.home-search-page):not(.chrono-main)::after{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ pointer-events:none;
+ top:18px;
+ left:50%;
+ transform:translateX(-50%);
+ width:calc(100vw - 44px);
+ height:calc(clamp(300px,36vw,390px) - 36px);
+ border:1px solid rgba(255,235,218,.22);
 }
 .home-search-intro,
 .chrono-search-intro,
 .ancestor-page>.section-intro{
+ position:relative;
+ z-index:1;
+ padding:2rem 1.5rem 1rem!important;
+ margin:0!important;
+ border:0!important;
+ border-radius:0!important;
  background:transparent!important;
- padding:clamp(.5rem,1.4vw,1rem) 0 clamp(.7rem,1.8vw,1.25rem)!important;
+ box-shadow:none!important;
+ color:#f1dcd4!important;
+ text-align:center;
+}
+.home-search-intro h1,
+.chrono-search-intro h1,
+.ancestor-page>.section-intro h1,
+.archive-page:not(.home-search-page):not(.chrono-main)>h1{
+ color:#fff9f4!important;
+ text-shadow:0 3px 18px rgba(20,0,5,.22);
+}
+.home-search-intro .eyebrow,
+.chrono-search-intro .eyebrow,
+.ancestor-page>.section-intro .eyebrow,
+.archive-page:not(.home-search-page):not(.chrono-main)>.eyebrow{
+ color:#e9c7b8!important;
+}
+.home-search-intro>p:last-child,
+.chrono-search-intro>p:last-child,
+.ancestor-page>.section-intro>p{
+ color:#f1dcd4!important;
 }
 .home-search-box,
 .chrono-filter-panel,
 .location-tool-box,
 .location-records-panel{
+ position:relative;
+ z-index:1;
+ border:0!important;
+ border-radius:0!important;
  background:transparent!important;
- padding:clamp(.65rem,1.5vw,1rem) 0!important;
+ box-shadow:none!important;
+}
+.home-search-box{
+ padding:.8rem 1.5rem 1.4rem!important;
+}
+.chrono-filter-panel{
+ padding:.5rem 1.5rem 1.3rem!important;
+}
+.home-search-box label,
+.chrono-filter-panel label,
+.location-tool-box label,
+.location-tool-box .search-label{
+ color:#fff3e9!important;
+}
+.home-search-box .connection-status,
+.chrono-filter-panel .connection-status{
+ color:#f1dcd4!important;
 }
 .home-search-box input,
 .home-search-box select,
@@ -6563,201 +6487,37 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
 .location-tool-box input,
 .location-tool-box select,
 .location-tool-box .person-picker-trigger{
- border-color:rgba(105,69,45,.5)!important;
- box-shadow:inset 0 1px 2px rgba(70,45,28,.07)!important;
+ background:#fffaf6!important;
+ color:#3b241b!important;
+ border:1px solid rgba(198,154,120,.85)!important;
+ box-shadow:0 2px 8px rgba(20,0,5,.12)!important;
 }
-.archive-page:not(.home-search-page):not(.chrono-main) > h1{
- width:fit-content!important;
- max-width:100%!important;
- padding:.35rem 0!important;
- margin:.1rem 0 .55rem!important;
- border:0!important;
- border-left:0!important;
- background:transparent!important;
-}
-.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
- width:fit-content!important;
- max-width:100%!important;
- padding:.2rem 0!important;
- margin-bottom:.2rem!important;
- background:transparent!important;
-}
-.location-layout .location-tool-box,
-.location-records-panel{
- border-bottom:1px solid rgba(111,67,43,.2)!important;
-}
-body.dark-mode .home-search-layout::before,
-body.dark-mode .chrono-search-layout::before,
-body.dark-mode .ancestor-page>.section-intro::before,
-body.dark-mode .location-registry-page::before,
-body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
- background:
-  radial-gradient(ellipse at 18% 8%,rgba(180,125,58,.19),transparent 54%),
-  linear-gradient(105deg,rgba(49,32,24,.98),rgba(61,40,28,.97) 48%,rgba(39,25,21,.98));
- border-bottom-color:rgba(190,145,83,.38);
- box-shadow:inset 0 1px rgba(229,193,130,.08);
-}
-body.dark-mode .home-search-intro,
-body.dark-mode .chrono-search-intro,
-body.dark-mode .ancestor-page>.section-intro,
-body.dark-mode .home-search-box,
-body.dark-mode .chrono-filter-panel,
-body.dark-mode .location-tool-box,
-body.dark-mode .location-records-panel,
-body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1,
-body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
- background:transparent!important;
- border:0!important;
- box-shadow:none!important;
- color:inherit!important;
-}
-@media(max-width:700px){
- .home-search-layout::before,
- .chrono-search-layout::before,
- .ancestor-page>.section-intro::before,
- .location-registry-page::before,
- .archive-page:not(.home-search-page):not(.chrono-main)::before{
-  height:clamp(300px,78vw,430px);
- }
- .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
-  padding:.4rem 0 .7rem!important;
- }
- .home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
-  padding:.55rem 0!important;
- }
-}
-
-/* Location Registry uses .location-page as its page-level wrapper. */
-.location-page{position:relative!important;isolation:isolate!important}
-.location-page::before{
- content:"";position:absolute;z-index:-1;pointer-events:none;top:0;left:50%;
- transform:translateX(-50%);width:100vw;height:clamp(300px,35vw,430px);
- background:radial-gradient(ellipse at 18% 8%,rgba(210,171,107,.22),transparent 54%),
- linear-gradient(105deg,rgba(222,198,153,.88),rgba(239,222,188,.82) 48%,rgba(206,170,119,.74));
- border-bottom:1px solid rgba(111,67,43,.24);
-}
-body.dark-mode .location-page::before{
- background:radial-gradient(ellipse at 18% 8%,rgba(180,125,58,.19),transparent 54%),
- linear-gradient(105deg,rgba(49,32,24,.98),rgba(61,40,28,.97) 48%,rgba(39,25,21,.98));
- border-bottom-color:rgba(190,145,83,.38);
-}
-
-
-/* Banner visibility fix: keep the broad page banner above the main background,
-   while all real page content remains layered clearly in front of it. */
-.home-search-layout::before,
-.chrono-search-layout::before,
-.ancestor-page>.section-intro::before,
-.archive-page:not(.home-search-page):not(.chrono-main)::before,
-.location-page::before{
- z-index:0!important;
-}
-.home-search-layout>*,
-.chrono-search-layout>*,
-.ancestor-page>.section-intro>*,
-.archive-page:not(.home-search-page):not(.chrono-main)>*,
-.location-page>*{
+.archive-page:not(.home-search-page):not(.chrono-main)> .eyebrow,
+.archive-page:not(.home-search-page):not(.chrono-main)>h1,
+.archive-page:not(.home-search-page):not(.chrono-main)>.section-intro{
  position:relative;
  z-index:1;
-}
-
-
-/* Classic Tylka home-banner treatment: rich burgundy, warm cream lettering,
-   fine antique-gold framing and a soft illuminated center. */
-:root{
- --classic-banner-red:#641b29;
- --classic-banner-red-dark:#35121b;
- --classic-banner-gold:#c6a16a;
- --classic-banner-cream:#fff2d9;
-}
-.home-search-layout,
-.chrono-search-layout,
-.ancestor-page,
-.location-page,
-.archive-page:not(.home-search-page):not(.chrono-main){
- position:relative!important;
- isolation:isolate!important;
-}
-.home-search-layout::before,
-.chrono-search-layout::before,
-.ancestor-page::before,
-.location-page::before,
-.archive-page:not(.home-search-page):not(.chrono-main)::before{
- content:""!important;
- position:absolute!important;
- z-index:0!important;
- pointer-events:none!important;
- top:0!important;
- left:50%!important;
- transform:translateX(-50%)!important;
- width:100vw!important;
- height:clamp(290px,34vw,430px)!important;
- background:
-  radial-gradient(ellipse at 50% 0%,rgba(205,157,105,.28),transparent 57%),
-  linear-gradient(115deg,rgba(48,15,24,.98) 0%,rgba(105,29,43,.98) 38%,rgba(122,37,48,.97) 60%,rgba(53,17,27,.99) 100%)!important;
+ width:auto!important;
+ max-width:100%!important;
+ margin-left:0!important;
+ padding-left:0!important;
  border:0!important;
- border-bottom:2px solid rgba(198,161,106,.72)!important;
- box-shadow:inset 0 1px rgba(255,232,190,.22),inset 0 -10px 28px rgba(20,5,9,.2)!important;
-}
-.home-search-layout::after,
-.chrono-search-layout::after,
-.ancestor-page::after,
-.location-page::after,
-.archive-page:not(.home-search-page):not(.chrono-main)::after{
- content:""!important;
- position:absolute!important;
- z-index:0!important;
- pointer-events:none!important;
- top:13px!important;
- left:50%!important;
- transform:translateX(-50%)!important;
- width:calc(100vw - 26px)!important;
- height:clamp(264px,32vw,402px)!important;
- border:1px solid rgba(222,190,135,.32)!important;
- box-shadow:inset 0 1px rgba(255,240,210,.08)!important;
-}
-.home-search-layout>*,
-.chrono-search-layout>*,
-.ancestor-page>*,
-.location-page>*,
-.archive-page:not(.home-search-page):not(.chrono-main)>*{
- position:relative!important;
- z-index:1!important;
-}
-.home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
- padding:clamp(1.35rem,3vw,2.25rem) clamp(.7rem,1.5vw,1.2rem) 1rem!important;
- color:var(--classic-banner-cream)!important;
+ border-radius:0!important;
  background:transparent!important;
+ box-shadow:none!important;
 }
-.home-search-intro h1,.chrono-search-intro h1,.ancestor-page>.section-intro h1,
-.archive-page:not(.home-search-page):not(.chrono-main)>h1{
- color:var(--classic-banner-cream)!important;
- text-shadow:0 2px 12px rgba(20,5,9,.34)!important;
+.archive-page:not(.home-search-page):not(.chrono-main)> .eyebrow{
+ padding-top:1.8rem!important;
 }
-.home-search-intro p,.chrono-search-intro p,.ancestor-page>.section-intro p,
-.archive-page:not(.home-search-page):not(.chrono-main)>.eyebrow,
 .archive-page:not(.home-search-page):not(.chrono-main)>.section-intro{
- color:rgba(255,242,217,.88)!important;
+ color:#f1dcd4!important;
 }
-.archive-page:not(.home-search-page):not(.chrono-main)>h1{
- background:transparent!important;border:0!important;padding:.3rem 0!important;
+.archive-page:not(.home-search-page):not(.chrono-main)>.section-intro{
+ margin-bottom:1.1rem!important;
 }
-.home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
- background:transparent!important;border:0!important;box-shadow:none!important;
-}
-.home-search-box label,.chrono-filter-panel label,.location-tool-box label{
- color:var(--classic-banner-cream)!important;
-}
-.home-search-box input,.home-search-box select,
-.chrono-filter-panel input,.chrono-filter-panel select,
-.location-tool-box input,.location-tool-box select,
-.location-tool-box .person-picker-trigger{
- background:rgba(255,247,230,.94)!important;
- color:#38251d!important;
- border:1px solid rgba(198,161,106,.8)!important;
-}
-.home-search-box .connection-status,.chrono-search-layout .connection-status{
- color:rgba(255,242,217,.86)!important;
+.location-page .location-toolbar{
+ position:relative;
+ z-index:1;
 }
 body.dark-mode .home-search-layout::before,
 body.dark-mode .chrono-search-layout::before,
@@ -6765,20 +6525,23 @@ body.dark-mode .ancestor-page::before,
 body.dark-mode .location-page::before,
 body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
  background:
-  radial-gradient(ellipse at 50% 0%,rgba(176,127,70,.2),transparent 57%),
-  linear-gradient(115deg,#241017 0%,#481722 42%,#5a2029 62%,#211016 100%)!important;
- border-bottom-color:rgba(198,161,106,.62)!important;
+  radial-gradient(ellipse at 80% 15%,rgba(184,119,82,.18),transparent 48%),
+  linear-gradient(120deg,#281018,#4b1928 58%,#54232b);
+ border-bottom-color:#9f7955;
 }
-@media(max-width:700px){
+@media(max-width:800px){
  .home-search-layout::before,.chrono-search-layout::before,.ancestor-page::before,
  .location-page::before,.archive-page:not(.home-search-page):not(.chrono-main)::before{
-  height:clamp(390px,112vw,540px)!important;
+  height:clamp(350px,92vw,470px);
  }
  .home-search-layout::after,.chrono-search-layout::after,.ancestor-page::after,
  .location-page::after,.archive-page:not(.home-search-page):not(.chrono-main)::after{
-  height:calc(clamp(390px,112vw,540px) - 26px)!important;
+  height:calc(clamp(350px,92vw,470px) - 36px);
  }
  .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
-  padding:1.2rem .35rem .8rem!important;
+  padding:1.8rem 1rem .7rem!important;
+ }
+ .home-search-box,.chrono-filter-panel{
+  padding:.5rem 1rem 1.2rem!important;
  }
 }
