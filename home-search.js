@@ -5,53 +5,59 @@
  const node=(tag,text,cls)=>{const e=document.createElement(tag);e.textContent=text||"";if(cls)e.className=cls;return e;};const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
  function ensureDetailModal(){
   let modal=document.getElementById("home-record-detail-modal");if(modal)return modal;
-  modal=document.createElement("section");modal.id="home-record-detail-modal";modal.className="site-modal record-detail-modal home-record-detail-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-labelledby","home-detail-title");
+  modal=document.createElement("section");modal.id="home-record-detail-modal";modal.className="site-modal record-detail-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-labelledby","home-detail-title");
   const panel=node("div","","modal-card modal-wide record-detail-card home-record-detail-card");
   const close=node("button","×","modal-close");close.type="button";close.setAttribute("aria-label","Close record");close.addEventListener("click",()=>modal.hidden=true);
-  const eyebrow=node("p","Record detail","eyebrow");
-  const title=node("h2","","");title.id="home-detail-title";
+  const eyebrow=node("p","Record detail","eyebrow"),title=node("h2","","");title.id="home-detail-title";
   const meta=node("div","","detail-meta");meta.id="home-detail-meta";
-  const grid=node("div","","record-detail-grid home-detail-grid");
+  const confidence=node("div","","detail-confidence");confidence.id="home-detail-confidence";
+  const grid=node("div","","record-detail-grid");
   const source=node("section","","detail-source");source.append(node("h3","Original source"));
-  const viewport=node("div","","detail-image-viewport home-detail-attachment");viewport.id="home-detail-viewport";
+  const toolbar=node("div","","image-viewer-toolbar home-image-viewer-toolbar");
+  const zoomOut=node("span","−","small-button"),reset=node("span","Fit to view","small-button"),zoomIn=node("span","+","small-button");toolbar.append(zoomOut,reset,zoomIn);
+  const viewport=node("div","","detail-image-viewport");viewport.id="home-detail-viewport";
   const img=document.createElement("img");img.id="home-detail-image";img.alt="Original record scan";viewport.append(img);
   const fallback=node("div","","detail-file-fallback");fallback.id="home-detail-fallback";
-  source.append(viewport,fallback);
-  const notes=node("section","","detail-transcription");notes.append(node("h3","Transcription & research notes"));
+  source.append(toolbar,viewport,node("p","Original document attached to this record.","image-viewer-hint"),fallback);
+  const right=node("div","","detail-right-column");
+  const notes=node("section","","detail-transcription");notes.id="home-detail-transcription-panel";notes.hidden=true;notes.append(node("h3","Transcription & research notes"));
   const description=node("pre","","");description.id="home-detail-description";notes.append(description);
-  grid.append(source,notes);
-  const metadata=node("section","","home-detail-metadata");metadata.setAttribute("aria-label","Record information");
-  panel.append(close,eyebrow,title,meta,grid,metadata);modal.append(panel);
-  modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
+  const family=node("section","","detail-family-information");family.id="home-detail-family-information";family.hidden=true;family.append(node("h3","Identified family & names"));
+  const familyList=node("div","","");familyList.id="home-detail-family-list";family.append(familyList);
+  const faces=node("section","","detail-family-information detail-face-identifications");faces.id="home-detail-face-identifications";faces.hidden=true;faces.append(node("h3","People identified in photograph"));
+  const faceList=node("ul","","combined-identified-names");faceList.id="home-detail-face-list";faces.append(faceList);
+  right.append(notes,family,faces);grid.append(source,right);panel.append(close,eyebrow,title,meta,confidence,grid);
+  modal.append(panel);modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)modal.hidden=true;});
   document.body.append(modal);return modal;
  }
  function openRecord(record){
   const modal=ensureDetailModal(),panel=modal.querySelector(".home-record-detail-card");
   modal.querySelector("#home-detail-title").textContent=record.title||"Untitled record";
-  modal.querySelector("#home-detail-meta").textContent=[names[record.category]||record.category,record.location||"Location not entered",new Date(record.created_at).toLocaleDateString()].join(" · ");
-  const img=modal.querySelector("#home-detail-image"),fallback=modal.querySelector("#home-detail-fallback");
-  img.hidden=true;img.removeAttribute("src");fallback.replaceChildren();
+  modal.querySelector("#home-detail-meta").textContent=[names[record.category]||record.category,record.record_date||record.event_date||"Date not entered",record.location||"Location not entered"].join(" · ");
+  const img=modal.querySelector("#home-detail-image"),fallback=modal.querySelector("#home-detail-fallback"),viewport=modal.querySelector("#home-detail-viewport");
+  img.hidden=true;img.removeAttribute("src");fallback.replaceChildren();viewport.style.display="";
   if(record.file_path){
    const url=publicUrl(record.file_path);
    if((record.mime_type||"").startsWith("image/")){img.src=url;img.alt=(record.title||"Record")+" original scan";img.hidden=false;}
    else if(record.mime_type==="application/pdf"){const frame=document.createElement("iframe");frame.src=url;frame.title="Original PDF for "+record.title;frame.style.cssText="width:100%;height:60vh;border:0";fallback.append(frame);}
    else{const link=node("a","Open original attachment","text-link");link.href=url;link.target="_blank";link.rel="noopener noreferrer";fallback.append(link);}
   }else fallback.append(node("p","No attachment is saved for this record.","empty-state"));
-  const metadata=modal.querySelector(".home-detail-metadata");metadata.replaceChildren();
-  const addField=(label,value)=>{if(!value)return;const row=node("p");const strong=node("strong",label+": ");row.append(strong,document.createTextNode(String(value)));metadata.append(row);};
-  addField("Record type",names[record.category]||record.category);
-  addField("Date",record.record_date||record.event_date||"");
-  addField("Location",record.location);
-  addField("People mentioned",record.persons_mentioned);
-  addField("Added to archive",new Date(record.created_at).toLocaleString());
-  modal.querySelector("#home-detail-description").textContent=record.description||"No transcription or research notes have been added.";
+  const raw=String(record.description||"");
+  const notes=raw.split(/\r?\n/).filter(line=>!/^\s*(?:Date on record|Parish|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Page name identifications|Face identifications):/i.test(line)).join("\n").trim();
+  const notesPanel=modal.querySelector("#home-detail-transcription-panel");modal.querySelector("#home-detail-description").textContent=notes;notesPanel.hidden=!notes;
+  const family=modal.querySelector("#home-detail-family-information"),familyList=modal.querySelector("#home-detail-family-list");familyList.replaceChildren();
+  const familyEntries=[...raw.matchAll(/^Family - ([^:\r\n]+):\s*(.+)$/gim)].map(m=>({role:m[1].trim(),name:m[2].trim()}));
+  const birthSubject=record.category==="births"&&record.title?{role:"Baptized / born person",name:record.title}:null;
+  const bride=raw.match(/^Bride:\s*(.+)$/im),groom=raw.match(/^Groom:\s*(.+)$/im);
+  const entries=[...(birthSubject?[birthSubject]:[]),...(bride?[{role:"Bride",name:bride[1].trim()}]:[]),...(groom?[{role:"Groom",name:groom[1].trim()}]:[]),...familyEntries];
+  if(entries.length){const list=node("ul","","combined-identified-names");entries.forEach(entry=>{const li=node("li","","");li.append(node("strong",entry.role+": "),document.createTextNode(entry.name));list.append(li);});familyList.append(list);}family.hidden=!entries.length;
+  const facePanel=modal.querySelector("#home-detail-face-identifications"),faceList=modal.querySelector("#home-detail-face-list");faceList.replaceChildren();const fm=raw.match(/^Face identifications:\s*(\[.*\])\s*$/im);let faceEntries=[];if(fm){try{faceEntries=JSON.parse(fm[1]);}catch(_){}}faceEntries.filter(x=>x&&x.name).forEach(x=>faceList.append(node("li",x.name)));facePanel.hidden=!faceEntries.length;
+  modal.querySelector("#home-detail-confidence").textContent=(raw.match(/^Research confidence:\s*(.+)$/im)||[])[1]||"";
   const oldLink=panel.querySelector(".home-open-attachment");if(oldLink)oldLink.remove();
   if(record.file_path){const link=node("a","Open original attachment in new tab","text-link home-open-attachment");link.href=publicUrl(record.file_path);link.target="_blank";link.rel="noopener noreferrer";panel.append(link);}
   modal.hidden=false;
  }
- function recordYear(r){const source=String(r.record_date||r.event_date||"");const match=source.match(/(?:^|\D)((?:1[0-9]{3}|20[0-9]{2}|2100))(?:\D|$)/);return match?match[1]:"Year unknown";}
- function recordSummary(r){const raw=String(r.description||"").split(/\r?\n/).filter(line=>!/^\s*(?:Date on record|Parish|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Page name identifications|Face identifications):/i.test(line)).join(" ").replace(/\s+/g," ").trim();if(raw)return raw.length>155?raw.slice(0,152).trimEnd()+"…":raw;return r.persons_mentioned?"People: "+r.persons_mentioned:"No summary or transcription has been added yet.";}
  function render(){const q=query.value.trim().toLowerCase(),loc=location.value.trim().toLowerCase(),cat=category.value,found=records.filter(r=>(cat==="all"||r.category===cat)&&(!loc||(r.location||"").toLowerCase().includes(loc))&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned].join(" ").toLowerCase().includes(q));count.textContent=found.length+" matching records · "+records.length+" total records";results.replaceChildren();results.classList.add("home-record-tiles");if(!found.length){results.append(node("p",records.length?"No records match those filters.":"No records have been added yet.","empty-state"));return;}found.forEach(r=>{const card=node("button","","home-record-tile");card.type="button";card.setAttribute("aria-label","Open record: "+r.title);const kind=node("span",(names[r.category]||r.category)+" · "+recordYear(r),"record-category");const thumb=node("div","","home-tile-thumbnail");if(r.file_path&&(r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="";img.loading="lazy";thumb.append(img);}else{const symbol=node("span",r.file_path?(r.mime_type==="application/pdf"?"PDF":"FILE"):"NO SCAN","home-tile-file");thumb.append(symbol);}const title=node("h3",r.title||"Untitled record");const summary=node("p",recordSummary(r),"home-tile-summary");const place=node("p",r.location||"Location not entered","home-tile-place");card.append(kind,thumb,title,summary,place);card.addEventListener("click",()=>openRecord(r));results.append(card);});}
  async function load(){if(!ok||!window.supabase){count.textContent="Archive connection is not configured.";return;}client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,file_name,file_path,mime_type,created_at").order("created_at",{ascending:false});if(error){count.textContent="Could not load public records: "+error.message;results.replaceChildren(node("p","The public archive could not be loaded.","empty-state"));return;}records=data||[];render();if(activity){activity.replaceChildren();if(!records.length)activity.append(node("p","No records have been added yet.","empty-state"));records.forEach(r=>{const item=node("article","","activity-log-item");item.append(node("p",new Date(r.created_at).toLocaleString()+" — "+"Archive owner added “"+(r.title||"Untitled record")+"” to “"+(names[r.category]||r.category||"Uncategorized")+"”.","activity-log-entry"));activity.append(item);});}}
  [query,category,location].filter(Boolean).forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",render));load();
