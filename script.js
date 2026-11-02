@@ -65,17 +65,19 @@
     motionChoice.addEventListener("change",()=>{setPref(motionKey,motionChoice.value);applyFormat();});
   }
   if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches&&getPref(motionKey,"full")!=="reduced"){
-    document.body.classList.add("page-enter");requestAnimationFrame(()=>document.body.classList.add("page-enter-active"));
+    const pageContent=document.querySelector("main");
+    if(pageContent){
+      pageContent.classList.add("page-enter");
+      requestAnimationFrame(()=>pageContent.classList.add("page-enter-active"));
+    }
     document.querySelectorAll('a[href]').forEach(link=>{
       const href=link.getAttribute("href")||"";
       if(!href||href.startsWith("#")||link.target==="_blank"||link.hasAttribute("download")||link.origin!==location.origin||!/\.html(?:$|[?#])/.test(href))return;
       link.addEventListener("click",event=>{
         if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.defaultPrevented)return;
+        if(!pageContent||pageContent.classList.contains("page-leaving"))return;
         event.preventDefault();
-        if(document.body.classList.contains("page-leaving"))return;
-        document.body.classList.add("page-leaving","page-leave");
-        const veil=document.getElementById("tylka-page-veil");
-        if(veil)veil.classList.add("is-active");
+        pageContent.classList.add("page-leaving","page-leave");
         setTimeout(()=>{location.href=link.href;},320);
       });
     });
