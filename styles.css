@@ -5217,3 +5217,13 @@ body.dark-mode #ancestor-grid .ancestor-card-open .ancestor-life-dates{color:#e1
 #ancestor-grid .ancestor-portrait-placeholder{height:148px;display:grid;place-items:center;background:linear-gradient(135deg,#b7a17d,#d8c6a4);color:#493321;border-bottom:1px solid var(--line);font:italic 1rem var(--serif)}
 #ancestor-grid .ancestor-card-open:disabled{cursor:default;opacity:1}
 #ancestor-grid .ancestor-life-dates{display:block;margin:.3rem 0 0;color:#60452e;font-size:.78rem;line-height:1.4}
+
+
+/* Homepage search cards without scans use the full text width; no empty thumbnail slot. */
+#home-results .home-search-record-card.no-scan{grid-template-columns:minmax(0,1fr)!important}
+#home-results .home-search-record-card.no-scan>.home-search-record-details{grid-column:1/-1;min-width:0}
+#home-results .home-search-record-card.has-scan{grid-template-columns:112px minmax(0,1fr)}
+@media(max-width:760px){
+ #home-results .home-search-record-card.has-scan{grid-template-columns:92px minmax(0,1fr)}
+ #home-results .home-search-record-card.no-scan{grid-template-columns:minmax(0,1fr)!important}
+}
