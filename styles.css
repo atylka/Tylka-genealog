@@ -4198,3 +4198,19 @@ body.dark-mode header.site-header .primary-nav a,
 body.dark-mode header.site-header .owner-sign-in-button{color:#fff0d2!important}
 @media(max-width:800px){html body header.site-header .wordmark strong{font-size:1.8rem!important}}
 @media(max-width:420px){html body header.site-header .wordmark strong{font-size:1.5rem!important}}
+
+
+/* Ancestors page intro alignment: match the left-aligned page headings used elsewhere. */
+html body main.ancestor-page>.section-intro{
+  text-align:left!important;
+  align-items:flex-start!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+html body main.ancestor-page>.section-intro>h1,
+html body main.ancestor-page>.section-intro>.eyebrow,
+html body main.ancestor-page>.section-intro>p{
+  text-align:left!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
