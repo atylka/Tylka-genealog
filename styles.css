@@ -4062,3 +4062,72 @@ body.dark-mode #private-archive .archive-folder-content .record-card .record-thu
   #private-archive .archive-folder-content .records-list>.record-card{min-height:0!important;padding:.7rem!important}
   #private-archive .archive-folder-content .record-card>.record-thumbnail{height:130px!important;min-height:130px!important;max-height:130px!important}
 }
+
+
+/* HEADER FIX — final theme-specific rules with stronger specificity than earlier header styles. */
+html body header.site-header{
+  background:#d5c19d!important;
+  background-image:linear-gradient(105deg,#e1d0ad 0%,#c9b18a 45%,#bda07a 100%)!important;
+  background-color:#d5c19d!important;
+  border-bottom:3px double #80603b!important;
+  box-shadow:inset 0 1px rgba(255,248,224,.65),0 5px 16px rgba(42,25,13,.18)!important;
+  color:#38251a!important;
+}
+html body header.site-header .wordmark,
+html body header.site-header .wordmark strong,
+html body header.site-header .wordmark small,
+html body header.site-header .primary-nav a{color:#38251a!important;text-shadow:none!important}
+html body header.site-header .monogram{background:#6f342b!important;color:#fff0d2!important;border:1px solid #b99558!important}
+html body header.site-header .primary-nav a:hover,
+html body header.site-header .primary-nav a[aria-current="page"],
+html body header.site-header .owner-sign-in-button{background:#6f342b!important;color:#fff0d2!important;border-color:#b99558!important}
+html[data-theme="dark"] body header.site-header,
+body[data-theme="dark"] header.site-header,
+html.theme-dark body header.site-header,
+body.theme-dark header.site-header,
+body.dark-mode header.site-header{
+  background:#49352b!important;
+  background-image:linear-gradient(105deg,#684c39 0%,#5d4232 43%,#51392d 72%,#493229 100%)!important;
+  background-color:#49352b!important;
+  border-bottom:3px double #c09a60!important;
+  box-shadow:inset 0 1px rgba(231,190,116,.2),0 6px 20px rgba(0,0,0,.3)!important;
+  color:#fff0d2!important;
+}
+html[data-theme="dark"] body header.site-header .wordmark,
+html[data-theme="dark"] body header.site-header .wordmark strong,
+html[data-theme="dark"] body header.site-header .wordmark small,
+html[data-theme="dark"] body header.site-header .primary-nav a,
+body[data-theme="dark"] header.site-header .wordmark,
+body[data-theme="dark"] header.site-header .wordmark strong,
+body[data-theme="dark"] header.site-header .wordmark small,
+body[data-theme="dark"] header.site-header .primary-nav a,
+html.theme-dark body header.site-header .wordmark,
+html.theme-dark body header.site-header .wordmark strong,
+html.theme-dark body header.site-header .wordmark small,
+html.theme-dark body header.site-header .primary-nav a,
+body.theme-dark header.site-header .wordmark,
+body.theme-dark header.site-header .wordmark strong,
+body.theme-dark header.site-header .wordmark small,
+body.theme-dark header.site-header .primary-nav a,
+body.dark-mode header.site-header .wordmark,
+body.dark-mode header.site-header .wordmark strong,
+body.dark-mode header.site-header .wordmark small,
+body.dark-mode header.site-header .primary-nav a{color:#fff0d2!important;text-shadow:none!important}
+html[data-theme="dark"] body header.site-header .monogram,
+body[data-theme="dark"] header.site-header .monogram,
+html.theme-dark body header.site-header .monogram,
+body.theme-dark header.site-header .monogram,
+body.dark-mode header.site-header .monogram{background:#70472f!important;color:#fff4df!important;border-color:#c6a36b!important}
+html[data-theme="dark"] body header.site-header .primary-nav a:hover,
+html[data-theme="dark"] body header.site-header .primary-nav a[aria-current="page"],
+html[data-theme="dark"] body header.site-header .owner-sign-in-button,
+body[data-theme="dark"] header.site-header .primary-nav a:hover,
+body[data-theme="dark"] header.site-header .primary-nav a[aria-current="page"],
+body[data-theme="dark"] header.site-header .owner-sign-in-button,
+html.theme-dark body header.site-header .primary-nav a:hover,
+html.theme-dark body header.site-header .primary-nav a[aria-current="page"],
+body.theme-dark header.site-header .primary-nav a:hover,
+body.theme-dark header.site-header .primary-nav a[aria-current="page"],
+body.dark-mode header.site-header .primary-nav a:hover,
+body.dark-mode header.site-header .primary-nav a[aria-current="page"]{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
+@media(prefers-reduced-motion:reduce){html body header.site-header:before{animation:none!important}}
