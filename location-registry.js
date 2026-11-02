@@ -6,10 +6,12 @@
   const search = document.getElementById("location-search");
   const detail = document.getElementById("location-detail");
   const count = document.getElementById("location-count");
+  const personSelect = document.getElementById("person-location-select");
+  const personStatus = document.getElementById("person-location-status");
   if (!workspace) return;
   let currentUser = null;
 
-  let client = null, map = null, markerLayer = null, places = [], selected = null;
+  let client = null, map = null, markerLayer = null, places = [], selected = null, personIndex = new Map();
   const coordinateCache=new Map();
   let selectionSequence=0;
 
@@ -24,6 +26,55 @@
     let appliedTheme=document.documentElement.dataset.theme||"light";
     new MutationObserver(()=>{const theme=document.documentElement.dataset.theme||"light";if(theme===appliedTheme)return;appliedTheme=theme;const dark=theme==="dark";map.eachLayer(layer=>{if(layer instanceof L.TileLayer)map.removeLayer(layer);});L.tileLayer(dark?"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
   }
+
+  function splitPeople(value){
+    return String(value||"").split(/[\\n;,|]+/).map(v=>v.replace(/^[-•*\\s]+/,"").trim()).filter(Boolean);
+  }
+  function buildPersonIndex(records){
+    const index=new Map();
+    records.forEach(record=>{
+      splitPeople(record.persons_mentioned).forEach(name=>{
+        const key=normalize(name); if(!key)return;
+        if(!index.has(key))index.set(key,{name,places:new Map(),records:[]});
+        const person=index.get(key); person.records.push(record);
+        const placeName=(record.location||"").trim();
+        if(placeName){
+          const placeKey=normalize(placeName);
+          if(!person.places.has(placeKey))person.places.set(placeKey,places.find(p=>normalize(p.name)===placeKey)||{name:placeName,records:[record]});
+          else if(!person.places.get(placeKey).records.some(r=>r.id===record.id))person.places.get(placeKey).records.push(record);
+        }
+      });
+    });
+    return index;
+  }
+  function renderPeople(){
+    if(!personSelect)return;
+    const current=personSelect.value;
+    personSelect.replaceChildren(new Option("Choose a person…",""));
+    [...personIndex.entries()].sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([key,person])=>personSelect.append(new Option(person.name,key)));
+    if(personIndex.has(current))personSelect.value=current;
+  }
+  async function selectPerson(key){
+    const person=personIndex.get(key); markerLayer.clearLayers();
+    if(!person){if(personStatus)personStatus.textContent="Choose a person to highlight every location linked to their name in the records.";return;}
+    const matches=[...person.places.values()];
+    if(!matches.length){personStatus.textContent=person.name+" is mentioned in "+person.records.length+" record(s), but none has a saved location.";return;}
+    personStatus.textContent="Mapping "+matches.length+" location(s) mentioned for "+person.name+"…";
+    const plotted=[];
+    for(const place of matches){try{plotted.push({place,point:await coordinatesFor(place)});}catch(error){}}
+    if(!plotted.length){personStatus.textContent="No mappable locations found for "+person.name+". Add town and country details to the records.";return;}
+    const bounds=[];
+    plotted.forEach(({place,point})=>{
+      const pin=L.circleMarker(point,{radius:9,color:"#f0d18c",weight:3,fillColor:"#741923",fillOpacity:.95}).addTo(markerLayer);
+      pin.bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-9],className:"registry-location-label"});
+      pin.bindPopup("<strong>"+escapeText(person.name)+"</strong><br>"+escapeText(place.name)+"<br>"+place.records.length+" linked record(s)");
+      pin.on("click",()=>selectPlace(place,true)); bounds.push(point);
+    });
+    map.stop();map.invalidateSize();
+    if(bounds.length===1)map.setView(bounds[0],12,{animate:false});else map.fitBounds(L.latLngBounds(bounds).pad(.2),{animate:false});
+    personStatus.textContent=person.name+" appears in "+person.records.length+" record(s) across "+plotted.length+" mapped location(s). Select a pin to review its records.";
+  }
+
   function buildPlaces(records){
     const found=new Map();
     records.forEach(record=>{
@@ -65,13 +116,13 @@
     coordinateCache.set(key,request);
     try{return await request;}catch(error){coordinateCache.delete(key);throw error;}
   }
-  async function selectPlace(place){
+  async function selectPlace(place,preserveMarkers=false){
     selected=place;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
       initMap();
       const [lat,lng]=await coordinatesFor(place);
       if(sequence!==selectionSequence)return;
-      markerLayer.clearLayers();
+      if(!preserveMarkers)markerLayer.clearLayers();
       const pinIcon=L.divIcon({
         className:"registry-pin-icon",
         html:'<span class="registry-map-pin" aria-hidden="true"><span></span></span>',
@@ -122,9 +173,11 @@
 
   async function loadRegistry(){
     count.textContent="Loading public family locations…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
+    personIndex=buildPersonIndex(data||[]);
+    renderPeople();
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
     renderList();initMap();
     if(places.length){const requested=new URLSearchParams(window.location.search).get("place");const initial=(requested&&places.find(p=>normalize(p.name)===normalize(requested)))||places[0];if(requested)search.value=requested;renderList();selectPlace(initial);}
@@ -138,5 +191,6 @@
     // Avoid a duplicate location query when site-ui broadcasts the same event.
   }
   search.addEventListener("input",renderList);
+  if(personSelect)personSelect.addEventListener("change",()=>selectPerson(personSelect.value));
   start();
 })();
