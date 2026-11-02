@@ -5884,3 +5884,14 @@ html body header.site-header{position:relative!important;top:auto!important;flex
 html body header.site-header .primary-nav{display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;min-width:0!important}
 @media(max-width:800px){html body footer.site-footer .footer-mark .wordmark-title,html body header.site-header .wordmark .wordmark-title{gap:.4rem!important}}
 @media(max-width:420px){html body footer.site-footer .footer-mark .wordmark-title,html body header.site-header .wordmark .wordmark-title{gap:.28rem!important}}
+
+
+/* ChronoSearch date rail and compact content-height timeline. */
+.chrono-main #chrono-timeline{height:auto!important;min-height:0!important;max-height:none!important;padding-bottom:.4rem!important;align-items:stretch!important;overflow-y:hidden!important}
+.chrono-main #chrono-timeline>.chrono-year-column{height:auto!important;min-height:0!important;align-self:stretch!important;justify-content:flex-start!important;padding-bottom:.2rem!important}
+.chrono-main #chrono-timeline .chrono-event{position:relative!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;min-width:0!important;margin:0 0 .8rem!important;padding:0!important}
+.chrono-main #chrono-timeline .chrono-event>.chrono-record-date{display:block!important;position:relative!important;z-index:1!important;width:auto!important;height:auto!important;min-height:0!important;margin:0 0 .42rem!important;padding:0 0 .38rem!important;border:0!important;border-bottom:1px solid rgba(133,99,58,.48)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#65472f!important;font:700 .86rem/1.35 Georgia,serif!important;letter-spacing:.015em!important}
+.chrono-main #chrono-timeline .chrono-event>.chrono-record-date:after{content:""!important;display:block!important;position:absolute!important;left:.38rem!important;bottom:-.48rem!important;width:1px!important;height:.48rem!important;background:linear-gradient(to bottom,#987448,rgba(152,116,72,.25))!important}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{margin:0!important}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date,body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date{color:#e0c18e!important;border-bottom-color:rgba(205,170,111,.52)!important}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date:after,body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-record-date:after{background:linear-gradient(to bottom,#c39a5c,rgba(195,154,92,.25))!important}
