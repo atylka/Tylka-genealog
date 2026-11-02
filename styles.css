@@ -5042,3 +5042,36 @@ html { scroll-behavior: auto; }
 @media(min-width:801px) and (max-width:1100px){
   .site-header>.primary-nav{flex-basis:100%;justify-content:flex-start}
 }
+
+
+/* ChronoSearch is always a left-to-right horizontal timeline.
+   Disable the retired vertical/list presentation at every breakpoint. */
+.chrono-main .chrono-timeline,
+.chrono-list-mode .chrono-timeline{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+}
+.chrono-main .chrono-year-column,
+.chrono-list-mode .chrono-year-column{
+  display:block!important;
+  flex:0 0 clamp(250px,27vw,340px)!important;
+  width:auto!important;
+  min-width:250px!important;
+  max-width:none!important;
+  margin:0!important;
+}
+@media(max-width:650px){
+  .chrono-main .chrono-year-column,
+  .chrono-list-mode .chrono-year-column{
+    flex-basis:84vw!important;
+    min-width:0!important;
+  }
+}
