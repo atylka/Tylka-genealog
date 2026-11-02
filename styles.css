@@ -7147,3 +7147,44 @@ body.dark-mode .location-page-header::before{
     padding-right:1rem!important;
   }
 }
+
+
+/* 2026-11-02: align full-bleed mastheads to the viewport, not the padded
+   content edge of the centered main element. The previous calc omitted the
+   main element's horizontal padding, leaving the banner displaced by that
+   exact amount. Chrono's main overflow rule also clipped the bleed. */
+.home-search-header,
+.chrono-search-layout{
+  position:relative!important;
+  left:auto!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  margin-left:calc(50% - 50vw - clamp(1.25rem,8vw,8rem))!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+  min-width:0!important;
+  transform:none!important;
+}
+.chrono-main{
+  overflow:visible!important;
+}
+.home-search-page,
+.chrono-main{
+  overflow-x:clip!important;
+}
+.home-search-header .home-search-intro,
+.home-search-header .home-search-box,
+.chrono-search-layout .chrono-search-intro,
+.chrono-search-layout .chrono-filter-panel{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:800px){
+  .home-search-header,
+  .chrono-search-layout{
+    margin-left:calc(50% - 50vw - clamp(1.25rem,8vw,8rem))!important;
+    padding-left:1rem!important;
+    padding-right:1rem!important;
+  }
+}
