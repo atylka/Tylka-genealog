@@ -138,7 +138,7 @@
    timeline.append(column);
   });
  }
- let ownerUser=null;
+ let ownerUser=null,records=[];
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
   client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
@@ -148,7 +148,7 @@
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
   // Deduplicate rows by record id so duplicate database results cannot create duplicate cards or thumbnails.
   const seenIds=new Set();
-  const records=(data||[]).filter(record=>{
+  records=(data||[]).filter(record=>{
    if(!record?.id)return true;
    if(seenIds.has(record.id))return false;
    seenIds.add(record.id);
