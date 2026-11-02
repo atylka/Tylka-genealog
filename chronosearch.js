@@ -23,6 +23,9 @@
   const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
+ const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\\s*([^\\r\\n]+)$/im);return m?m[1].trim():"";};
+ const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").trim();return (raw?raw+"\\n\\n":"")+"Chrono thumbnail: "+path;};
+ const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").replace(/\\n{3,}/g,"\\n\\n").trim();
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
   const box=node("div","",("chrono-info-box "+cls).trim());
@@ -81,10 +84,11 @@
     event.append(node("p",eventDescription(r),"chrono-event-description"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
-    const imageFile=!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
+    const customThumb=chronoThumbPath(r);
+    const imageFile=!!customThumb||!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
     if(imageFile){
      const thumb=node("div","","record-thumbnail chrono-source-preview");
-     const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Source scan preview for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
+     const img=document.createElement("img");img.src=publicUrl(customThumb||r.file_path);img.alt="Chronological card thumbnail for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
     }else card.classList.add("chrono-no-thumbnail");
     const info=node("div","","chrono-card-info");
     const family=familyValues(r);
@@ -105,14 +109,40 @@
     const excerpt=cleanChronoDescription(r.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Date on record|Parish|Research confidence):/i.test(line)).join("\\n").trim();
     if(excerpt)appendInfoBox(details,"Record notes",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-notes-box");
     info.append(details);card.append(info);
+    if(ownerUser){
+     const controls=node("div","","chrono-thumbnail-controls");
+     const edit=node("button","Edit thumbnail","small-button chrono-thumbnail-edit");edit.type="button";
+     const picker=document.createElement("input");picker.type="file";picker.accept="image/*";picker.hidden=true;picker.setAttribute("aria-label","Choose a custom ChronoSearch thumbnail");
+     edit.addEventListener("click",e=>{e.stopPropagation();picker.click();});
+     picker.addEventListener("click",e=>e.stopPropagation());
+     picker.addEventListener("change",async e=>{
+      e.stopPropagation();const file=picker.files?.[0];if(!file)return;
+      if(!file.type.startsWith("image/")){alert("Choose an image file.");picker.value="";return;}
+      edit.disabled=true;edit.textContent="Saving…";
+      const path=ownerUser.id+"/chrono-thumbnails/"+String(r.id||crypto.randomUUID())+"-"+Date.now()+"."+((file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg");
+      try{
+       const uploaded=await client.storage.from("family-archive").upload(path,file,{contentType:file.type,upsert:true});if(uploaded.error)throw uploaded.error;
+       const description=withChronoThumb(r,path);
+       const saved=await client.from("archive_records").update({description}).eq("id",r.id);if(saved.error){await client.storage.from("family-archive").remove([path]);throw saved.error;}
+       const oldPath=customThumb;r.description=description;if(oldPath&&oldPath!==path)await client.storage.from("family-archive").remove([oldPath]);render(records);
+      }catch(error){alert("Could not update this thumbnail: "+(error.message||"Unknown error."));}
+      finally{edit.disabled=false;edit.textContent="Edit thumbnail";picker.value="";}
+     });
+     controls.append(edit,picker);
+     if(customThumb){const reset=node("button","Use record scan","small-button chrono-thumbnail-reset");reset.type="button";reset.addEventListener("click",async e=>{e.stopPropagation();if(!confirm("Restore the original record scan as this card’s thumbnail?"))return;reset.disabled=true;try{const saved=await client.from("archive_records").update({description:withoutChronoThumb(r)}).eq("id",r.id);if(saved.error)throw saved.error;r.description=withoutChronoThumb(r);await client.storage.from("family-archive").remove([customThumb]);render(records);}catch(error){alert("Could not restore the original thumbnail: "+(error.message||"Unknown error."));reset.disabled=false;}});controls.append(reset);}
+     controls.addEventListener("click",e=>e.stopPropagation());card.append(controls);
+    }
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
    });
    timeline.append(column);
   });
  }
+ let ownerUser=null;
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
   client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
+  const sessionResult=await client.auth.getSession();ownerUser=sessionResult.data?.session?.user||null;
+  client.auth.onAuthStateChange((_event,session)=>{ownerUser=session?.user||null;render(records);});
   const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
   // Deduplicate rows by record id so duplicate database results cannot create duplicate cards or thumbnails.
