@@ -72,7 +72,17 @@
     if(!section||!list||!familyList)return;
     familyList.replaceChildren();list.replaceChildren();activePageNameHighlight=null;activeFaceHighlight=null;
     const family=readFamilyRelationships(record),pageNames=readPageNames(record),matchedPageNameIndexes=new Set();
-    const isMarriage=canonical(record.category)==="marriages";const groups=isMarriage?[{title:"Bride & groom",roles:["Bride","Groom"]},{title:"Bride’s parents",roles:["Bride’s father","Bride’s mother"]},{title:"Groom’s parents",roles:["Groom’s father","Groom’s mother"]}]:[{title:"Parents",roles:["Mother","Father"]},{title:"Grandparents",roles:["Mother’s father","Mother’s mother","Father’s father","Father’s mother"]}];
+    const category=canonical(record.category),isMarriage=category==="marriages",isBirth=category==="births";
+    if(isBirth&&String(record.title||"").trim()){
+      const subjectName=String(record.title).trim(),matchIndex=pageNames.findIndex(entry=>entry.name.trim().toLocaleLowerCase()===subjectName.toLocaleLowerCase());
+      if(matchIndex>=0)matchedPageNameIndexes.add(matchIndex);
+      const wrapper=document.createElement("section"),heading=document.createElement("h4"),grid=document.createElement("div"),card=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong"),actions=document.createElement("div");
+      wrapper.className="identified-family-group identified-birth-subject";heading.textContent="Person born / baptized";grid.className="identified-family-grid";card.className="identified-family-card";label.textContent="Baptized / born person";value.textContent=subjectName;actions.className="identified-name-actions";card.append(label,value);card.tabIndex=0;card.setAttribute("role","group");card.setAttribute("aria-label","Person born / baptized: "+subjectName);
+      card.addEventListener("mouseenter",()=>highlightPageName(matchIndex));card.addEventListener("mouseleave",()=>highlightPageName(null));card.addEventListener("focus",()=>highlightPageName(matchIndex));card.addEventListener("blur",()=>highlightPageName(null));
+      if(currentUser){const box=document.createElement("button");box.type="button";box.className="small-button";box.textContent=matchIndex>=0?"Rebox":"Box name";box.addEventListener("click",()=>matchIndex>=0?editPageName(matchIndex):openPageNameTool(subjectName));actions.append(box);if(matchIndex>=0){const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Remove box";remove.addEventListener("click",()=>removePageName(matchIndex));actions.append(remove);}}
+      card.append(actions);grid.append(card);wrapper.append(heading,grid);familyList.append(wrapper);
+    }
+    const groups=isMarriage?[{title:"Bride & groom",roles:["Bride","Groom"]},{title:"Bride’s parents",roles:["Bride’s father","Bride’s mother"]},{title:"Groom’s parents",roles:["Groom’s father","Groom’s mother"]}]:[{title:"Parents",roles:["Mother","Father"]},{title:"Grandparents",roles:["Mother’s father","Mother’s mother","Father’s father","Father’s mother"]}];
     groups.forEach(group=>{
       const entries=family.filter(([role])=>group.roles.includes(role));
       if(!entries.length)return;
@@ -111,7 +121,7 @@
       li.append(label,actions);list.append(li);
     });
     if(otherNames)otherNames.hidden=!other.length;
-    section.hidden=!family.length&&!pageNames.length;
+    section.hidden=!family.length&&!pageNames.length&&!(isBirth&&String(record.title||"").trim());
     renderFaceIdentificationList(record);
     drawPageNameOverlay(record);
   }
