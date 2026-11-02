@@ -4851,3 +4851,32 @@ html { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+
+/* Homepage: compact square activity log tucked to the lower left. */
+.home-search-page #home-activity-log.activity-log-section{
+  width:min(100%,330px)!important;
+  min-height:0!important;
+  margin:2rem 0 0!important;
+  padding:1rem!important;
+  border:1px solid var(--line)!important;
+  border-radius:8px!important;
+  background:var(--paper-light)!important;
+  box-shadow:0 5px 18px rgba(44,29,18,.08);
+}
+.home-search-page .activity-log-heading{margin:0 0 .65rem}
+.home-search-page .activity-log-heading .eyebrow{margin:0 0 .2rem;font-size:.62rem;letter-spacing:.12em}
+.home-search-page .activity-log-heading h2{margin:0;font-size:1.25rem;line-height:1.2}
+.home-search-page .activity-log-list{display:grid;gap:.35rem;max-width:none}
+.home-search-page .activity-log-item{
+  display:grid;gap:.12rem;padding:.48rem .58rem!important;
+  border:1px solid var(--line);border-radius:4px;
+  background:rgba(203,185,154,.2);box-shadow:none!important;
+  animation:none!important;transform:none!important;
+}
+.home-search-page .activity-log-entry-title{display:block;font:600 .78rem/1.25 var(--serif);overflow-wrap:anywhere}
+.home-search-page .activity-log-entry-meta{display:block;color:var(--muted);font-size:.65rem;line-height:1.25}
+.home-search-page #home-activity-list>.empty-state{margin:0;padding:.5rem;font-size:.75rem}
+@media(max-width:600px){
+ .home-search-page #home-activity-log.activity-log-section{width:100%!important;max-width:330px!important;margin:1.25rem 0 0!important;padding:.85rem!important}
+}
