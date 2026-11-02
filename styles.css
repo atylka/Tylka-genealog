@@ -4219,3 +4219,31 @@ html body main.ancestor-page>.section-intro>p{
 /* Reliable touch and mouse selection in the ancestor portrait cropper. */
 .face-crop-canvas-wrap{position:relative;overflow:auto;overscroll-behavior:contain;}
 .face-crop-canvas-wrap canvas#face-crop-canvas{display:block;max-width:100%;height:auto;touch-action:none!important;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;cursor:crosshair;pointer-events:auto;}
+
+
+/* Horizontal brand lockup and install action beside the logo. */
+html body header.site-header{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:1rem!important;}
+html body header.site-header .wordmark{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;gap:.7rem!important;white-space:nowrap!important;}
+html body header.site-header .wordmark .wordmark-title{display:flex!important;flex-direction:row!important;align-items:baseline!important;gap:.7rem!important;white-space:nowrap!important;}
+html body header.site-header .wordmark .wordmark-title strong{font-size:2.25rem!important;line-height:1!important;}
+html body header.site-header .wordmark .wordmark-title small{font-family:Georgia,serif!important;font-size:.68rem!important;letter-spacing:.11em!important;text-transform:uppercase!important;white-space:nowrap!important;}
+html body header.site-header .pwa-install-button{order:1!important;flex:0 0 auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;margin:0 .4rem 0 0!important;padding:.58rem .8rem!important;border:1px solid #c9a765!important;border-radius:2px!important;background:rgba(28,15,12,.22)!important;color:#f7e8c8!important;font:600 .78rem Georgia,serif!important;letter-spacing:.04em!important;white-space:nowrap!important;cursor:pointer!important;}
+html body header.site-header .pwa-install-button[hidden]{display:none!important;}
+html body header.site-header .menu-toggle{margin-left:auto!important;flex:0 0 auto!important;}
+html body header.site-header .primary-nav{margin-left:auto!important;}
+@media(max-width:800px){
+ html body header.site-header{gap:.5rem!important;flex-wrap:wrap!important;}
+ html body header.site-header .wordmark{gap:.45rem!important;}
+ html body header.site-header .wordmark .wordmark-title{gap:.4rem!important;}
+ html body header.site-header .wordmark .wordmark-title strong{font-size:1.65rem!important;}
+ html body header.site-header .wordmark .wordmark-title small{font-size:.55rem!important;letter-spacing:.06em!important;}
+ html body header.site-header .pwa-install-button{font-size:.68rem!important;padding:.48rem .55rem!important;margin-right:0!important;}
+ html body header.site-header .menu-toggle{margin-left:auto!important;}
+}
+@media(max-width:420px){
+ html body header.site-header{column-gap:.35rem!important;}
+ html body header.site-header .wordmark .wordmark-title{gap:.28rem!important;}
+ html body header.site-header .wordmark .wordmark-title strong{font-size:1.4rem!important;}
+ html body header.site-header .wordmark .wordmark-title small{font-size:.48rem!important;letter-spacing:.025em!important;}
+ html body header.site-header .pwa-install-button{font-size:.61rem!important;padding:.4rem .42rem!important;}
+}
