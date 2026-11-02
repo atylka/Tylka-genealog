@@ -5408,3 +5408,46 @@ body.dark-mode footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small
 html[data-theme="dark"] .chrono-record-date,body[data-theme="dark"] .chrono-record-date,
 html.theme-dark .chrono-record-date,body.theme-dark .chrono-record-date,
 body.dark-mode .chrono-record-date{background:transparent!important;border:0!important;box-shadow:none!important;color:#d8bd8b!important}
+
+
+/* ChronoSearch: archive-style compact record cards with a larger scan preview */
+.chrono-year-column .chrono-record-date{
+  display:block!important;position:relative!important;margin:1rem 0 .28rem!important;
+  padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  color:var(--accent-dark)!important;font-size:.78rem!important;font-weight:700!important;
+  line-height:1.35!important;letter-spacing:.025em!important;
+}
+.chrono-year-column .chrono-record-card{
+  display:grid!important;grid-template-columns:minmax(112px,148px) minmax(0,1fr)!important;
+  align-items:center!important;gap:.85rem!important;
+  width:100%!important;min-height:0!important;margin:0 0 .65rem!important;
+  padding:.7rem!important;border:1px solid var(--line)!important;border-radius:3px!important;
+  background:rgba(223,208,179,.78)!important;box-shadow:0 3px 8px rgba(45,24,17,.07)!important;
+}
+.chrono-year-column .chrono-record-card .record-thumbnail{
+  grid-column:1!important;grid-row:1!important;
+  width:100%!important;max-width:none!important;height:112px!important;aspect-ratio:auto!important;
+  margin:0!important;border:1px solid rgba(90,62,42,.22)!important;
+  background:rgba(115,83,54,.10)!important;
+}
+.chrono-year-column .chrono-record-card .record-thumbnail img{
+  width:100%!important;height:100%!important;object-fit:contain!important;background:#e9dfcb!important;
+}
+.chrono-record-details{grid-column:2!important;grid-row:1!important;min-width:0!important}
+.chrono-record-details h3{margin:.15rem 0 .3rem!important;font-size:1.05rem!important;line-height:1.2!important;overflow-wrap:anywhere}
+.chrono-record-details p{margin:.2rem 0!important;font-size:.75rem!important;line-height:1.35!important}
+.chrono-record-details .record-category{margin:0 0 .2rem!important;padding:0!important;border:0!important;background:transparent!important;font-size:.62rem!important}
+.chrono-record-details .chrono-record-location{color:var(--accent-dark)!important;font-weight:600!important}
+.chrono-record-details .chrono-record-notes{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+html[data-theme="dark"] .chrono-year-column .chrono-record-date,
+body[data-theme="dark"] .chrono-year-column .chrono-record-date{background:transparent!important;border:0!important;box-shadow:none!important;color:#d8bd8b!important}
+html[data-theme="dark"] .chrono-year-column .chrono-record-card,
+body[data-theme="dark"] .chrono-year-column .chrono-record-card{background:#2a1c13!important;color:#ead9b7!important;border-color:#715332!important}
+html[data-theme="dark"] .chrono-record-details .chrono-record-location,
+body[data-theme="dark"] .chrono-record-details .chrono-record-location{color:#c0a77d!important}
+@media(max-width:650px){
+  .chrono-year-column .chrono-record-card{grid-template-columns:minmax(92px,34%) minmax(0,1fr)!important;gap:.6rem!important;padding:.58rem!important}
+  .chrono-year-column .chrono-record-card .record-thumbnail{height:104px!important}
+  .chrono-record-details h3{font-size:.96rem!important}
+}
