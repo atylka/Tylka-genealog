@@ -76,6 +76,8 @@
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if(recordsList)renderRecords();
+    // Refresh the portrait action after the asynchronous owner session check completes.
+    syncFaceButton();
   }
   if($("sign-out"))$("sign-out").addEventListener("click",async()=>{await client.auth.signOut();});
   let editingRecordId=null;
