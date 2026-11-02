@@ -70,8 +70,10 @@
      const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Source scan preview for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
     }else card.classList.add("chrono-no-thumbnail");
     const info=node("div","","chrono-card-info");
-    details.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
-    details.append(node("h3",r.title||"Untitled record"));
+    const headingBox=node("div","","chrono-heading-box");
+    headingBox.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
+    headingBox.append(node("h3",r.title||"Untitled record"));
+    details.append(headingBox);
     const facts=node("div","","chrono-facts-grid");
     appendInfoBox(facts,"Record date",formatRecordDate(r),"chrono-date-box");
     appendInfoBox(facts,"Location",r.location,"chrono-place-box");
