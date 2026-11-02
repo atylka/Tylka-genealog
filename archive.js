@@ -112,10 +112,13 @@
   function updateMarriageFields(){
     const isMarriage=$("record-category")?.value==="marriages";
     const section=$("marriage-parties-section");
+    const titleField=$("record-title-field");
     if(section)section.hidden=!isMarriage;
+    if(titleField)titleField.hidden=isMarriage;
     $("record-bride").required=isMarriage;
     $("record-groom").required=isMarriage;
     $("record-title").readOnly=isMarriage;
+    $("record-title").required=!isMarriage;
     $("record-title").placeholder=isMarriage?"Automatically set from groom + bride":"e.g. Michał Tylka baptism record";
     if(isMarriage)updateMarriageTitle();
   }
