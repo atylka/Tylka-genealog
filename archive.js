@@ -150,10 +150,10 @@
     faceSourceImage=image;faceCanvas.width=image.naturalWidth;faceCanvas.height=image.naturalHeight;faceSelection=null;drawFaceCanvas();$("face-person-name").value="";setMessage($("face-crop-status"),"");showModal("face-crop-modal");
   }
   $("mark-face")?.addEventListener("click",openFaceCrop);
-  faceCanvas?.addEventListener("pointerdown",event=>{if(!faceSourceImage)return;faceCanvas.setPointerCapture(event.pointerId);faceDragStart=canvasPoint(event);faceSelection={x:faceDragStart.x,y:faceDragStart.y,w:1,h:1};drawFaceCanvas();});
-  faceCanvas?.addEventListener("pointermove",event=>{if(!faceDragStart)return;const p=canvasPoint(event);faceSelection={x:Math.min(p.x,faceDragStart.x),y:Math.min(p.y,faceDragStart.y),w:Math.abs(p.x-faceDragStart.x),h:Math.abs(p.y-faceDragStart.y)};drawFaceCanvas();});
-  function finishFaceDrag(){faceDragStart=null;}
-  faceCanvas?.addEventListener("pointerup",finishFaceDrag);faceCanvas?.addEventListener("pointercancel",finishFaceDrag);
+  faceCanvas?.addEventListener("pointerdown",event=>{if(!faceSourceImage)return;event.preventDefault();try{faceCanvas.setPointerCapture(event.pointerId);}catch(_){}faceDragStart=canvasPoint(event);faceSelection={x:faceDragStart.x,y:faceDragStart.y,w:1,h:1};drawFaceCanvas();});
+  faceCanvas?.addEventListener("pointermove",event=>{if(!faceDragStart)return;event.preventDefault();const p=canvasPoint(event);faceSelection={x:Math.min(p.x,faceDragStart.x),y:Math.min(p.y,faceDragStart.y),w:Math.abs(p.x-faceDragStart.x),h:Math.abs(p.y-faceDragStart.y)};drawFaceCanvas();});
+  function finishFaceDrag(event){if(event)event.preventDefault();faceDragStart=null;}
+  faceCanvas?.addEventListener("pointerup",finishFaceDrag);faceCanvas?.addEventListener("pointercancel",finishFaceDrag);faceCanvas?.addEventListener("lostpointercapture",finishFaceDrag);
   $("face-crop-reset")?.addEventListener("click",()=>{faceSelection=null;drawFaceCanvas();setMessage($("face-crop-status"),"Selection cleared.");});
   $("save-face-portrait")?.addEventListener("click",async()=>{
     const name=$("face-person-name").value.trim();
