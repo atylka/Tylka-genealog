@@ -7335,3 +7335,178 @@ body.page-leaving #tylka-page-veil,
     right:12px!important;
   }
 }
+
+
+/* 2026-11-02 ChronoSearch layout cleanup: remove conflicting legacy card sizing
+   and keep the masthead directly beneath the shared site header. */
+body.chronosearch-page main.chrono-main{
+  padding-top:0!important;
+  overflow:visible!important;
+}
+body.chronosearch-page main.chrono-main>.chrono-search-layout{
+  position:relative!important;
+  left:50%!important;
+  right:auto!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+  min-height:0!important;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)!important;
+  align-items:center!important;
+}
+body.chronosearch-page .chrono-search-intro,
+body.chronosearch-page .chrono-filter-panel{
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+body.chronosearch-page .chrono-filter-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:.75rem!important;
+}
+body.chronosearch-page .chrono-filter-footer{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:.65rem 1rem!important;
+  justify-content:space-between!important;
+}
+body.chronosearch-page .chrono-scroll-hint,
+body.chronosearch-page #chrono-timeline,
+body.chronosearch-page>.chrono-main>.notice,
+body.chronosearch-page>.chrono-main>.text-link{
+  max-width:100%!important;
+}
+body.chronosearch-page #chrono-timeline{
+  align-items:stretch!important;
+  gap:.85rem!important;
+  padding:1rem .15rem 1.5rem!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column{
+  flex:0 0 clamp(250px,25vw,330px)!important;
+  min-width:0!important;
+  padding:.8rem!important;
+  overflow:hidden!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column>.chrono-year-heading{
+  position:relative!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:space-between!important;
+  gap:.5rem!important;
+  margin:0 0 .7rem!important;
+  padding:0 0 .55rem!important;
+  border-bottom:1px solid var(--line)!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column>.chrono-year-heading h2{
+  margin:0!important;
+  font-size:1.65rem!important;
+  line-height:1.1!important;
+  color:var(--accent)!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column>.chrono-year-heading span{
+  color:var(--muted)!important;
+  font-size:.7rem!important;
+  white-space:nowrap!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+  display:grid!important;
+  grid-template-columns:minmax(82px,34%) minmax(0,1fr)!important;
+  align-items:stretch!important;
+  gap:.6rem!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:145px!important;
+  max-height:190px!important;
+  padding:.55rem!important;
+  overflow:hidden!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card.chrono-no-thumbnail{
+  grid-template-columns:minmax(0,1fr)!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail{
+  grid-column:1!important;
+  grid-row:1!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card>.chrono-card-info{
+  grid-column:2!important;
+  grid-row:1!important;
+  display:flex!important;
+  min-width:0!important;
+  min-height:0!important;
+  width:100%!important;
+  overflow:hidden!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card.chrono-no-thumbnail>.chrono-card-info{
+  grid-column:1!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event .chrono-record-details{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  gap:.3rem!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event .chrono-info-box{
+  min-width:0!important;
+  padding:.3rem .4rem!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event .chrono-info-value{
+  font-size:.7rem!important;
+  line-height:1.25!important;
+  overflow-wrap:anywhere!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>.chrono-event-meta{
+  gap:.3rem .55rem!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>.chrono-event-meta>.chrono-record-date{
+  font-size:1.05rem!important;
+  line-height:1.2!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>.chrono-event-description{
+  font-size:.8rem!important;
+  margin:.1rem 0 .45rem!important;
+}
+@media(max-width:800px){
+  body.chronosearch-page main.chrono-main>.chrono-search-layout{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:.75rem!important;
+    padding:1.2rem 1rem 1rem!important;
+  }
+  body.chronosearch-page .chrono-search-intro{
+    text-align:center!important;
+    justify-self:center!important;
+  }
+  body.chronosearch-page .chrono-ornament{margin:.45rem auto!important}
+  body.chronosearch-page .chrono-filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body.chronosearch-page #chrono-timeline>.chrono-year-column{
+    flex-basis:min(82vw,320px)!important;
+  }
+}
+@media(max-width:520px){
+  body.chronosearch-page .chrono-filter-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+    min-height:138px!important;
+    max-height:172px!important;
+    grid-template-columns:minmax(76px,32%) minmax(0,1fr)!important;
+  }
+}
