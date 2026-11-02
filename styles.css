@@ -4263,3 +4263,21 @@ html body header.site-header .primary-nav{margin-left:auto!important;}
 .site-header>.site-menu-toggle:hover .settings-gear-art{transform:rotate(45deg)}
 .site-header>.site-menu-toggle[aria-expanded=true] .settings-gear-art{transform:rotate(30deg)}
 @media(max-width:560px){.site-header>.site-menu-toggle{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex-basis:42px!important}.site-header>.site-menu-toggle .settings-gear-art{width:22px;height:22px}}
+
+/* Multi-face ancestor portrait cards and full portrait viewer. */
+.ancestor-card-open{display:flex;flex-direction:column;width:100%;height:100%;padding:0;text-align:left;background:transparent;border:0;color:inherit;cursor:pointer}
+.ancestor-card-open .ancestor-portrait{width:100%;height:220px;object-fit:cover;display:block}
+.ancestor-card-open .ancestor-card-body{width:100%}
+.ancestor-card-open .small-button{display:inline-block;margin-top:.35rem}
+.ancestor-multi-card{overflow:hidden;cursor:pointer}
+.ancestor-face-viewer{width:min(760px,calc(100vw - 2rem));max-height:90vh;overflow:auto}
+.ancestor-viewer-stage{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:.6rem;margin:.8rem 0}
+.ancestor-viewer-image{display:block;max-width:100%;width:auto;height:auto;max-height:58vh;object-fit:contain;margin:auto;background:#160f0c;border:1px solid #a9824e;box-shadow:0 8px 26px rgba(0,0,0,.25)}
+.ancestor-face-arrow{width:42px;height:42px;border:1px solid #ad874e;background:#3b211b;color:#f1d49b;font-size:2rem;line-height:1;cursor:pointer}
+.ancestor-face-position,.ancestor-face-source{text-align:center;color:var(--muted)}
+.ancestor-face-thumbnails{display:flex;gap:.55rem;overflow-x:auto;padding:.5rem 0}
+.ancestor-face-thumb{flex:0 0 66px;width:66px;height:66px;padding:3px;border:1px solid var(--line);background:var(--paper-light);cursor:pointer}
+.ancestor-face-thumb img{width:100%;height:100%;object-fit:cover}
+.ancestor-face-thumb.is-active{border:2px solid #b58a50;box-shadow:0 0 0 2px rgba(181,138,80,.2)}
+html[data-theme="dark"] .ancestor-face-viewer{background:#211713;color:var(--ink);border-color:#9a7445}
+@media(max-width:560px){.ancestor-card-open .ancestor-portrait{height:175px}.ancestor-viewer-stage{grid-template-columns:34px minmax(0,1fr) 34px;gap:.3rem}.ancestor-face-arrow{width:32px;height:38px}.ancestor-viewer-image{max-height:52vh}}
