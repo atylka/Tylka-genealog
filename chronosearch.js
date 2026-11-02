@@ -4,7 +4,7 @@
  const $=id=>document.getElementById(id);let client=null;const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
  const timeline=$("chrono-timeline"),count=$("chrono-count"),locationInput=$("chrono-location"),personInput=$("chrono-person"),folderInput=$("chrono-folder"),yearInput=$("chrono-year");
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
- const dateText=record=>{const description=record.description||"";const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);return String(record.record_date||labeled?.[1]||"").trim();};
+ const dateText=record=>{const description=record.description||"";const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);return String(labeled?.[1]||record.record_date||"").trim();};
  function parseRecordDate(record){
   const raw=dateText(record);if(!raw)return null;
   // ISO dates are unambiguous; text dates use the browser's locale parser.
@@ -35,7 +35,7 @@
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
     const dateLabel=dateText(r);
-    if(dateLabel)column.append(node("p",dateLabel,"chrono-record-date"));
+    if(dateLabel)column.append(node("div",dateLabel,"chrono-record-date"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
     const thumb=node("div","","record-thumbnail");
