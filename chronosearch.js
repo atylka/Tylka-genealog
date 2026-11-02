@@ -39,8 +39,8 @@
     if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("h3",r.title||"Untitled record"));
     if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
-    const dateLabel=r.record_date?{1:r.record_date}:(r.description||"").match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
-    if(dateLabel)card.append(node("p","Date: "+dateLabel[1].trim(),"chrono-record-date"));
+    const dateLabel=formatRecordDate(r);
+    if(dateLabel)card.append(node("p",dateLabel,"chrono-record-date"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
     const thumbnails=card.querySelectorAll(".record-thumbnail");thumbnails.forEach((thumb,index)=>{if(index>0)thumb.remove();});
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id);};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});column.append(card);
