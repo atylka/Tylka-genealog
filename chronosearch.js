@@ -28,14 +28,13 @@
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>(a.title||"").localeCompare(b.title||"")).forEach(r=>{
     const card=node("article","","chrono-record-card");card.dataset.recordId=r.id||"";
-    if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
+    if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
     card.append(node("h3",r.title||"Untitled record"));
     if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
     const dateLabel=r.record_date?{1:r.record_date}:(r.description||"").match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
     if(dateLabel)card.append(node("p","Date: "+dateLabel[1].trim(),"chrono-record-date"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
-    if(r.file_name)card.append(node("small",r.file_name,"record-filename"));
     const thumbnails=card.querySelectorAll(".record-thumbnail");thumbnails.forEach((thumb,index)=>{if(index>0)thumb.remove();});
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));card.addEventListener("click",()=>showRecordPopup(r));card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showRecordPopup(r);}});column.append(card);
    });
