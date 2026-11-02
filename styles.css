@@ -6206,3 +6206,54 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
  .chrono-main #chrono-timeline .chrono-event>.chrono-event-meta>.chrono-record-date{font-size:1.2rem!important}
  .chrono-main #chrono-timeline .chrono-event>.chrono-event-description{font-size:.83rem!important;margin-bottom:.5rem!important}
 }
+
+
+/* Simplified ChronoSearch cards: scan first, then only essential record details. */
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ height:360px!important;min-height:360px!important;max-height:360px!important;
+ gap:0!important;padding:.65rem!important;overflow:hidden!important;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail{
+ order:0!important;display:block!important;flex:0 0 118px!important;
+ width:100%!important;height:118px!important;min-height:118px!important;max-height:118px!important;
+ margin:0 0 .55rem!important;overflow:hidden!important;border:1px solid rgba(139,118,88,.55)!important;
+ background:rgba(111,78,43,.09)!important;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail img{
+ display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card>.chrono-card-info{
+ order:1!important;display:flex!important;flex:1 1 auto!important;min-width:0!important;min-height:0!important;
+ width:100%!important;overflow:hidden!important;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card.chrono-no-thumbnail>.chrono-card-info{
+ width:100%!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-record-details{
+ gap:.42rem!important;justify-content:flex-start!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-record-details>.chrono-heading-box,
+.chrono-main #chrono-timeline .chrono-event .chrono-record-details>.record-category,
+.chrono-main #chrono-timeline .chrono-event .chrono-record-details>h3{
+ display:none!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-family-panel{
+ padding:.38rem!important;gap:.28rem!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-family-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.chrono-main #chrono-timeline .chrono-event .chrono-info-box{padding:.32rem .42rem!important}
+.chrono-main #chrono-timeline .chrono-event .chrono-notes-box .chrono-info-value{
+ -webkit-line-clamp:3!important;
+}
+@media(max-width:650px){
+ .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{
+  height:360px!important;min-height:360px!important;max-height:360px!important;
+  display:flex!important;flex-direction:column!important;
+ }
+ .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card>.record-thumbnail{
+  flex-basis:104px!important;height:104px!important;min-height:104px!important;max-height:104px!important;
+ }
+}
