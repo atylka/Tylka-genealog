@@ -34,7 +34,7 @@
    const column=node("section","","chrono-year-column");
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
-    const dateLabel=dateText(r);
+    const dateLabel=formatRecordDate(r);
     if(dateLabel)column.append(node("div",dateLabel,"chrono-record-date"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
