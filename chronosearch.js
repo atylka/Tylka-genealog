@@ -25,7 +25,7 @@
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
  const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\s*([^\r\n]+)$/im);return m?m[1].trim():"";};
- const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").trim();return (raw?raw+"\\n\\n":"")+"Chrono thumbnail: "+path;};
+ const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").trim();return (raw?raw+"\n\n":"")+"Chrono thumbnail: "+path;};
  const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").replace(/\\n{3,}/g,"\\n\\n").trim();
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
