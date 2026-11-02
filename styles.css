@@ -6660,3 +6660,125 @@ body.dark-mode .location-page::before{
  position:relative;
  z-index:1;
 }
+
+
+/* Classic Tylka home-banner treatment: rich burgundy, warm cream lettering,
+   fine antique-gold framing and a soft illuminated center. */
+:root{
+ --classic-banner-red:#641b29;
+ --classic-banner-red-dark:#35121b;
+ --classic-banner-gold:#c6a16a;
+ --classic-banner-cream:#fff2d9;
+}
+.home-search-layout,
+.chrono-search-layout,
+.ancestor-page,
+.location-page,
+.archive-page:not(.home-search-page):not(.chrono-main){
+ position:relative!important;
+ isolation:isolate!important;
+}
+.home-search-layout::before,
+.chrono-search-layout::before,
+.ancestor-page::before,
+.location-page::before,
+.archive-page:not(.home-search-page):not(.chrono-main)::before{
+ content:""!important;
+ position:absolute!important;
+ z-index:0!important;
+ pointer-events:none!important;
+ top:0!important;
+ left:50%!important;
+ transform:translateX(-50%)!important;
+ width:100vw!important;
+ height:clamp(290px,34vw,430px)!important;
+ background:
+  radial-gradient(ellipse at 50% 0%,rgba(205,157,105,.28),transparent 57%),
+  linear-gradient(115deg,rgba(48,15,24,.98) 0%,rgba(105,29,43,.98) 38%,rgba(122,37,48,.97) 60%,rgba(53,17,27,.99) 100%)!important;
+ border:0!important;
+ border-bottom:2px solid rgba(198,161,106,.72)!important;
+ box-shadow:inset 0 1px rgba(255,232,190,.22),inset 0 -10px 28px rgba(20,5,9,.2)!important;
+}
+.home-search-layout::after,
+.chrono-search-layout::after,
+.ancestor-page::after,
+.location-page::after,
+.archive-page:not(.home-search-page):not(.chrono-main)::after{
+ content:""!important;
+ position:absolute!important;
+ z-index:0!important;
+ pointer-events:none!important;
+ top:13px!important;
+ left:50%!important;
+ transform:translateX(-50%)!important;
+ width:calc(100vw - 26px)!important;
+ height:clamp(264px,32vw,402px)!important;
+ border:1px solid rgba(222,190,135,.32)!important;
+ box-shadow:inset 0 1px rgba(255,240,210,.08)!important;
+}
+.home-search-layout>*,
+.chrono-search-layout>*,
+.ancestor-page>*,
+.location-page>*,
+.archive-page:not(.home-search-page):not(.chrono-main)>*{
+ position:relative!important;
+ z-index:1!important;
+}
+.home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+ padding:clamp(1.35rem,3vw,2.25rem) clamp(.7rem,1.5vw,1.2rem) 1rem!important;
+ color:var(--classic-banner-cream)!important;
+ background:transparent!important;
+}
+.home-search-intro h1,.chrono-search-intro h1,.ancestor-page>.section-intro h1,
+.archive-page:not(.home-search-page):not(.chrono-main)>h1{
+ color:var(--classic-banner-cream)!important;
+ text-shadow:0 2px 12px rgba(20,5,9,.34)!important;
+}
+.home-search-intro p,.chrono-search-intro p,.ancestor-page>.section-intro p,
+.archive-page:not(.home-search-page):not(.chrono-main)>.eyebrow,
+.archive-page:not(.home-search-page):not(.chrono-main)>.section-intro{
+ color:rgba(255,242,217,.88)!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main)>h1{
+ background:transparent!important;border:0!important;padding:.3rem 0!important;
+}
+.home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+.home-search-box label,.chrono-filter-panel label,.location-tool-box label{
+ color:var(--classic-banner-cream)!important;
+}
+.home-search-box input,.home-search-box select,
+.chrono-filter-panel input,.chrono-filter-panel select,
+.location-tool-box input,.location-tool-box select,
+.location-tool-box .person-picker-trigger{
+ background:rgba(255,247,230,.94)!important;
+ color:#38251d!important;
+ border:1px solid rgba(198,161,106,.8)!important;
+}
+.home-search-box .connection-status,.chrono-search-layout .connection-status{
+ color:rgba(255,242,217,.86)!important;
+}
+body.dark-mode .home-search-layout::before,
+body.dark-mode .chrono-search-layout::before,
+body.dark-mode .ancestor-page::before,
+body.dark-mode .location-page::before,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
+ background:
+  radial-gradient(ellipse at 50% 0%,rgba(176,127,70,.2),transparent 57%),
+  linear-gradient(115deg,#241017 0%,#481722 42%,#5a2029 62%,#211016 100%)!important;
+ border-bottom-color:rgba(198,161,106,.62)!important;
+}
+@media(max-width:700px){
+ .home-search-layout::before,.chrono-search-layout::before,.ancestor-page::before,
+ .location-page::before,.archive-page:not(.home-search-page):not(.chrono-main)::before{
+  height:clamp(390px,112vw,540px)!important;
+ }
+ .home-search-layout::after,.chrono-search-layout::after,.ancestor-page::after,
+ .location-page::after,.archive-page:not(.home-search-page):not(.chrono-main)::after{
+  height:calc(clamp(390px,112vw,540px) - 26px)!important;
+ }
+ .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+  padding:1.2rem .35rem .8rem!important;
+ }
+}
