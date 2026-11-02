@@ -9,9 +9,11 @@
    const s=line.trim();
    if(!s)return false;
    if(/^Chrono thumbnail(?: view)?:/i.test(s))return false;
+   if(/^(?:Page name identifications|Face identifications)\s*:/i.test(s))return false;
+   if(/^Family\s*-/i.test(s))return false;
    return !/(?:face|name)[\s_-]*(?:identif(?:y|ication|ied|ier)|recognition|detection)[\s_-]*(?:coordinates?|coords?|points?|regions?|boxes?|bounds?)/i.test(s)
     &&!/(?:coordinates?|coords?|bounding[\s_-]*boxes?|normalized[\s_-]*(?:x|y)|face[\s_-]*(?:box|region|landmark)|name[\s_-]*(?:box|region|landmark))/i.test(s)
-    &&!/^[\s{}[\](),.:;"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
+    &&!/^[\s{}[\](),.:"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
   }).join("\n").replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").replace(/\n{3,}/g,"\n\n").trim();
  };
  const displayPeople=value=>{
@@ -125,7 +127,7 @@
      const people=displayPeople(r.persons_mentioned);
      if(people){const peopleBox=node("div","","chrono-info-box chrono-photo-people");peopleBox.append(node("span","People","chrono-info-label"),node("p",people,"chrono-info-value"));details.append(peopleBox);}
     }
-    const excerpt=cleanChronoDescription(r.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Date on record|Parish|Research confidence):/i.test(line)).join("\\n").trim();
+    const excerpt=cleanChronoDescription(r.description||"").split(/\r?\n/).filter(line=>!/^\s*(?:Date on record|Parish|Research confidence|Bride|Groom):/i.test(line)).join("\n").trim()
     if(excerpt)appendInfoBox(details,"Record notes",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-notes-box");
     info.append(details);card.append(info);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
