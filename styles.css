@@ -3933,3 +3933,132 @@ body .brand-banner[aria-label="Tylka Genealogical Log banner"] .brand-banner-inn
   body .brand-banner[aria-label="Tylka Genealogical Log banner"]:before{inset:9px!important}
   body .brand-banner[aria-label="Tylka Genealogical Log banner"]:after{inset:16px!important}
 }
+
+
+/* Archive folder cards: readable rectangular cards in three-column rows. */
+#private-archive .archive-folder-content .records-list{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:1rem!important;
+  width:100%!important;
+}
+#private-archive .archive-folder-content .records-list>.record-card{
+  display:flex!important;
+  flex-direction:column!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:230px!important;
+  height:auto!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  overflow:visible!important;
+  padding:.8rem!important;
+  gap:.5rem!important;
+  border:1px solid #ad9067!important;
+  border-radius:7px!important;
+  background:#f5e8cf!important;
+  color:#432b20!important;
+  box-shadow:0 3px 9px rgba(55,35,20,.09)!important;
+  transform:none!important;
+  animation:none!important;
+}
+#private-archive .archive-folder-content .records-list>.record-card:hover{
+  background:#efe0c2!important;border-color:#94754d!important;
+}
+#private-archive .archive-folder-content .record-card>.record-thumbnail{
+  display:flex!important;flex:0 0 auto!important;
+  width:100%!important;height:105px!important;min-height:105px!important;max-height:105px!important;
+  aspect-ratio:auto!important;overflow:hidden!important;align-items:center!important;justify-content:center!important;
+  margin:0!important;border:1px solid #c5ad85!important;border-radius:4px!important;background:#dfcfad!important;
+}
+#private-archive .archive-folder-content .record-card>.record-thumbnail img{
+  display:block!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain!important;
+}
+#private-archive .archive-folder-content .record-card>div:nth-child(2){
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;align-items:stretch!important;
+  justify-content:flex-start!important;gap:.28rem!important;min-width:0!important;width:100%!important;overflow:visible!important;
+}
+#private-archive .archive-folder-content .record-card .record-category{
+  display:block!important;margin:0!important;padding:0!important;color:#793c32!important;
+  font-size:.68rem!important;line-height:1.25!important;letter-spacing:.055em!important;font-weight:700!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+#private-archive .archive-folder-content .record-card h3{
+  display:block!important;margin:0!important;padding:0!important;overflow:visible!important;
+  color:#432b20!important;font-family:Georgia,serif!important;font-size:1rem!important;font-weight:600!important;
+  line-height:1.25!important;overflow-wrap:anywhere!important;
+}
+#private-archive .archive-folder-content .record-card p{
+  display:block!important;min-width:0!important;margin:0!important;padding:0!important;color:#795f46!important;
+  font-size:.78rem!important;line-height:1.3!important;white-space:normal!important;overflow:visible!important;
+  overflow-wrap:anywhere!important;text-overflow:clip!important;
+}
+#private-archive .archive-folder-content .record-card .record-location{font-size:.75rem!important}
+#private-archive .archive-folder-content .record-card .record-location-link{color:#795f46!important;overflow-wrap:anywhere!important}
+#private-archive .archive-folder-content .record-card .confidence-badge{display:inline-flex!important;align-self:flex-start!important}
+#private-archive .archive-folder-content .record-card .record-date{
+  display:block!important;margin-top:.1rem!important;padding:0!important;color:#795f46!important;
+  font-size:.74rem!important;line-height:1.25!important;white-space:normal!important;overflow:visible!important;
+  overflow-wrap:anywhere!important;text-overflow:clip!important;
+}
+#private-archive .archive-folder-content .record-card .record-view-button{
+  display:inline-flex!important;align-self:flex-start!important;min-height:32px!important;margin:.2rem 0 0!important;
+  padding:.35rem .55rem!important;border:1px solid #ad9067!important;border-radius:4px!important;
+  background:#ead7b5!important;color:#432b20!important;font-size:.75rem!important;line-height:1.2!important;
+}
+#private-archive .archive-folder-content .record-card>.record-actions{
+  display:flex!important;flex:0 0 auto!important;flex-wrap:wrap!important;gap:.35rem!important;
+  width:100%!important;min-width:0!important;align-self:stretch!important;margin-top:.15rem!important;
+}
+#private-archive .archive-folder-content .record-card>.record-actions .small-button{
+  min-height:30px!important;padding:.3rem .5rem!important;font-size:.72rem!important;
+}
+#private-archive .archive-folder-content .records-list>.empty-state{grid-column:1/-1!important}
+html[data-theme="dark"] #private-archive .archive-folder-content .records-list>.record-card,
+body[data-theme="dark"] #private-archive .archive-folder-content .records-list>.record-card,
+html.theme-dark #private-archive .archive-folder-content .records-list>.record-card,
+body.theme-dark #private-archive .archive-folder-content .records-list>.record-card,
+body.dark-mode #private-archive .archive-folder-content .records-list>.record-card{
+  background:#302116!important;background-image:linear-gradient(135deg,rgba(205,161,89,.06),transparent 58%)!important;
+  color:#f0dfbd!important;border-color:#765936!important;
+}
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card h3,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card h3,
+html.theme-dark #private-archive .archive-folder-content .record-card h3,
+body.theme-dark #private-archive .archive-folder-content .record-card h3,
+body.dark-mode #private-archive .archive-folder-content .record-card h3{color:#f0dfbd!important}
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card p,
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-date,
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-location-link,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card p,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-date,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-location-link,
+html.theme-dark #private-archive .archive-folder-content .record-card p,
+html.theme-dark #private-archive .archive-folder-content .record-card .record-date,
+html.theme-dark #private-archive .archive-folder-content .record-card .record-location-link,
+body.theme-dark #private-archive .archive-folder-content .record-card p,
+body.theme-dark #private-archive .archive-folder-content .record-card .record-date,
+body.theme-dark #private-archive .archive-folder-content .record-card .record-location-link,
+body.dark-mode #private-archive .archive-folder-content .record-card p,
+body.dark-mode #private-archive .archive-folder-content .record-card .record-date,
+body.dark-mode #private-archive .archive-folder-content .record-card .record-location-link{color:#cbb894!important}
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-category,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-category,
+html.theme-dark #private-archive .archive-folder-content .record-card .record-category,
+body.theme-dark #private-archive .archive-folder-content .record-card .record-category,
+body.dark-mode #private-archive .archive-folder-content .record-card .record-category{color:#d7a66f!important}
+html[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-thumbnail,
+body[data-theme="dark"] #private-archive .archive-folder-content .record-card .record-thumbnail,
+html.theme-dark #private-archive .archive-folder-content .record-card .record-thumbnail,
+body.theme-dark #private-archive .archive-folder-content .record-card .record-thumbnail,
+body.dark-mode #private-archive .archive-folder-content .record-card .record-thumbnail{background:#19110c!important;border-color:#765936!important}
+@media(max-width:900px){
+  #private-archive .archive-folder-content .records-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.7rem!important}
+}
+@media(max-width:520px){
+  #private-archive .archive-folder-content .records-list{grid-template-columns:1fr!important;gap:.65rem!important}
+  #private-archive .archive-folder-content .records-list>.record-card{min-height:0!important;padding:.7rem!important}
+  #private-archive .archive-folder-content .record-card>.record-thumbnail{height:130px!important;min-height:130px!important;max-height:130px!important}
+}
