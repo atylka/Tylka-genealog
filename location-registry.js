@@ -23,10 +23,10 @@
   function initMap(){
     if(map || !window.L) return;
     map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([20,0],2);
-    L.tileLayer(document.documentElement.dataset.theme==="dark"||document.body.dataset.theme==="dark"?"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
     let appliedTheme=document.documentElement.dataset.theme||"light";
-    new MutationObserver(()=>{const theme=document.documentElement.dataset.theme||"light";if(theme===appliedTheme)return;appliedTheme=theme;const dark=theme==="dark";map.eachLayer(layer=>{if(layer instanceof L.TileLayer)map.removeLayer(layer);});L.tileLayer(dark?"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+    new MutationObserver(()=>{const theme=document.documentElement.dataset.theme||"light";if(theme===appliedTheme)return;appliedTheme=theme;const dark=theme==="dark";map.eachLayer(layer=>{if(layer instanceof L.TileLayer)map.removeLayer(layer);});L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
   }
 
   function splitPeople(value){
