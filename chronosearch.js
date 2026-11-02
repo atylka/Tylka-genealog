@@ -10,7 +10,7 @@
   const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);
   return findYear(record.record_date)||findYear(labeled?.[1])||findYear(record.title)||findYear(description);
  }
- function showRecordPopup(r){let modal=document.getElementById("chrono-record-popup");if(!modal){modal=node("section","","site-modal chrono-record-popup");modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.innerHTML=`<div class="modal-card modal-wide"><button type="button" class="modal-close" aria-label="Close">×</button><p class="eyebrow">Record detail</p><h2 class="popup-title"></h2><p class="popup-meta"></p><div class="popup-image"></div><pre class="popup-description"></pre><button type="button" class="small-button popup-download">Download record image</button></div>`;document.body.append(modal);modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".modal-close"))modal.hidden=true;});}modal.querySelector(".popup-title").textContent=r.title||"Untitled record";modal.querySelector(".popup-meta").textContent=[names[r.category]||r.category,r.location||"Location not entered"].filter(Boolean).join(" · ");modal.querySelector(".popup-description").textContent=r.description||"No transcription or notes have been added.";const box=modal.querySelector(".popup-image");box.replaceChildren();const download=modal.querySelector(".popup-download");download.hidden=!(r.file_path&&(r.mime_type||"").startsWith("image/"));download.onclick=async()=>{const url=publicUrl(r.file_path);try{const response=await fetch(url);const blob=await response.blob();const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=r.file_name||"record-image";a.click();URL.revokeObjectURL(a.href);}catch{window.open(url,"_self");}};if(r.file_path&&(r.mime_type||"").startsWith("image/")){const img=node("img");img.src=publicUrl(r.file_path);img.alt=r.title||"Record image";img.style.cssText="max-width:100%;max-height:65vh;object-fit:contain";box.append(img);}else if(r.file_path){box.append(node("p","This attachment is not an image preview."));}modal.hidden=false;}
+
  function render(records){
   const loc=locationInput.value.trim().toLocaleLowerCase(),person=personInput.value.trim().toLocaleLowerCase(),folder=folderInput.value,year=yearInput.value;
   const filtered=records.filter(r=>{
@@ -36,7 +36,7 @@
     if(dateLabel)card.append(node("p","Date: "+dateLabel[1].trim(),"chrono-record-date"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
     const thumbnails=card.querySelectorAll(".record-thumbnail");thumbnails.forEach((thumb,index)=>{if(index>0)thumb.remove();});
-    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));card.addEventListener("click",()=>showRecordPopup(r));card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showRecordPopup(r);}});column.append(card);
+    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id);};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});column.append(card);
    });
    timeline.append(column);
   });
