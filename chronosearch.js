@@ -20,9 +20,8 @@
  };
  const familyValues=record=>{
   const raw=String(record.description||"");
-  const read=label=>{const escaped=label.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&");const m=raw.match(new RegExp("^Family - "+escaped+":\\\\s*([^\\\\r\\\\n]+)$","im"));return m?m[1].trim():"";};
-  const values={mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
-  return values;
+  const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
+  return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
