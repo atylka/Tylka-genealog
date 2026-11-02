@@ -28,7 +28,7 @@
   }
 
   function splitPeople(value){
-    return String(value||"").split(/[\\n;,|]+/).map(v=>v.replace(/^[-•*\\s]+/,"").trim()).filter(Boolean);
+    return String(value||"").split(/[\n,;]+/).map(v=>v.replace(/^[-•*\s]+/,"").trim()).filter(Boolean);
   }
   function buildPersonIndex(records){
     const index=new Map();
