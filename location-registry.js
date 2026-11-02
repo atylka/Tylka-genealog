@@ -160,12 +160,14 @@
       });
       const marker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:2000,keyboard:true,title:place.name,alt:"Selected location: "+place.name})
         .addTo(markerLayer)
-        .bindPopup(makeLocationPopup(place),{className:"registry-pin-popup-container"})
-        .bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-38],className:"registry-location-label"})
-        .openPopup();
+        .bindPopup(makeLocationPopup(place),{className:"registry-pin-popup-container",autoPan:false})
+        .bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-38],className:"registry-location-label"});
+      // Fly from the current view to the newly selected place. Popup auto-pan is
+      // disabled so opening the preview cannot interrupt the map's travel animation.
       map.stop();
-      map.invalidateSize();
-      map.flyTo([lat,lng],13,{animate:true,duration:1.1,easeLinearity:.22});
+      map.invalidateSize({pan:false,animate:false});
+      map.flyTo([lat,lng],13,{animate:true,duration:1.65,easeLinearity:.18});
+      marker.openPopup();
       marker.setZIndexOffset(2000);
       const heading=document.createElement("h3");heading.textContent=place.name;
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
