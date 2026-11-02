@@ -87,12 +87,6 @@
      const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Source scan preview for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
     }else card.classList.add("chrono-no-thumbnail");
     const info=node("div","","chrono-card-info");
-    const headingBox=node("div","","chrono-heading-box");
-    headingBox.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
-    headingBox.append(node("h3",r.title||"Untitled record"));
-    details.append(headingBox);
-    const facts=node("div","","chrono-facts-grid");
-    if(facts.childElementCount)details.append(facts);
     const family=familyValues(r);
     const hasFamily=Object.values(family).some(Boolean);
     if(hasFamily){
@@ -102,21 +96,6 @@
      appendInfoBox(parents,"Father",family.father);
      appendInfoBox(parents,"Mother",family.mother);
      if(parents.childElementCount)familyPanel.append(parents);
-     const grandparents=node("div","","chrono-grandparents");
-     const maternal=node("div","","chrono-family-group");
-     maternal.append(node("h5","Maternal grandparents","chrono-subpanel-title"));
-     const maternalGrid=node("div","","chrono-family-grid");
-     appendInfoBox(maternalGrid,"Grandfather",family.maternalGrandfather);
-     appendInfoBox(maternalGrid,"Grandmother",family.maternalGrandmother);
-     if(maternalGrid.childElementCount)maternal.append(maternalGrid);
-     const paternal=node("div","","chrono-family-group");
-     paternal.append(node("h5","Paternal grandparents","chrono-subpanel-title"));
-     const paternalGrid=node("div","","chrono-family-grid");
-     appendInfoBox(paternalGrid,"Grandfather",family.paternalGrandfather);
-     appendInfoBox(paternalGrid,"Grandmother",family.paternalGrandmother);
-     if(paternalGrid.childElementCount)paternal.append(paternalGrid);
-     if(maternalGrid.childElementCount||paternalGrid.childElementCount)grandparents.append(maternal,paternal);
-     if(grandparents.childElementCount)familyPanel.append(grandparents);
      details.append(familyPanel);
     }
     if(r.category==="photos"){
