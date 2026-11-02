@@ -5244,3 +5244,88 @@ body.dark-mode #ancestor-grid .ancestor-card-open .ancestor-life-dates{color:#e1
 .home-search-page .home-search-intro .section-intro{margin:.2rem 0 .1rem!important;}
 #home-results .home-search-record-card{cursor:pointer;}
 #home-results .home-search-record-card:focus-visible{outline:2px solid #8f202b;outline-offset:3px;}
+
+
+/* Footer mirrors the antique header; install control occupies the far-right end. */
+html body footer.site-footer{
+  position:relative!important;isolation:isolate!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  flex-flow:row nowrap!important;gap:clamp(.75rem,2vw,2rem)!important;
+  min-height:82px!important;padding:1rem clamp(1.2rem,5vw,5rem)!important;
+  background:linear-gradient(110deg,#4b2925 0%,#60372d 42%,#704638 72%,#59352d 100%)!important;
+  background-color:#60372d!important;color:#f7e8c8!important;
+  border:0!important;border-top:3px double #c9a765!important;
+  box-shadow:inset 0 1px rgba(255,235,190,.18),0 -7px 22px rgba(28,15,10,.2)!important;
+}
+html body footer.site-footer:after{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,#e3bd75 20%,#f0d99f 50%,#e3bd75 80%,transparent);
+  opacity:.85;animation:footer-glint 8s ease-in-out infinite;
+}
+html body footer.site-footer .wordmark,
+html body footer.site-footer .wordmark strong,
+html body footer.site-footer .wordmark small,
+html body footer.site-footer p,
+html body footer.site-footer .footer-end{color:#f7e8c8!important}
+html body footer.site-footer .wordmark strong{
+  font-family:"Great Vibes",cursive!important;font-size:2.35rem!important;
+  font-weight:400!important;letter-spacing:0!important;line-height:1.05!important;
+  text-shadow:0 1px 0 #2b1713,0 0 12px rgba(226,181,103,.18)!important;
+}
+html body footer.site-footer .wordmark small{
+  font-family:Georgia,serif!important;letter-spacing:.13em!important;
+  text-transform:uppercase!important;font-size:.62rem!important;
+}
+html body footer.site-footer .monogram{
+  background:#7a3c30!important;color:#fff0d2!important;border:1px solid #d2b06b!important;
+  box-shadow:0 0 12px rgba(201,167,101,.18)!important;
+}
+html body footer.site-footer p{flex:1 1 auto;max-width:430px;margin:0!important;font-size:.78rem!important;opacity:.9}
+html body footer.site-footer .footer-end{flex:0 0 auto;font-size:.6rem;letter-spacing:.1em}
+html body footer.site-footer .pwa-install-button{
+  position:relative!important;inset:auto!important;z-index:1!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;order:10!important;min-height:48px!important;min-width:48px!important;
+  margin:0 0 0 auto!important;padding:.65rem .9rem!important;
+  border:1px solid #b58a50!important;border-radius:14px!important;
+  background:linear-gradient(145deg,#54202a 0%,#35151b 58%,#241512 100%)!important;
+  color:#e7c58a!important;font:600 .75rem/1.2 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.04em!important;text-transform:uppercase!important;
+  box-shadow:inset 0 1px rgba(255,235,190,.2),inset 0 -3px 8px rgba(0,0,0,.28),0 3px 12px rgba(54,26,17,.2)!important;
+  cursor:pointer!important;
+}
+html body footer.site-footer .pwa-install-button:hover,
+html body footer.site-footer .pwa-install-button:focus-visible{
+  background:linear-gradient(145deg,#70402a 0%,#4b1b21 65%,#2c1714 100%)!important;
+  color:#ffe0a1!important;border-color:#e0bd79!important;
+  box-shadow:0 0 15px rgba(218,174,97,.22)!important;
+}
+html body footer.site-footer .pwa-install-button[hidden]{display:none!important}
+html[data-theme="dark"] body footer.site-footer,
+body[data-theme="dark"] footer.site-footer,
+html.theme-dark body footer.site-footer,
+body.theme-dark footer.site-footer,
+body.dark-mode footer.site-footer{
+  background:linear-gradient(110deg,#634a38 0%,#59402f 40%,#51382b 72%,#493128 100%)!important;
+  background-color:#59402f!important;color:#fff0d2!important;border-top:3px double #d0ab68!important;
+  box-shadow:inset 0 1px rgba(231,190,116,.24),0 -7px 22px rgba(0,0,0,.35)!important;
+}
+html[data-theme="dark"] body footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small,p,.footer-end),
+body[data-theme="dark"] footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small,p,.footer-end),
+html.theme-dark body footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small,p,.footer-end),
+body.theme-dark footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small,p,.footer-end),
+body.dark-mode footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small,p,.footer-end){color:#fff0d2!important}
+@media(max-width:800px){
+  html body footer.site-footer{flex-wrap:wrap!important;align-items:center!important;padding:.8rem 1rem!important;gap:.65rem .8rem!important}
+  html body footer.site-footer .wordmark{flex:1 1 auto}
+  html body footer.site-footer p{flex:1 1 100%;order:3}
+  html body footer.site-footer .footer-end{order:4}
+  html body footer.site-footer .pwa-install-button{margin-left:auto!important;order:2!important}
+  html body footer.site-footer .wordmark strong{font-size:1.8rem!important}
+}
+@media(max-width:420px){
+  html body footer.site-footer{column-gap:.35rem!important}
+  html body footer.site-footer .wordmark strong{font-size:1.5rem!important}
+  html body footer.site-footer .wordmark small{font-size:.48rem!important;letter-spacing:.025em!important}
+  html body footer.site-footer .pwa-install-button{font-size:.61rem!important;padding:.4rem .42rem!important}
+}
