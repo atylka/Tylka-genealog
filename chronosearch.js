@@ -124,8 +124,10 @@
    seenIds.add(record.id);
    return true;
   });
+  // ChronoSearch is only for dated records. Keep undated records in the archive and other views,
+  // but omit them from this timeline unless a year can be determined from the record metadata.
+  records=records.filter(record=>recordYear(record)!==null);
   [...new Set(records.map(recordYear).filter(Boolean))].sort((a,b)=>a-b).forEach(y=>yearInput.append(new Option(String(y),String(y))));
-  if(records.some(r=>recordYear(r)===null))yearInput.append(new Option("Undated","undated"));
   [locationInput,personInput,folderInput,yearInput].forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",()=>render(records)));
   $("chrono-reset").addEventListener("click",()=>{locationInput.value="";personInput.value="";folderInput.value="all";yearInput.value="all";render(records);});
   render(records);
