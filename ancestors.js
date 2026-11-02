@@ -20,7 +20,7 @@
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
-  modal.innerHTML='<div class="modal-card ancestor-face-viewer"><button type="button" class="modal-close" aria-label="Close profile photos">×</button><p class="eyebrow">Ancestor profile photo gallery</p><h2 class="ancestor-viewer-name"></h2><div class="ancestor-viewer-stage"><button type="button" class="ancestor-face-arrow ancestor-face-prev" aria-label="Previous face">‹</button><img class="ancestor-viewer-image" alt=""><button type="button" class="ancestor-face-arrow ancestor-face-next" aria-label="Next face">›</button></div><p class="ancestor-face-position"></p><p class="ancestor-face-source"></p><div class="ancestor-viewer-actions"><button type="button" class="small-button ancestor-set-thumbnail">Use as card thumbnail</button><button type="button" class="small-button danger-button ancestor-delete-current" aria-label="Delete this ancestor portrait" title="Delete this profile photo"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 10v7m4-7v7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="ancestor-face-thumbnails"></div></div>';
+  modal.innerHTML='<div class="modal-card ancestor-face-viewer ancestor-profile-viewer"><button type="button" class="modal-close" aria-label="Close ancestor profile">×</button><p class="eyebrow">Ancestor profile</p><h2 class="ancestor-viewer-name"></h2><div class="ancestor-profile-facts"></div><div class="ancestor-profile-gallery"><h3>Photograph gallery</h3><p class="ancestor-gallery-empty" hidden>No photographs have been added to this ancestor yet.</p><div class="ancestor-viewer-stage"><button type="button" class="ancestor-face-arrow ancestor-face-prev" aria-label="Previous photo">‹</button><img class="ancestor-viewer-image" alt=""><button type="button" class="ancestor-face-arrow ancestor-face-next" aria-label="Next photo">›</button></div><p class="ancestor-face-position"></p><p class="ancestor-face-source"></p><div class="ancestor-viewer-actions"><button type="button" class="small-button ancestor-set-thumbnail">Use as card thumbnail</button><button type="button" class="small-button danger-button ancestor-delete-current" aria-label="Delete this ancestor photo" title="Delete this profile photo"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 10v7m4-7v7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="ancestor-face-thumbnails"></div></div></div>';
   document.body.append(modal);
   const close=()=>{modal.hidden=true;activePerson=null;};
   modal.querySelector(".modal-close").addEventListener("click",close);
@@ -30,11 +30,22 @@
   document.addEventListener("keydown",event=>{if(!modal.hidden&&event.key==="Escape")close();if(!modal.hidden&&event.key==="ArrowLeft")showFace(activeIndex-1);if(!modal.hidden&&event.key==="ArrowRight")showFace(activeIndex+1);});
   return modal;
  }
+ function renderProfileFacts(){
+  if(!activePerson||!modal)return;
+  const p=activePerson.profile||{},facts=modal.querySelector(".ancestor-profile-facts");facts.replaceChildren();
+  const addFact=(label,value)=>{if(!value||!value.length)return;const section=document.createElement("section");section.className="ancestor-profile-fact";const heading=document.createElement("h4"),content=document.createElement("p");heading.textContent=label;content.textContent=Array.isArray(value)?value.join(" · "):value;section.append(heading,content);facts.append(section);};
+  addFact("Birth",p.birth? p.birth+(p.birthPlace?" · "+p.birthPlace:""):"");
+  addFact("Death",p.death? p.death+(p.deathPlace?" · "+p.deathPlace:""):"");
+  addFact("Parents",p.parents);addFact("Grandparents",p.grandparents);addFact("Spouse",p.spouses);addFact("Children",p.children);
+ }
  function showFace(index){
   if(!activePerson)return;
-  const faces=faceList(activePerson);if(!faces.length)return;
+  const faces=faceList(activePerson),box=ensureModal();
+  const stage=box.querySelector(".ancestor-viewer-stage"),emptyGallery=box.querySelector(".ancestor-gallery-empty"),actions=box.querySelector(".ancestor-viewer-actions"),galleryThumbs=box.querySelector(".ancestor-face-thumbnails");
+  if(!faces.length){stage.hidden=true;actions.hidden=true;galleryThumbs.replaceChildren();box.querySelector(".ancestor-face-position").textContent="";box.querySelector(".ancestor-face-source").textContent="";emptyGallery.hidden=false;return;}
+  stage.hidden=false;actions.hidden=false;emptyGallery.hidden=true;
   activeIndex=(index+faces.length)%faces.length;
-  const face=faces[activeIndex],box=ensureModal();
+  const face=faces[activeIndex];
   box.querySelector(".ancestor-viewer-image").src=face.url;
   box.querySelector(".ancestor-viewer-image").alt="Profile photo "+(activeIndex+1)+" of "+activePerson.name;
   box.querySelector(".ancestor-viewer-name").textContent=activePerson.name;
@@ -59,9 +70,9 @@
  function renderThumbnailForActive(){
   if(!activePerson)return;
   const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));
-  if(card){const image=card.querySelector(".ancestor-portrait");image.src=activePerson.portrait_url||faceList(activePerson)[0].url;}
+  if(card){const image=card.querySelector(".ancestor-portrait");if(image)image.src=activePerson.portrait_url||faceList(activePerson)[0]?.url;}
  }
- function openPerson(person){activePerson=person;ensureModal().hidden=false;showFace(0);}
+ function openPerson(person){activePerson=person;const box=ensureModal();box.hidden=false;box.querySelector(".ancestor-viewer-name").textContent=person.name;renderProfileFacts();showFace(0);}
  async function deletePortrait(index){
   if(!activePerson||!client)return;
   const faces=faceList(activePerson),face=faces[index];if(!face)return;
@@ -75,19 +86,22 @@
    try{const pathname=new URL(face.url).pathname,marker="/family-archive/",at=pathname.indexOf(marker);if(at>=0)await client.storage.from("family-archive").remove([decodeURIComponent(pathname.slice(at+marker.length))]);}catch(_){}
    if(!next.length){const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));card?.remove();activePerson=null;modal.hidden=true;count.textContent=grid.querySelectorAll(".ancestor-card").length+" people";empty.hidden=grid.querySelectorAll(".ancestor-card").length>0;return;}
    activePerson={...activePerson,portraits:next,portrait_url:nextUrl,source_record_id:values.source_record_id,source_title:values.source_title};
-   const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));if(card){const img=card.querySelector(".ancestor-portrait");if(img)img.src=nextUrl;const p=card.querySelector(".ancestor-source");if(p)p.textContent=next.length+" saved "+(next.length===1?"face":"faces");}
+   const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));if(card){const img=card.querySelector(".ancestor-portrait");if(img)img.src=nextUrl;const p=card.querySelector(".ancestor-source");if(p)p.textContent=next.length+" saved "+(next.length===1?"photo":"photos");}
    showFace(Math.min(index,next.length-1));
   }catch(error){alert("Could not delete this portrait: "+(error.message||"Unknown error"));if(button)button.disabled=false;}
  }
  function render(people,profiles){
   people.sort((a,b)=>a.name.localeCompare(b.name));grid.replaceChildren();count.textContent=people.length+" "+(people.length===1?"person":"people");empty.hidden=people.length>0;
-  people.forEach(person=>{const faces=faceList(person),p=profiles.get(normalizeName(person.name))||{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[]},card=document.createElement("article");card.className="ancestor-card ancestor-multi-card ancestor-profile-card";card.dataset.personId=person.id;
-   const photo=document.createElement("button");photo.type="button";photo.className="ancestor-profile-photo";photo.disabled=!faces.length;photo.setAttribute("aria-label",faces.length?"View profile photos of "+person.name:"No profile photo for "+person.name);
-   if(faces.length){const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Profile photo of "+person.name;photo.append(image);}else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.textContent="Profile photo not added";photo.append(placeholder);}if(faces.length)photo.addEventListener("click",()=>openPerson(person));
-   const body=document.createElement("div");body.className="ancestor-card-body ancestor-profile-body";const title=document.createElement("h3");title.textContent=person.name;body.append(title);
-   const life=document.createElement("div");life.className="ancestor-profile-life";const birth=document.createElement("p"),death=document.createElement("p");birth.innerHTML="<strong>Born</strong> · "+esc(p.birth||"Date not recorded")+(p.birthPlace?"<span> · "+esc(p.birthPlace)+"</span>":"");death.innerHTML="<strong>Died</strong> · "+esc(p.death||"Date not recorded")+(p.deathPlace?"<span> · "+esc(p.deathPlace)+"</span>":"");life.append(birth,death);body.append(life);
-   const relation=(label,values)=>{if(!values.length)return;const section=document.createElement("section"),heading=document.createElement("h4"),names=document.createElement("p");section.className="ancestor-profile-relations";heading.textContent=label;names.textContent=values.join(" · ");section.append(heading,names);body.append(section);};relation("Parents",p.parents);relation("Grandparents",p.grandparents);relation("Spouse",p.spouses);relation("Children",p.children);
-   const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length?faces.length+" profile "+(faces.length===1?"photo":"photos"):"No profile photo saved";body.append(source);card.append(photo,body);grid.append(card);
+  people.forEach(person=>{
+   const faces=faceList(person),profile=profiles.get(normalizeName(person.name))||{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[]};person.profile=profile;
+   const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";card.dataset.personId=person.id;
+   const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";trigger.setAttribute("aria-label","Open profile for "+person.name);
+   if(faces.length){const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Profile photo of "+person.name;trigger.append(image);}
+   else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.textContent="Photograph not added";trigger.append(placeholder);}
+   const body=document.createElement("div");body.className="ancestor-card-body";const title=document.createElement("h3");title.textContent=person.name;
+   const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length?faces.length+" saved "+(faces.length===1?"photo":"photos"):"No photographs saved";
+   const life=document.createElement("p");life.className="ancestor-life-dates";const dateParts=[];if(profile.birth)dateParts.push("Born: "+profile.birth);if(profile.death)dateParts.push("Died: "+profile.death);life.textContent=dateParts.join(" · ");life.hidden=!dateParts.length;
+   const open=document.createElement("span");open.className="small-button";open.textContent="View profile";body.append(title,source,life,open);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));card.append(trigger);grid.append(card);
   });
  }
  async function load(){
