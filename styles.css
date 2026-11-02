@@ -7673,3 +7673,16 @@ body.dark-mode:has(main.ancestor-page) .ancestor-siblings{
   body:has(main.ancestor-page) .section-heading{align-items:flex-start!important}
   body:has(main.ancestor-page) #ancestor-count{min-height:40px!important;font-size:1.05rem!important}
 }
+
+/* 2026-11-02: ChronoSearch banner filter uses the same deeper red panel treatment as home search. */
+body.chronosearch-page .chrono-search-layout .chrono-filter-panel{
+  border:1px solid rgba(255,224,210,.42)!important;
+  border-radius:12px!important;
+  background:rgba(76,12,24,.78)!important;
+  background-image:linear-gradient(135deg,rgba(112,24,39,.58),rgba(57,8,18,.82))!important;
+  box-shadow:0 12px 30px rgba(24,0,6,.28),inset 0 1px rgba(255,235,220,.16)!important;
+  backdrop-filter:blur(6px)!important;
+}
+body.chronosearch-page .chrono-search-layout .chrono-filter-panel:before{color:#f5d8c9!important}
+body.chronosearch-page .chrono-search-layout .chrono-filter-panel label{color:#fff5ed!important}
+body.chronosearch-page .chrono-search-layout .chrono-filter-panel .connection-status{color:#ffede2!important}
