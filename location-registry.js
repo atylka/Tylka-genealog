@@ -54,10 +54,9 @@
     const entries=[...personIndex.entries()].sort((a,b)=>a[1].name.localeCompare(b[1].name));
     if(!entries.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="No people have been added to saved records yet.";personMenu.append(empty);return;}
     entries.forEach(([key,person])=>{
-      const button=document.createElement("button");button.type="button";button.className="person-picker-option";button.setAttribute("role","option");
-      const portrait=portraitIndex.get(key);
+      const button=document.createElement("button");button.type="button";const portrait=portraitIndex.get(key);button.className="person-picker-option"+(portrait?" has-portrait":"");button.setAttribute("role","option");
       if(portrait){const image=document.createElement("img");image.className="person-picker-avatar";image.src=portrait;image.alt="";image.loading="lazy";button.append(image);}
-      else{const placeholder=document.createElement("span");placeholder.className="person-picker-avatar person-picker-avatar-empty";placeholder.setAttribute("aria-hidden","true");button.append(placeholder);}
+      // People without a saved ancestor portrait get no empty photo bubble.
       const name=document.createElement("span");name.className="person-picker-name";name.textContent=person.name;
       const meta=document.createElement("small");meta.textContent=person.places.size+" location"+(person.places.size===1?"":"s");
       const textWrap=document.createElement("span");textWrap.className="person-picker-copy";textWrap.append(name,meta);button.append(textWrap);
