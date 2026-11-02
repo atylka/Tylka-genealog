@@ -8,7 +8,7 @@
   return String(value||"").split(/\r?\n/).filter(line=>{
    const s=line.trim();
    if(!s)return false;
-   if(/^Chrono thumbnail:/i.test(s))return false;
+   if(/^Chrono thumbnail(?: view)?:/i.test(s))return false;
    return !/(?:face|name)[\s_-]*(?:identif(?:y|ication|ied|ier)|recognition|detection)[\s_-]*(?:coordinates?|coords?|points?|regions?|boxes?|bounds?)/i.test(s)
     &&!/(?:coordinates?|coords?|bounding[\s_-]*boxes?|normalized[\s_-]*(?:x|y)|face[\s_-]*(?:box|region|landmark)|name[\s_-]*(?:box|region|landmark))/i.test(s)
     &&!/^[\s{}[\](),.:;"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
@@ -24,9 +24,8 @@
   const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
- const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\s*([^\r\n]+)$/im);return m?m[1].trim():"";};
- const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").trim();return (raw?raw+"\n\n":"")+"Chrono thumbnail: "+path;};
- const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").replace(/\n{3,}/g,"\n\n").trim();
+ const thumbnailView=record=>{const m=String(record.description||"").match(/^Chrono thumbnail view:\s*(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/im);return m?{x:Math.max(0,Math.min(100,+m[1])),y:Math.max(0,Math.min(100,+m[2])),zoom:Math.max(1,Math.min(2.4,+m[3]))}:{x:50,y:50,zoom:1};};
+ const saveThumbnailView=(record,view)=>{const raw=String(record.description||"").split(/\r?\n/).filter(line=>!/^Chrono thumbnail(?: view)?:/i.test(line.trim())).join("\n").replace(/\n{3,}/g,"\n\n").trim();return (raw?raw+"\n\n":"")+"Chrono thumbnail view: "+view.x.toFixed(1)+","+view.y.toFixed(1)+","+view.zoom.toFixed(2);};
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
   const box=node("div","",("chrono-info-box "+cls).trim());
@@ -85,11 +84,30 @@
     event.append(node("p",eventDescription(r),"chrono-event-description"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
-    const customThumb=chronoThumbPath(r);
-    const imageFile=!!customThumb||!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
+    const view=thumbnailView(r);
+    const imageFile=!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
     if(imageFile){
      const thumb=node("div","","record-thumbnail chrono-source-preview");
-     const img=document.createElement("img");img.src=publicUrl(customThumb||r.file_path);img.alt="Chronological card thumbnail for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
+     const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Chronological card thumbnail for "+(r.title||"record");img.loading="lazy";img.draggable=false;img.style.objectPosition=view.x+"% "+view.y+"%";img.style.transform="scale("+view.zoom+")";thumb.append(img);
+     if(ownerUser){
+      const pencil=node("button","✎","chrono-thumbnail-pencil");pencil.type="button";pencil.title="Adjust thumbnail framing";pencil.setAttribute("aria-label","Adjust thumbnail framing");
+      const editor=node("div","","chrono-thumbnail-editor");editor.hidden=true;
+      const hint=node("span","Drag image to reposition","chrono-thumbnail-hint");
+      const zoomLabel=node("label","Zoom","chrono-thumbnail-zoom-label");const zoom=document.createElement("input");zoom.type="range";zoom.min="1";zoom.max="2.4";zoom.step=".05";zoom.value=String(view.zoom);zoom.setAttribute("aria-label","Thumbnail zoom");
+      const actions=node("div","","chrono-thumbnail-actions");const save=node("button","Save","small-button chrono-thumbnail-save");save.type="button";const cancel=node("button","Cancel","small-button chrono-thumbnail-cancel");cancel.type="button";
+      editor.append(hint,zoomLabel,zoom,actions);actions.append(save,cancel);thumb.append(pencil,editor);
+      let draft={...view},drag=null;
+      const applyView=()=>{img.style.objectPosition=draft.x+"% "+draft.y+"%";img.style.transform="scale("+draft.zoom+")";zoom.value=String(draft.zoom);};
+      pencil.addEventListener("click",e=>{e.stopPropagation();editor.hidden=!editor.hidden;pencil.classList.toggle("is-active",!editor.hidden);});
+      editor.addEventListener("click",e=>e.stopPropagation());
+      zoom.addEventListener("input",()=>{draft.zoom=+zoom.value;applyView();});
+      img.addEventListener("pointerdown",e=>{if(editor.hidden)return;e.preventDefault();img.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,originX:draft.x,originY:draft.y};});
+      img.addEventListener("pointermove",e=>{if(!drag)return;const rect=thumb.getBoundingClientRect();draft.x=Math.max(0,Math.min(100,drag.originX-(e.clientX-drag.x)/Math.max(1,rect.width)*100));draft.y=Math.max(0,Math.min(100,drag.originY-(e.clientY-drag.y)/Math.max(1,rect.height)*100));applyView();});
+      img.addEventListener("pointerup",()=>{drag=null;});img.addEventListener("pointercancel",()=>{drag=null;});
+      save.addEventListener("click",async e=>{e.stopPropagation();save.disabled=true;save.textContent="Saving…";try{const description=saveThumbnailView(r,draft);const result=await client.from("archive_records").update({description}).eq("id",r.id);if(result.error)throw result.error;r.description=description;editor.hidden=true;pencil.classList.remove("is-active");}catch(error){alert("Could not save thumbnail framing: "+(error.message||"Unknown error."));}finally{save.disabled=false;save.textContent="Save";}});
+      cancel.addEventListener("click",e=>{e.stopPropagation();draft=thumbnailView(r);applyView();editor.hidden=true;pencil.classList.remove("is-active");});
+     }
+     card.append(thumb);
     }else card.classList.add("chrono-no-thumbnail");
     const info=node("div","","chrono-card-info");
     const family=familyValues(r);
@@ -110,29 +128,6 @@
     const excerpt=cleanChronoDescription(r.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Date on record|Parish|Research confidence):/i.test(line)).join("\\n").trim();
     if(excerpt)appendInfoBox(details,"Record notes",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-notes-box");
     info.append(details);card.append(info);
-    if(ownerUser){
-     const controls=node("div","","chrono-thumbnail-controls");
-     const edit=node("button","Edit thumbnail","small-button chrono-thumbnail-edit");edit.type="button";
-     const picker=document.createElement("input");picker.type="file";picker.accept="image/*";picker.hidden=true;picker.setAttribute("aria-label","Choose a custom ChronoSearch thumbnail");
-     edit.addEventListener("click",e=>{e.stopPropagation();picker.click();});
-     picker.addEventListener("click",e=>e.stopPropagation());
-     picker.addEventListener("change",async e=>{
-      e.stopPropagation();const file=picker.files?.[0];if(!file)return;
-      if(!file.type.startsWith("image/")){alert("Choose an image file.");picker.value="";return;}
-      edit.disabled=true;edit.textContent="Saving…";
-      const path=ownerUser.id+"/chrono-thumbnails/"+String(r.id||crypto.randomUUID())+"-"+Date.now()+"."+((file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg");
-      try{
-       const uploaded=await client.storage.from("family-archive").upload(path,file,{contentType:file.type,upsert:true});if(uploaded.error)throw uploaded.error;
-       const description=withChronoThumb(r,path);
-       const saved=await client.from("archive_records").update({description}).eq("id",r.id);if(saved.error){await client.storage.from("family-archive").remove([path]);throw saved.error;}
-       const oldPath=customThumb;r.description=description;if(oldPath&&oldPath!==path)await client.storage.from("family-archive").remove([oldPath]);render(records);
-      }catch(error){alert("Could not update this thumbnail: "+(error.message||"Unknown error."));}
-      finally{edit.disabled=false;edit.textContent="Edit thumbnail";picker.value="";}
-     });
-     controls.append(edit,picker);
-     if(customThumb){const reset=node("button","Use record scan","small-button chrono-thumbnail-reset");reset.type="button";reset.addEventListener("click",async e=>{e.stopPropagation();if(!confirm("Restore the original record scan as this card’s thumbnail?"))return;reset.disabled=true;try{const saved=await client.from("archive_records").update({description:withoutChronoThumb(r)}).eq("id",r.id);if(saved.error)throw saved.error;r.description=withoutChronoThumb(r);await client.storage.from("family-archive").remove([customThumb]);render(records);}catch(error){alert("Could not restore the original thumbnail: "+(error.message||"Unknown error."));reset.disabled=false;}});controls.append(reset);}
-     controls.addEventListener("click",e=>e.stopPropagation());card.append(controls);
-    }
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
    });
    timeline.append(column);
