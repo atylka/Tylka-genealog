@@ -9,7 +9,7 @@
   if(!faces.length&&person.portrait_url)faces=[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id,created_at:person.updated_at}];
   return faces.filter(face=>face&&(face.url||face.portrait_url)).map(face=>({...face,url:face.url||face.portrait_url}));
  }
- function yearFrom(value){const match=String(value||"").match(/(?:18|19|20)\\d{2}/);return match?match[0]:"Year not recorded";}
+ function yearFrom(value){const match=String(value||"").match(/(?:18|19|20)\d{2}/);return match?match[0]:"Year not recorded";}
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
