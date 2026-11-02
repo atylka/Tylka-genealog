@@ -4131,3 +4131,45 @@ body.theme-dark header.site-header .primary-nav a[aria-current="page"],
 body.dark-mode header.site-header .primary-nav a:hover,
 body.dark-mode header.site-header .primary-nav a[aria-current="page"]{background:#71352e!important;color:#fff0d2!important;border-color:#c6a36b!important}
 @media(prefers-reduced-motion:reduce){html body header.site-header:before{animation:none!important}}
+
+
+/* PAGE SWITCH SCOPE FIX: transitions belong to main content only, never the shared header or footer. */
+body.page-leaving main{
+  filter:blur(8px) brightness(.62) saturate(.7);
+  transform:scale(.975) translateY(-10px);
+  opacity:0;
+  transition:filter .65s ease,transform .82s var(--motion-cinema),opacity .52s ease;
+}
+body.page-leaving .site-header,
+body.page-leaving .site-footer{
+  filter:none!important;
+  transform:none!important;
+  opacity:1!important;
+  letter-spacing:normal!important;
+  transition:none!important;
+  animation:none!important;
+}
+body.page-enter,
+body.page-enter-active{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  transition:none!important;
+}
+body.page-enter main{opacity:0;transform:scale(1.018);filter:blur(7px)}
+body.page-enter-active main{
+  opacity:1;transform:none;filter:none;
+  transition:opacity .9s ease,transform 1.1s var(--motion-cinema),filter 1s ease;
+}
+body.page-enter-active .site-header,
+body.page-enter-active .site-footer{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  animation:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  body.page-leaving main,body.page-enter main,body.page-enter-active main{
+    opacity:1!important;transform:none!important;filter:none!important;transition:none!important;
+  }
+}
