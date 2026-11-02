@@ -4797,3 +4797,21 @@ body:after,
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
+
+
+/* Record details: show only actual transcription text and group scan boxes by relationship. */
+#detail-transcription-panel[hidden],
+#detail-family-information[hidden],
+#other-page-names[hidden]{display:none!important}
+.identified-family-group{margin:.25rem 0 .9rem}
+.identified-family-group h4,.other-page-names h4{margin:0 0 .5rem;font:600 .86rem var(--serif);color:var(--muted);letter-spacing:.045em;text-transform:uppercase}
+.identified-family-group .identified-family-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+.identified-family-card{align-items:flex-start}
+.identified-family-card .identified-name-actions{display:flex;flex-wrap:wrap;margin-top:.25rem}
+.identified-family-card .small-button{align-self:auto}
+.identified-family-card:focus-visible{outline:2px solid #c08b25;outline-offset:2px}
+.other-page-names{margin-top:.8rem;padding-top:.75rem;border-top:1px solid var(--line)}
+.identified-name-row{display:flex;align-items:center;justify-content:space-between;gap:.65rem;padding:.45rem .2rem;border-bottom:1px solid var(--line)}
+.identified-name-row>span{overflow-wrap:anywhere}
+@media(max-width:760px){.identified-family-group .identified-family-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.identified-family-group .identified-family-grid{grid-template-columns:1fr}}
