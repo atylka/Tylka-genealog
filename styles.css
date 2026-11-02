@@ -6344,3 +6344,13 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
  }
  .ancestor-page>.section-intro>p:not(.eyebrow):not(.connection-status){max-width:68ch!important}
 }
+
+/* Show known siblings directly on each People Index card. */
+.ancestor-card .ancestor-siblings{
+ margin:.25rem 0 .55rem!important;
+ color:var(--muted-ink,#75624d)!important;
+ font-size:.88rem!important;
+ line-height:1.45!important;
+ overflow-wrap:anywhere!important;
+}
+.ancestor-card .ancestor-siblings[hidden]{display:none!important}
