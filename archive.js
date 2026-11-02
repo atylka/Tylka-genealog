@@ -173,10 +173,12 @@
       const uploaded=await client.storage.from("family-archive").upload(path,blob,{contentType:"image/jpeg",upsert:false});
       if(uploaded.error)throw uploaded.error;
       const portraitUrl=client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
-      const {data:existingRows,error:lookupError}=await client.from("ancestor_portraits").select("id,name").ilike("name",name);
+      const {data:existingRows,error:lookupError}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").ilike("name",name);
       if(lookupError)throw lookupError;
       const existing=existingRows?.find(person=>person.name.toLocaleLowerCase()===name.toLocaleLowerCase());
-      const values={name,portrait_url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
+      const face={url:portraitUrl,source_record_id:window.tylkaActiveDetailRecord.id,source_title:window.tylkaActiveDetailRecord.title,created_at:new Date().toISOString()};
+      const prior=Array.isArray(existing?.portraits)?existing.portraits:(existing?.portrait_url?[{url:existing.portrait_url,source_record_id:existing.source_record_id,source_title:existing.source_title,created_at:existing.updated_at}]:[]);
+      const values={name,portrait_url:existing?.portrait_url||portraitUrl,portraits:[...prior,face],source_record_id:existing?.source_record_id||window.tylkaActiveDetailRecord.id,source_title:existing?.source_title||window.tylkaActiveDetailRecord.title,updated_at:new Date().toISOString(),created_by:currentUser.id};
       const result=existing?await client.from("ancestor_portraits").update(values).eq("id",existing.id):await client.from("ancestor_portraits").insert(values);
       if(result.error)throw result.error;
       setMessage($("face-crop-status"),"Portrait saved to the shared archive. It will be available on other devices.");setTimeout(()=>{closeModals();},700);
