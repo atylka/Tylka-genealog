@@ -7757,3 +7757,54 @@ body:has(main.ancestor-page) .ancestor-page-header .section-intro>p strong{
     line-height:1.55!important;
   }
 }
+
+
+/* 2026-11-02: unified archival mastheads and refined ancestor portraits/profiles. */
+.archive-page-header,.ancestor-page-header,.location-page-header,.chrono-page-header{
+ position:relative!important;isolation:isolate!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ width:100vw!important;max-width:100vw!important;min-height:190px!important;left:50%!important;transform:translateX(-50%)!important;
+ margin:0 0 clamp(2rem,3.5vw,3rem)!important;padding:1.8rem clamp(1rem,7vw,6rem)!important;box-sizing:border-box!important;text-align:center!important;
+ background:linear-gradient(120deg,#681018 0%,#941b25 52%,#b92c35 100%)!important;border-bottom:5px solid #c99a68!important;
+}
+.archive-page-header::after,.ancestor-page-header::after,.location-page-header::after,.chrono-page-header::after{
+ content:"";position:absolute;z-index:-1;pointer-events:none;inset:18px 22px 22px;border:1px solid rgba(255,235,218,.28);
+}
+.archive-page-header>*,.ancestor-page-header>*,.location-page-header>*,.chrono-page-header>*{
+ width:min(100%,900px)!important;max-width:900px!important;margin-left:auto!important;margin-right:auto!important;text-align:center!important;
+}
+.archive-page-header .eyebrow,.ancestor-page-header .eyebrow,.location-page-header .eyebrow,.chrono-page-header .eyebrow{color:#ffe2cf!important;text-shadow:0 1px 3px rgba(20,0,5,.8)!important;letter-spacing:.16em!important}
+.archive-page-header h1,.ancestor-page-header h1,.location-page-header h1,.chrono-page-header h1{
+ max-width:1000px!important;color:#fffaf5!important;font-size:clamp(2.2rem,4vw,3.6rem)!important;line-height:1.12!important;margin:.25rem auto .6rem!important;
+ text-shadow:0 2px 3px rgba(20,0,5,.45),0 8px 22px rgba(20,0,5,.22)!important;
+}
+.archive-page-header .section-intro,.ancestor-page-header .section-intro,.location-page-header .section-intro,.chrono-page-header .section-intro{
+ color:#fff3eb!important;font-size:1rem!important;line-height:1.65!important;text-shadow:0 1px 3px rgba(20,0,5,.72)!important;
+}
+.chrono-page-header .chrono-ornament{color:#f1c99d!important}
+.ancestor-grid .ancestor-card{border:1px solid rgba(112,73,44,.48)!important;border-radius:5px!important;background:linear-gradient(180deg,#f1e3c7,#dfcba8)!important;overflow:hidden!important}
+.ancestor-card-open{display:flex!important;flex-direction:column!important;width:100%!important;height:100%!important;text-align:left!important;background:transparent!important}
+.ancestor-card-open .ancestor-portrait,.ancestor-card-open .ancestor-portrait-placeholder{
+ width:100%!important;height:clamp(180px,21vw,245px)!important;min-height:180px!important;object-fit:cover!important;object-position:center 35%!important;border:0!important;border-bottom:1px solid rgba(112,73,44,.4)!important;
+}
+.ancestor-card-open .ancestor-card-body{display:flex!important;flex:1!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;padding:15px 14px 14px!important}
+.ancestor-card-open .ancestor-card-body h3{font:1.3rem/1.2 Georgia,serif!important;color:#3e251c!important}
+.ancestor-card-open .ancestor-source,.ancestor-card-open .ancestor-life-dates,.ancestor-card-open .ancestor-siblings,.ancestor-card-evidence{margin:0!important;color:#624a37!important;font-size:.84rem!important;line-height:1.5!important}
+.ancestor-card-evidence{font-weight:700!important;color:#78412f!important}
+.ancestor-card-open .small-button{margin-top:auto!important;padding:.5rem .9rem!important;border:1px solid #9b7445!important;background:rgba(255,248,229,.72)!important;color:#4b3021!important}
+.ancestor-profile-viewer{max-width:1120px!important;width:min(1120px,calc(100vw - 2rem))!important;max-height:92vh!important;overflow:auto!important}
+.ancestor-profile-layout{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(280px,.9fr)!important;gap:clamp(1.2rem,3vw,2.5rem)!important;align-items:start!important}
+.ancestor-profile-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.75rem!important}
+.ancestor-profile-fact,.ancestor-profile-sources{padding:.85rem!important;border:1px solid rgba(139,118,88,.55)!important;background:rgba(223,208,179,.45)!important}
+.ancestor-profile-fact h4{margin:0 0 .35rem!important;color:#6c352b!important;font:700 .75rem/1.3 Arial,sans-serif!important;letter-spacing:.1em!important;text-transform:uppercase!important}
+.ancestor-profile-fact p{margin:0!important;overflow-wrap:anywhere!important}
+.ancestor-profile-sources{margin-top:1rem!important}.ancestor-profile-sources h3{margin:0 0 .65rem!important;font:1.25rem Georgia,serif!important}
+.ancestor-profile-source-list{display:grid!important;gap:.55rem!important}
+.ancestor-source-reference{display:flex!important;flex-direction:column!important;gap:.2rem!important;padding:.65rem .75rem!important;border-left:3px solid #8b3b32!important;background:rgba(255,248,229,.58)!important;text-decoration:none!important;color:#38261d!important}
+.ancestor-source-reference:hover{background:#fff4dc!important;text-decoration:underline!important}
+.ancestor-source-reference span,.ancestor-no-sources{font-size:.8rem!important;color:#665344!important}
+@media(max-width:700px){
+ .archive-page-header,.ancestor-page-header,.location-page-header,.chrono-page-header{min-height:0!important;padding:1.35rem 1.15rem!important}
+ .archive-page-header::after,.ancestor-page-header::after,.location-page-header::after,.chrono-page-header::after{inset:10px!important}
+ .ancestor-profile-layout{grid-template-columns:1fr!important}.ancestor-profile-facts{grid-template-columns:1fr!important}
+ .ancestor-card-open .ancestor-portrait,.ancestor-card-open .ancestor-portrait-placeholder{height:160px!important;min-height:160px!important}
+}
