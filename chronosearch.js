@@ -7,16 +7,16 @@
  const dateText=record=>{const description=record.description||"";const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);return String(labeled?.[1]||record.record_date||"").trim();};
  function parseRecordDate(record){
   const raw=dateText(record);if(!raw)return null;
-  // ISO dates are unambiguous; text dates use the browser's locale parser.
-  let match=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if(match){const d=new Date(+match[1],+match[2]-1,+match[3]);return d.getFullYear()===+match[1]&&d.getMonth()===+match[2]-1&&d.getDate()===+match[3]?d:null;}
+  if(/^\d{4}$/.test(raw))return null;
+  let match=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:$|[Tt ]\d{2}:\d{2})/);
+  if(match){const y=+match[1],m=+match[2],day=+match[3],d=new Date(y,m-1,day);return d.getFullYear()===y&&d.getMonth()===m-1&&d.getDate()===day?d:null;}
   match=raw.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
   if(match){const a=+match[1],b=+match[2],y=+match[3],month=a>12?b:a,day=a>12?a:b;if(month<1||month>12||day<1||day>31)return null;const d=new Date(y,month-1,day);return d.getFullYear()===y&&d.getMonth()===month-1&&d.getDate()===day?d:null;}
-  const parsed=new Date(raw);return Number.isNaN(parsed.getTime())?null:parsed;
+  const parsed=new Date(raw);return Number.isNaN(parsed.getTime())?null:new Date(parsed.getUTCFullYear(),parsed.getUTCMonth(),parsed.getUTCDate());
  }
  const findYear=value=>{const match=String(value||"").match(/\b(1[5-9]\d{2}|20\d{2}|21\d{2})\b/);return match?Number(match[1]):null;};
  function recordYear(record){return parseRecordDate(record)?.getFullYear()||findYear(dateText(record))||findYear(record.title)||findYear(record.description);}
- function formatRecordDate(record){const raw=dateText(record),date=parseRecordDate(record);return date?new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"}).format(new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()))):raw;}
+ function formatRecordDate(record){const raw=dateText(record),yearOnly=raw.match(/^(\d{4})$/),date=parseRecordDate(record);if(yearOnly)return yearOnly[1];return date?new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric",year:"numeric"}).format(date):raw;}
 
  function render(records){
   const loc=locationInput.value.trim().toLocaleLowerCase(),person=personInput.value.trim().toLocaleLowerCase(),folder=folderInput.value,year=yearInput.value;
@@ -34,8 +34,9 @@
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
+    const event=node("div","","chrono-event");
     const dateLabel=formatRecordDate(r)||"Date not recorded";
-    column.append(node("div",dateLabel,"chrono-record-date"));
+    event.append(node("div",dateLabel,"chrono-record-date"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
     const thumb=node("div","","record-thumbnail chrono-source-preview");
@@ -48,7 +49,7 @@
     if(r.location)details.append(node("p","Location: "+r.location,"chrono-record-location"));
     if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)details.append(node("p",excerpt.length>180?excerpt.slice(0,177)+"…":excerpt,"chrono-record-notes"));}
     card.append(details);
-    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});column.append(card);
+    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
    });
    timeline.append(column);
   });
