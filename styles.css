@@ -4364,3 +4364,68 @@ html[data-theme="dark"] #family-map .registry-map-pin{
   border-color:#fffdf4!important;
   box-shadow:0 2px 7px rgba(0,0,0,.42),0 0 0 3px #e1b35f,0 0 18px rgba(255,202,105,.95)!important;
 }
+
+
+/* Location pin popup cleanup: one clean parchment card, no legacy popup layers. */
+#family-map .leaflet-popup.registry-pin-popup-container{
+  margin-bottom:8px!important;
+  filter:none!important;
+}
+#family-map .registry-pin-popup-container .leaflet-popup-content-wrapper{
+  background:linear-gradient(145deg,#fff8e8 0%,#f1dfbd 100%)!important;
+  color:#493020!important;
+  border:1px solid #bd9658!important;
+  border-radius:10px!important;
+  box-shadow:0 5px 18px rgba(49,29,16,.24),inset 0 1px rgba(255,255,255,.85)!important;
+  overflow:hidden!important;
+}
+#family-map .registry-pin-popup-container .leaflet-popup-tip{
+  background:#f1dfbd!important;
+  border:1px solid #bd9658!important;
+  box-shadow:3px 3px 8px rgba(49,29,16,.12)!important;
+}
+#family-map .registry-pin-popup-container .leaflet-popup-content{
+  margin:11px 13px!important;
+  color:#493020!important;
+}
+#family-map .registry-pin-popup-container .leaflet-popup-close-button{
+  color:#80572f!important;
+}
+#family-map .registry-pin-popup-container:before,
+#family-map .registry-pin-popup-container:after,
+#family-map .registry-pin-popup-container .leaflet-popup-content-wrapper:before,
+#family-map .registry-pin-popup-container .leaflet-popup-content-wrapper:after{
+  content:none!important;display:none!important;
+}
+/* Bright ivory-and-gold location marker; suppress every remnant of the older pin artwork. */
+#family-map .leaflet-marker-icon.registry-pin-icon,
+#family-map .leaflet-marker-icon.registry-pin-icon:before,
+#family-map .leaflet-marker-icon.registry-pin-icon:after{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  content:none!important;filter:none!important;
+}
+#family-map .leaflet-marker-icon.registry-pin-icon .registry-map-pin{
+  width:30px!important;height:30px!important;margin:2px!important;
+  background:linear-gradient(145deg,#fffdf2 0%,#ffe5a0 48%,#f3bd59 100%)!important;
+  border:3px solid #fffef8!important;
+  box-shadow:0 2px 7px rgba(67,39,15,.28),0 0 0 3px #e0ad4e,0 0 17px rgba(255,213,119,.95)!important;
+}
+#family-map .leaflet-marker-icon.registry-pin-icon .registry-map-pin:before,
+#family-map .leaflet-marker-icon.registry-pin-icon .registry-map-pin:after{
+  content:none!important;display:none!important;
+}
+#family-map .leaflet-marker-icon.registry-pin-icon .registry-map-pin>span{
+  width:9px!important;height:9px!important;top:7px!important;left:7px!important;
+  background:#fff!important;box-shadow:0 0 8px rgba(255,255,255,.98)!important;
+}
+html[data-theme="dark"] #family-map .leaflet-marker-icon.registry-pin-icon .registry-map-pin{
+  background:linear-gradient(145deg,#fffdf2 0%,#ffe5a0 48%,#f3bd59 100%)!important;
+  border-color:#fffef8!important;
+  box-shadow:0 2px 7px rgba(35,19,8,.35),0 0 0 3px #edbd60,0 0 19px rgba(255,213,119,.98)!important;
+}
+html[data-theme="dark"] #family-map .registry-pin-popup-container .leaflet-popup-content-wrapper{
+  background:linear-gradient(145deg,#fff8e8 0%,#f1dfbd 100%)!important;
+  color:#493020!important;border-color:#bd9658!important;
+}
+html[data-theme="dark"] #family-map .registry-pin-popup-container .leaflet-popup-content,
+html[data-theme="dark"] #family-map .registry-pin-popup-title{color:#493020!important}
