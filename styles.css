@@ -5491,3 +5491,69 @@ body[data-theme="dark"] .chrono-main .chrono-timeline .chrono-year-column .chron
  }
  .chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card .record-thumbnail{height:104px!important;min-height:104px!important}
 }
+.records-list.all-records-view{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:.65rem!important;align-items:stretch;width:100%;margin:.75rem 0 1rem;
+}
+.records-list.all-records-view .home-search-record-card{
+  display:grid!important;grid-template-columns:minmax(76px,96px) minmax(0,1fr)!important;
+  align-items:stretch!important;justify-content:stretch!important;gap:.65rem!important;
+  min-width:0;min-height:124px;padding:.58rem!important;
+  border:1px solid var(--line);border-radius:3px;
+  background:rgba(223,208,179,.78);color:var(--ink);
+  box-shadow:0 2px 6px rgba(55,35,20,.08);
+}
+.records-list.all-records-view .home-search-record-card>.record-thumbnail{
+  width:100%;height:100%;min-height:108px;max-width:none;aspect-ratio:auto;
+  margin:0!important;align-self:stretch;
+}
+.records-list.all-records-view .home-search-record-card>.record-thumbnail img{
+  width:100%;height:100%;object-fit:contain;
+}
+.records-list.all-records-view .home-search-record-details{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:.18rem}
+.records-list.all-records-view .home-search-record-details .record-category{font-size:.58rem;line-height:1.2;overflow-wrap:anywhere}
+.records-list.all-records-view .home-search-record-details h3{
+  margin:.08rem 0 .12rem;font-size:.92rem;line-height:1.18;overflow-wrap:anywhere;
+}
+.records-list.all-records-view .home-search-record-details p{margin:.08rem 0;font-size:.68rem;line-height:1.25;color:var(--muted);overflow-wrap:anywhere}
+.records-list.all-records-view .home-search-record-details .record-view-button{
+  margin:.12rem 0 .18rem;padding:.34rem .55rem;font-size:.66rem;min-height:30px;
+}
+@media(max-width:1050px){
+  .records-list.all-records-view{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:620px){
+  .records-list.all-records-view{grid-template-columns:1fr!important;gap:.55rem!important}
+  .records-list.all-records-view .home-search-record-card{grid-template-columns:92px minmax(0,1fr)!important;min-height:112px;padding:.5rem!important}
+  .records-list.all-records-view .home-search-record-card>.record-thumbnail{min-height:96px}
+}
+html[data-theme="dark"] .records-list.all-records-view .home-search-record-card,
+body[data-theme="dark"] .records-list.all-records-view .home-search-record-card,
+html.theme-dark .records-list.all-records-view .home-search-record-card,
+body.theme-dark .records-list.all-records-view .home-search-record-card,
+body.dark-mode .records-list.all-records-view .home-search-record-card,
+.dark-mode .records-list.all-records-view .home-search-record-card{
+  background:rgba(48,32,23,.94)!important;border-color:#765936!important;color:#f0dfc0!important;
+}
+html[data-theme="dark"] .records-list.all-records-view .home-search-record-details p,
+body[data-theme="dark"] .records-list.all-records-view .home-search-record-details p,
+html.theme-dark .records-list.all-records-view .home-search-record-details p,
+body.theme-dark .records-list.all-records-view .home-search-record-details p,
+body.dark-mode .records-list.all-records-view .home-search-record-details p,
+.dark-mode .records-list.all-records-view .home-search-record-details p{color:#cbb894!important}
+html[data-theme="dark"] .records-list.all-records-view .home-search-record-details .record-category,
+body[data-theme="dark"] .records-list.all-records-view .home-search-record-details .record-category,
+html.theme-dark .records-list.all-records-view .home-search-record-details .record-category,
+body.theme-dark .records-list.all-records-view .home-search-record-details .record-category,
+body.dark-mode .records-list.all-records-view .home-search-record-details .record-category,
+.dark-mode .records-list.all-records-view .home-search-record-details .record-category{color:#d7a66f!important}
+
+
+
+/* The homepage layout is used only by the Archive's All records view. */
+#private-archive .records-list.all-records-view{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:.65rem!important;align-items:stretch}
+#private-archive .records-list.all-records-view .home-search-record-card.no-scan{grid-template-columns:minmax(0,1fr)!important}
+#private-archive .records-list.all-records-view .home-search-record-card.no-scan>.home-search-record-details{grid-column:1/-1}
+#private-archive .records-list.all-records-view .home-search-record-card>.record-actions{grid-column:1/-1;display:flex;gap:.4rem;flex-wrap:wrap}
+@media(max-width:1050px){#private-archive .records-list.all-records-view{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){#private-archive .records-list.all-records-view{grid-template-columns:1fr!important}}
