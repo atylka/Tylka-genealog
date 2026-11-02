@@ -103,7 +103,7 @@
       zoom.addEventListener("input",()=>{draft.zoom=+zoom.value;applyView();});
       img.addEventListener("pointerdown",e=>{if(editor.hidden)return;e.preventDefault();img.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,originX:draft.x,originY:draft.y};});
       img.addEventListener("pointermove",e=>{if(!drag)return;const rect=thumb.getBoundingClientRect();draft.x=Math.max(0,Math.min(100,drag.originX-(e.clientX-drag.x)/Math.max(1,rect.width)*100));draft.y=Math.max(0,Math.min(100,drag.originY-(e.clientY-drag.y)/Math.max(1,rect.height)*100));applyView();});
-      img.addEventListener("pointerup",()=>{drag=null;});img.addEventListener("pointercancel",()=>{drag=null;});
+      img.addEventListener("pointerup",()=>{drag=null;});img.addEventListener("pointercancel",()=>{drag=null;});img.addEventListener("click",e=>{if(!editor.hidden)e.stopPropagation();});
       save.addEventListener("click",async e=>{e.stopPropagation();save.disabled=true;save.textContent="Saving…";try{const description=saveThumbnailView(r,draft);const result=await client.from("archive_records").update({description}).eq("id",r.id);if(result.error)throw result.error;r.description=description;editor.hidden=true;pencil.classList.remove("is-active");thumb.classList.remove("is-editing");}catch(error){alert("Could not save thumbnail framing: "+(error.message||"Unknown error."));}finally{save.disabled=false;save.textContent="Save";}});
       cancel.addEventListener("click",e=>{e.stopPropagation();draft=thumbnailView(r);applyView();editor.hidden=true;pencil.classList.remove("is-active");thumb.classList.remove("is-editing");});
      }
