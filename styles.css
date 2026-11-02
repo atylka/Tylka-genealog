@@ -6545,3 +6545,75 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
   padding:.5rem 1rem 1.2rem!important;
  }
 }
+
+
+/* 2026-11-02: calm parchment color, tighter page mastheads, true oxblood-red banners. */
+body:before{
+  filter:blur(30px) saturate(1)!important;
+  opacity:.58!important;
+  animation:paper-aurora-drift 28s ease-in-out infinite alternate!important;
+}
+@keyframes ambient-hue-shift{from{filter:blur(30px) saturate(1)}to{filter:blur(30px) saturate(1)}}
+body:after{
+  opacity:.22!important;
+  animation:grain-shimmer 12s steps(4,end) infinite!important;
+}
+@media(max-width:800px){
+  body:before{filter:blur(24px) saturate(.96)!important;opacity:.42!important}
+  body:after{opacity:.16!important}
+}
+
+/* Page mastheads begin directly beneath the global navigation. */
+.site-header{margin-bottom:0!important}
+main.archive-page{
+  margin-top:0!important;
+  padding-top:0!important;
+}
+.home-search-page,.chrono-main,.ancestor-page,.location-page,
+.archive-page:not(.home-search-page):not(.chrono-main){
+  margin-top:0!important;
+}
+.home-search-layout,.chrono-search-layout{
+  margin-top:0!important;
+}
+.home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+  padding-top:1.55rem!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main)> .eyebrow{
+  padding-top:1.55rem!important;
+}
+@media(max-width:800px){
+  .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+    padding-top:1.25rem!important;
+  }
+  .archive-page:not(.home-search-page):not(.chrono-main)> .eyebrow{
+    padding-top:1.25rem!important;
+  }
+}
+
+/* Consistent red-wine masthead: deliberately red, not violet or plum. */
+.home-search-layout::before,
+.chrono-search-layout::before,
+.ancestor-page::before,
+.location-page::before,
+.archive-page:not(.home-search-page):not(.chrono-main)::before{
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(255,190,151,.16),transparent 48%),
+    linear-gradient(120deg,#681018 0%,#941b25 52%,#b92c35 100%)!important;
+  border-bottom-color:#c99a68!important;
+}
+html[data-theme="dark"] .home-search-layout::before,
+html[data-theme="dark"] .chrono-search-layout::before,
+html[data-theme="dark"] .ancestor-page::before,
+html[data-theme="dark"] .location-page::before,
+html[data-theme="dark"] .archive-page:not(.home-search-page):not(.chrono-main)::before,
+body.dark-mode .home-search-layout::before,
+body.dark-mode .chrono-search-layout::before,
+body.dark-mode .ancestor-page::before,
+body.dark-mode .location-page::before,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(220,139,102,.12),transparent 48%),
+    linear-gradient(120deg,#400b12 0%,#68121c 52%,#861c26 100%)!important;
+  border-bottom-color:#98734e!important;
+}
