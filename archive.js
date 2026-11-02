@@ -50,7 +50,7 @@
   function resetViewer(){viewerScale=1;viewerX=0;viewerY=0;applyViewerTransform();}
   function setupViewer(){const viewport=$("detail-image-viewport");if(!viewport||viewport.dataset.ready)return;viewport.dataset.ready="1";viewport.addEventListener("wheel",e=>{if(!$("record-detail-modal")||$("record-detail-modal").hidden)return;e.preventDefault();zoomViewer(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY);},{passive:false});viewport.addEventListener("pointerdown",e=>{if(viewerScale<=1)return;viewerDragging=true;viewerStart={x:e.clientX-viewerX,y:e.clientY-viewerY};viewport.setPointerCapture(e.pointerId);});viewport.addEventListener("pointermove",e=>{if(!viewerDragging)return;viewerX=e.clientX-viewerStart.x;viewerY=e.clientY-viewerStart.y;applyViewerTransform();});const stop=()=>{viewerDragging=false;};viewport.addEventListener("pointerup",stop);viewport.addEventListener("pointercancel",stop);$("image-zoom-in").addEventListener("click",()=>zoomViewer(1.25));$("image-zoom-out").addEventListener("click",()=>zoomViewer(1/1.25));$("image-zoom-reset").addEventListener("click",resetViewer);}
   function readFamilyRelationships(record){
-    const labels={"Mother":"Mother","Father":"Father","Mother’s father":"Maternal grandfather","Mother’s mother":"Maternal grandmother","Father’s father":"Paternal grandfather","Father’s mother":"Paternal grandmother"};
+    const labels={"Mother":"Mother","Father":"Father","Mother’s father":"Mother’s father","Mother’s mother":"Mother’s mother","Father’s father":"Father’s father","Father’s mother":"Father’s mother"};
     const values=[];
     Object.entries(labels).forEach(([stored,label])=>{
       const match=String(record.description||"").match(new RegExp("^Family - "+stored+":\\s*([^\\r\\n]+)$","im"));
@@ -58,23 +58,46 @@
     });
     return values;
   }
+  let activePageNameHighlight="";
+  function highlightPageName(name){
+    activePageNameHighlight=name||"";
+    drawPageNameOverlay(window.tylkaActiveDetailRecord);
+  }
   function renderPageNameList(record){
     const section=$("detail-family-information"),list=$("page-name-list"),familyList=$("detail-family-list");
     if(!section||!list||!familyList)return;
     familyList.replaceChildren();list.replaceChildren();
     const family=readFamilyRelationships(record);
-    family.forEach(([label,value])=>{const term=document.createElement("dt"),definition=document.createElement("dd");term.textContent=label;definition.textContent=value;familyList.append(term,definition);});
-    const seen=new Set(family.map(([,value])=>value.toLocaleLowerCase()));
-    const addName=(name,kind,index)=>{
-      const key=name.trim().toLocaleLowerCase();if(!key||seen.has(key))return;seen.add(key);
-      const li=document.createElement("li"),label=document.createElement("span"),remove=document.createElement("button");
-      label.textContent=name+" · "+kind;li.append(label);
-      if(kind==="Identified on page"){remove.type="button";remove.className="small-button";remove.textContent="Remove";remove.hidden=!currentUser;remove.addEventListener("click",()=>removePageName(index));li.append(remove);}
-      list.append(li);
-    };
-    String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>addName(name,"Mentioned in record"));
     const pageNames=readPageNames(record);
-    pageNames.forEach((entry,index)=>addName(entry.name,"Identified on page",index));
+    family.forEach(([role,name])=>{
+      const card=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong");
+      card.className="identified-family-card";label.textContent=role;value.textContent=name;card.append(label,value);
+      card.tabIndex=0;card.setAttribute("role","group");card.setAttribute("aria-label",role+": "+name);
+      card.addEventListener("mouseenter",()=>highlightPageName(name));
+      card.addEventListener("mouseleave",()=>highlightPageName(""));
+      card.addEventListener("focus",()=>highlightPageName(name));
+      card.addEventListener("blur",()=>highlightPageName(""));
+      if(currentUser){const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));card.append(edit);}
+      familyList.append(card);
+    });
+    const seen=new Set(family.map(([,value])=>value.toLocaleLowerCase()));
+    String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>{
+      const key=name.toLocaleLowerCase();if(seen.has(key))return;seen.add(key);
+      const li=document.createElement("li"),label=document.createElement("span");label.textContent=name+" · Mentioned in record";
+      li.append(label);li.addEventListener("mouseenter",()=>highlightPageName(name));li.addEventListener("mouseleave",()=>highlightPageName(""));
+      list.append(li);
+    });
+    pageNames.forEach((entry,index)=>{
+      const li=document.createElement("li"),label=document.createElement("span"),actions=document.createElement("div");
+      li.className="identified-name-row";label.textContent=entry.name+" · Identified on page";actions.className="identified-name-actions";
+      li.addEventListener("mouseenter",()=>highlightPageName(entry.name));li.addEventListener("mouseleave",()=>highlightPageName(""));
+      if(currentUser){
+        const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>editPageName(index));
+        const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Delete";remove.addEventListener("click",()=>removePageName(index));
+        actions.append(edit,remove);
+      }
+      li.append(label,actions);list.append(li);
+    });
     section.hidden=!family.length&&!list.children.length;
     drawPageNameOverlay(record);
   }
@@ -222,20 +245,20 @@
 
   // Manual name markers for scanned record pages; labels and normalized boxes are stored with the record.
   const pageCanvas=$("page-name-canvas"),pageCtx=pageCanvas?.getContext("2d");
-  let pageSourceImage=null,pageSelection=null,pageDragStart=null;
+  let pageSourceImage=null,pageSelection=null,pageDragStart=null,pageNameEditingIndex=null;
   function readPageNames(record){const m=String(record?.description||"").match(/^Page name identifications:\s*(\[.*\])\s*$/im);if(!m)return[];try{const a=JSON.parse(m[1]);return Array.isArray(a)?a.filter(x=>x&&typeof x.name==="string"&&x.rect):[];}catch(_){return[];}}
-  function drawPageNameOverlay(record){const overlay=$("page-name-overlay"),image=$("detail-image");if(!overlay||!image)return;const width=image.naturalWidth||0,height=image.naturalHeight||0;if(!width||!height){overlay.width=overlay.height=0;return;}overlay.width=width;overlay.height=height;const ctx=overlay.getContext("2d");ctx.clearRect(0,0,width,height);const entries=readPageNames(record);const scale=Math.max(1,width/1100);entries.forEach(entry=>{const r=entry.rect,x=r.x*width,y=r.y*height,w=r.w*width,h=r.h*height;ctx.save();ctx.fillStyle="rgba(255,220,70,.25)";ctx.strokeStyle="rgba(255,196,35,.96)";ctx.lineWidth=Math.max(2,3*scale);ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.font="600 "+Math.max(15,18*scale)+"px Arial,sans-serif";const label=entry.name,pad=7*scale,tagH=Math.max(25,28*scale),tagW=Math.min(width-x,ctx.measureText(label).width+pad*2);const tagY=Math.max(0,y-tagH);ctx.fillStyle="rgba(255,218,91,.96)";ctx.strokeStyle="rgba(125,83,15,.95)";ctx.lineWidth=Math.max(1,1.5*scale);ctx.fillRect(x,tagY,tagW,tagH);ctx.strokeRect(x,tagY,tagW,tagH);ctx.fillStyle="#38260b";ctx.textBaseline="middle";ctx.fillText(label,x+pad,tagY+tagH/2,Math.max(10,tagW-pad*2));ctx.restore();});applyViewerTransform();}
-  function renderPageNameList(record){const section=$("page-name-identifications"),list=$("page-name-list");if(!section||!list)return;list.replaceChildren();const entries=readPageNames(record);section.hidden=!entries.length;entries.forEach((entry,index)=>{const li=document.createElement("li"),name=document.createElement("span"),remove=document.createElement("button");name.textContent=entry.name;remove.type="button";remove.className="small-button";remove.textContent="Remove";remove.hidden=!currentUser;remove.addEventListener("click",()=>removePageName(index));li.append(name,remove);list.append(li);});drawPageNameOverlay(record);}
+  function drawPageNameOverlay(record){const overlay=$("page-name-overlay"),image=$("detail-image");if(!overlay||!image)return;const width=image.naturalWidth||0,height=image.naturalHeight||0;if(!width||!height){overlay.width=overlay.height=0;return;}overlay.width=width;overlay.height=height;const ctx=overlay.getContext("2d");ctx.clearRect(0,0,width,height);const entries=readPageNames(record);const scale=Math.max(1,width/1100);entries.forEach(entry=>{const r=entry.rect,x=r.x*width,y=r.y*height,w=r.w*width,h=r.h*height,active=activePageNameHighlight&&entry.name.toLocaleLowerCase()===activePageNameHighlight.toLocaleLowerCase();ctx.save();ctx.fillStyle=active?"rgba(255,220,70,.58)":"rgba(255,220,70,.16)";ctx.strokeStyle=active?"rgba(255,174,0,1)":"rgba(255,196,35,.62)";ctx.lineWidth=active?Math.max(4,5*scale):Math.max(1.5,2*scale);ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.font="600 "+Math.max(15,18*scale)+"px Arial,sans-serif";const label=entry.name,pad=7*scale,tagH=Math.max(25,28*scale),tagW=Math.min(width-x,ctx.measureText(label).width+pad*2);const tagY=Math.max(0,y-tagH);ctx.fillStyle=active?"rgba(255,196,45,1)":"rgba(255,218,91,.78)";ctx.strokeStyle="rgba(125,83,15,.95)";ctx.lineWidth=Math.max(1,1.5*scale);ctx.fillRect(x,tagY,tagW,tagH);ctx.strokeRect(x,tagY,tagW,tagH);ctx.fillStyle="#38260b";ctx.textBaseline="middle";ctx.fillText(label,x+pad,tagY+tagH/2,Math.max(10,tagW-pad*2));ctx.restore();});applyViewerTransform();}
   function drawPageCanvas(){if(!pageCtx||!pageSourceImage)return;pageCtx.clearRect(0,0,pageCanvas.width,pageCanvas.height);pageCtx.drawImage(pageSourceImage,0,0,pageCanvas.width,pageCanvas.height);if(pageSelection){pageCtx.save();pageCtx.fillStyle="rgba(93,53,31,.22)";pageCtx.fillRect(0,0,pageCanvas.width,pageCanvas.height);pageCtx.clearRect(pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.drawImage(pageSourceImage,pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h,pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.strokeStyle="#f2c66c";pageCtx.lineWidth=Math.max(3,pageCanvas.width/500);pageCtx.strokeRect(pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.restore();}}
   function pageCanvasPoint(e){const r=pageCanvas.getBoundingClientRect();return{x:Math.max(0,Math.min(pageCanvas.width,(e.clientX-r.left)*pageCanvas.width/r.width)),y:Math.max(0,Math.min(pageCanvas.height,(e.clientY-r.top)*pageCanvas.height/r.height))};}
-  function openPageNameTool(){const image=$("detail-image"),record=window.tylkaActiveDetailRecord;if(!currentUser)return setMessage($("page-name-status"),"Sign in as the archive owner to identify names.",true);if(!record||!isImage(record)||!record.file_path)return setMessage($("page-name-status"),"Open a record with an attached page-scan image first.",true);if(!image?.complete||!image.naturalWidth)return setMessage($("page-name-status"),"The scan is still loading. Try again in a moment.",true);pageSourceImage=image;pageCanvas.width=image.naturalWidth;pageCanvas.height=image.naturalHeight;pageSelection=null;drawPageCanvas();$("page-person-name").value="";setMessage($("page-name-status"),"");showModal("page-name-modal");}
+  function openPageNameTool(){const image=$("detail-image"),record=window.tylkaActiveDetailRecord;if(!currentUser)return setMessage($("page-name-status"),"Sign in as the archive owner to identify names.",true);if(!record||!isImage(record)||!record.file_path)return setMessage($("page-name-status"),"Open a record with an attached page-scan image first.",true);if(!image?.complete||!image.naturalWidth)return setMessage($("page-name-status"),"The scan is still loading. Try again in a moment.",true);pageSourceImage=image;pageCanvas.width=image.naturalWidth;pageCanvas.height=image.naturalHeight;pageSelection=null;pageNameEditingIndex=null;drawPageCanvas();$("page-person-name").value="";$("save-page-name").textContent="Save identified name";setMessage($("page-name-status"),"");showModal("page-name-modal");}
   $("mark-page-name")?.addEventListener("click",openPageNameTool);
   pageCanvas?.addEventListener("pointerdown",e=>{if(!pageSourceImage)return;e.preventDefault();try{pageCanvas.setPointerCapture(e.pointerId);}catch(_){}pageDragStart=pageCanvasPoint(e);pageSelection={x:pageDragStart.x,y:pageDragStart.y,w:1,h:1};drawPageCanvas();});
   pageCanvas?.addEventListener("pointermove",e=>{if(!pageDragStart)return;e.preventDefault();const p=pageCanvasPoint(e);pageSelection={x:Math.min(p.x,pageDragStart.x),y:Math.min(p.y,pageDragStart.y),w:Math.abs(p.x-pageDragStart.x),h:Math.abs(p.y-pageDragStart.y)};drawPageCanvas();});
   const finishPageDrag=e=>{if(e)e.preventDefault();pageDragStart=null;};pageCanvas?.addEventListener("pointerup",finishPageDrag);pageCanvas?.addEventListener("pointercancel",finishPageDrag);pageCanvas?.addEventListener("lostpointercapture",finishPageDrag);
   $("page-name-reset")?.addEventListener("click",()=>{pageSelection=null;drawPageCanvas();setMessage($("page-name-status"),"Selection cleared.");});
   async function savePageNames(entries){const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)throw new Error("Sign in as the archive owner first.");const clean=String(record.description||"").replace(/^Page name identifications:\s*[^\r\n]+\s*/im,"").trim();const description=(clean?clean+"\n\n":"")+"Page name identifications: "+JSON.stringify(entries);const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;const i=records.findIndex(x=>x.id===record.id);if(i>=0)records[i].description=description;renderPageNameList(record);}
-  $("save-page-name")?.addEventListener("click",async()=>{const name=$("page-person-name").value.trim();if(!name)return setMessage($("page-name-status"),"Enter the person's name.",true);if(!pageSelection||pageSelection.w<8||pageSelection.h<5)return setMessage($("page-name-status"),"Draw a box around the name first.",true);const button=$("save-page-name");button.disabled=true;setMessage($("page-name-status"),"Saving identification…");try{const entries=readPageNames(window.tylkaActiveDetailRecord);entries.push({name,rect:{x:pageSelection.x/pageCanvas.width,y:pageSelection.y/pageCanvas.height,w:pageSelection.w/pageCanvas.width,h:pageSelection.h/pageCanvas.height},created_at:new Date().toISOString()});await savePageNames(entries);pageSelection=null;drawPageCanvas();$("page-person-name").value="";setMessage($("page-name-status"),"Name saved to this record. You can identify another name on the same page.");}catch(error){setMessage($("page-name-status"),error.message||"Could not save this name.",true);}finally{button.disabled=false;}});
+  $("save-page-name")?.addEventListener("click",async()=>{const name=$("page-person-name").value.trim();if(!name)return setMessage($("page-name-status"),"Enter the person's name.",true);if(!pageSelection||pageSelection.w<8||pageSelection.h<5)return setMessage($("page-name-status"),"Draw a box around the name first.",true);const button=$("save-page-name");button.disabled=true;setMessage($("page-name-status"),"Saving identification…");try{const entries=readPageNames(window.tylkaActiveDetailRecord);const value={name,rect:{x:pageSelection.x/pageCanvas.width,y:pageSelection.y/pageCanvas.height,w:pageSelection.w/pageCanvas.width,h:pageSelection.h/pageCanvas.height},created_at:new Date().toISOString()};if(pageNameEditingIndex===null)entries.push(value);else entries[pageNameEditingIndex]=value;await savePageNames(entries);pageSelection=null;pageNameEditingIndex=null;drawPageCanvas();$("page-person-name").value="";$("save-page-name").textContent="Save identified name";setMessage($("page-name-status"),"Name saved to this record. You can identify another name on the same page.");}catch(error){setMessage($("page-name-status"),error.message||"Could not save this name.",true);}finally{button.disabled=false;}});
+  function editPageName(index){if(!currentUser)return;const entries=readPageNames(window.tylkaActiveDetailRecord),entry=entries[index];if(!entry)return;pageNameEditingIndex=index;pageSourceImage=$("detail-image");pageCanvas.width=pageSourceImage.naturalWidth;pageCanvas.height=pageSourceImage.naturalHeight;pageSelection={x:entry.rect.x*pageCanvas.width,y:entry.rect.y*pageCanvas.height,w:entry.rect.w*pageCanvas.width,h:entry.rect.h*pageCanvas.height};drawPageCanvas();$("page-person-name").value=entry.name;$("save-page-name").textContent="Save changes";setMessage($("page-name-status"),"Adjust the box or change the name, then save.");showModal("page-name-modal");}
   async function removePageName(index){if(!currentUser)return;try{const entries=readPageNames(window.tylkaActiveDetailRecord);entries.splice(index,1);await savePageNames(entries);}catch(error){setMessage($("page-name-status"),error.message||"Could not remove the name.",true);}}
   function syncPageNameButton(){const record=window.tylkaActiveDetailRecord,button=$("mark-page-name");if(button)button.hidden=!(currentUser&&record&&isImage(record)&&!!record.file_path);}
   const pageNameObserver=new MutationObserver(syncPageNameButton);const pageDetailModal=$("record-detail-modal");if(pageDetailModal)pageNameObserver.observe(pageDetailModal,{attributes:true,attributeFilter:["hidden"]});syncPageNameButton();
