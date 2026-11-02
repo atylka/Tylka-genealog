@@ -17,7 +17,7 @@
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
-  modal.innerHTML='<div class="modal-card ancestor-face-viewer"><button type="button" class="modal-close" aria-label="Close portraits">×</button><p class="eyebrow">Ancestor portrait collection</p><h2 class="ancestor-viewer-name"></h2><div class="ancestor-viewer-stage"><button type="button" class="ancestor-face-arrow ancestor-face-prev" aria-label="Previous face">‹</button><img class="ancestor-viewer-image" alt=""><button type="button" class="ancestor-face-arrow ancestor-face-next" aria-label="Next face">›</button></div><p class="ancestor-face-position"></p><p class="ancestor-face-source"></p><div class="ancestor-face-thumbnails"></div></div>';
+  modal.innerHTML='<div class="modal-card ancestor-face-viewer"><button type="button" class="modal-close" aria-label="Close portraits">×</button><p class="eyebrow">Ancestor portrait collection</p><h2 class="ancestor-viewer-name"></h2><div class="ancestor-viewer-stage"><button type="button" class="ancestor-face-arrow ancestor-face-prev" aria-label="Previous face">‹</button><img class="ancestor-viewer-image" alt=""><button type="button" class="ancestor-face-arrow ancestor-face-next" aria-label="Next face">›</button></div><p class="ancestor-face-position"></p><p class="ancestor-face-source"></p><div class="ancestor-viewer-actions"><button type="button" class="small-button danger-button ancestor-delete-current" aria-label="Delete this ancestor portrait" title="Delete this portrait"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 10v7m4-7v7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="ancestor-face-thumbnails"></div></div>';
   document.body.append(modal);
   const close=()=>{modal.hidden=true;activePerson=null;};
   modal.querySelector(".modal-close").addEventListener("click",close);
@@ -38,9 +38,9 @@
   box.querySelector(".ancestor-face-position").textContent="Face "+(activeIndex+1)+" of "+faces.length;
   box.querySelector(".ancestor-face-source").textContent="Year: "+(face.source_year||"Year not recorded")+" · "+(face.source_title?"Source: "+face.source_title:"Portrait source not recorded");
   const thumbButton=box.querySelector(".ancestor-set-thumbnail");
-  thumbButton.textContent=activePerson.portrait_url===face.url?"Current card thumbnail":"Use as card thumbnail";
-  thumbButton.disabled=activePerson.portrait_url===face.url;
-  thumbButton.onclick=()=>setCardThumbnail(face.url,thumbButton);
+  if(thumbButton){thumbButton.textContent=activePerson.portrait_url===face.url?"Current card thumbnail":"Use as card thumbnail";thumbButton.disabled=activePerson.portrait_url===face.url;thumbButton.onclick=()=>setCardThumbnail(face.url,thumbButton);}
+  const deleteButton=box.querySelector(".ancestor-delete-current");
+  if(deleteButton){deleteButton.disabled=false;deleteButton.onclick=()=>deletePortrait(activeIndex);}
   box.querySelector(".ancestor-face-prev").disabled=faces.length<2;
   box.querySelector(".ancestor-face-next").disabled=faces.length<2;
   const thumbs=box.querySelector(".ancestor-face-thumbnails");thumbs.replaceChildren();
@@ -59,6 +59,23 @@
   if(card){const image=card.querySelector(".ancestor-portrait");image.src=activePerson.portrait_url||faceList(activePerson)[0].url;}
  }
  function openPerson(person){activePerson=person;ensureModal().hidden=false;showFace(0);}
+ async function deletePortrait(index){
+  if(!activePerson||!client)return;
+  const faces=faceList(activePerson),face=faces[index];if(!face)return;
+  if(!window.confirm("Delete this ancestor portrait? This will not remove the face identification from its original record."))return;
+  const button=modal?.querySelector(".ancestor-delete-current");if(button)button.disabled=true;
+  try{
+   const next=faces.filter((_,i)=>i!==index),nextUrl=next[0]?.url||null;
+   const values={portraits:next,portrait_url:nextUrl,source_record_id:next[0]?.source_record_id||null,source_title:next[0]?.source_title||null,updated_at:new Date().toISOString()};
+   const result=!next.length?await client.from("ancestor_portraits").delete().eq("id",activePerson.id):await client.from("ancestor_portraits").update(values).eq("id",activePerson.id);
+   if(result.error)throw result.error;
+   try{const pathname=new URL(face.url).pathname,marker="/family-archive/",at=pathname.indexOf(marker);if(at>=0)await client.storage.from("family-archive").remove([decodeURIComponent(pathname.slice(at+marker.length))]);}catch(_){}
+   if(!next.length){const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));card?.remove();activePerson=null;modal.hidden=true;count.textContent=grid.querySelectorAll(".ancestor-card").length+" people";empty.hidden=grid.querySelectorAll(".ancestor-card").length>0;return;}
+   activePerson={...activePerson,portraits:next,portrait_url:nextUrl,source_record_id:values.source_record_id,source_title:values.source_title};
+   const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));if(card){const img=card.querySelector(".ancestor-portrait");if(img)img.src=nextUrl;const p=card.querySelector(".ancestor-source");if(p)p.textContent=next.length+" saved "+(next.length===1?"face":"faces");}
+   showFace(Math.min(index,next.length-1));
+  }catch(error){alert("Could not delete this portrait: "+(error.message||"Unknown error"));if(button)button.disabled=false;}
+ }
  function render(people,dates){
   people.sort((a,b)=>a.name.localeCompare(b.name));
   grid.replaceChildren();count.textContent=people.length+" "+(people.length===1?"person":"people");empty.hidden=people.length>0;
