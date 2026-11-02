@@ -5395,3 +5395,16 @@ body.dark-mode footer.site-footer :is(.wordmark,.wordmark strong,.wordmark small
   .home-search-page #home-search-workspace>.home-search-divider{grid-column:1!important;grid-row:3!important}
   .home-search-page #home-search-workspace>#home-results{grid-column:1!important;grid-row:4!important}
 }
+
+/* ChronoSearch dates are plain text, never badges, pills, or boxed metadata. */
+.chrono-record-date{
+ display:block!important;width:max-content!important;max-width:100%!important;
+ margin:.25rem 0 .45rem!important;padding:0!important;
+ border:0!important;border-radius:0!important;outline:0!important;
+ background:transparent!important;box-shadow:none!important;
+ font:italic .88rem/1.35 Georgia,serif!important;letter-spacing:.015em!important;
+ color:var(--muted)!important;
+}
+html[data-theme="dark"] .chrono-record-date,body[data-theme="dark"] .chrono-record-date,
+html.theme-dark .chrono-record-date,body.theme-dark .chrono-record-date,
+body.dark-mode .chrono-record-date{background:transparent!important;border:0!important;box-shadow:none!important;color:#d8bd8b!important}
