@@ -6354,3 +6354,23 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
  overflow-wrap:anywhere!important;
 }
 .ancestor-card .ancestor-siblings[hidden]{display:none!important}
+
+
+/* ChronoSearch notes: keep prose readable and prevent metadata/long tokens
+   from distorting the compact card layout. */
+.chrono-main #chrono-timeline .chrono-notes-box{
+ min-width:0!important;max-width:100%!important;overflow:hidden!important;
+}
+.chrono-main #chrono-timeline .chrono-notes-box .chrono-info-value{
+ min-width:0!important;max-width:100%!important;
+ overflow-wrap:anywhere!important;word-break:normal!important;
+ white-space:pre-line!important;line-height:1.45!important;
+}
+.chrono-main #chrono-timeline .chrono-family-panel,
+.chrono-main #chrono-timeline .chrono-family-grid,
+.chrono-main #chrono-timeline .chrono-record-details{
+ min-width:0!important;max-width:100%!important;
+}
+.chrono-main #chrono-timeline .chrono-info-box{
+ min-width:0!important;overflow:hidden!important;
+}
