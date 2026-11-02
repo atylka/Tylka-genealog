@@ -4127,3 +4127,74 @@ body.page-enter-active .site-footer{
     opacity:1!important;transform:none!important;filter:none!important;transition:none!important;
   }
 }
+
+
+/* NOV 2026 HEADER VISIBILITY FIX — deliberately high-contrast, shared across all pages. */
+html body header.site-header{
+  position:relative!important;isolation:isolate!important;
+  background:linear-gradient(110deg,#4b2925 0%,#60372d 42%,#704638 72%,#59352d 100%)!important;
+  background-color:#60372d!important;color:#f7e8c8!important;
+  border:0!important;border-bottom:3px double #c9a765!important;
+  box-shadow:inset 0 1px rgba(255,235,190,.18),0 7px 22px rgba(28,15,10,.32)!important;
+}
+html body header.site-header .wordmark,
+html body header.site-header .wordmark strong,
+html body header.site-header .wordmark small,
+html body header.site-header .primary-nav a,
+html body header.site-header .owner-sign-in-button,
+html body header.site-header .menu-toggle{color:#f7e8c8!important}
+html body header.site-header .wordmark strong{
+  font-family:"Great Vibes",cursive!important;font-size:2.35rem!important;
+  font-weight:400!important;letter-spacing:0!important;line-height:1.05!important;
+  text-shadow:0 1px 0 #2b1713,0 0 12px rgba(226,181,103,.18)!important;
+}
+html body header.site-header .wordmark small{font-family:Georgia,serif!important;letter-spacing:.13em!important;text-transform:uppercase!important;font-size:.62rem!important}
+html body header.site-header .monogram{background:#7a3c30!important;color:#fff0d2!important;border:1px solid #d2b06b!important;box-shadow:0 0 12px rgba(201,167,101,.18)!important}
+html body header.site-header .primary-nav a,
+html body header.site-header .owner-sign-in-button{
+  border:1px solid rgba(215,181,116,.38)!important;border-radius:2px!important;
+  background:rgba(28,15,12,.16)!important;padding:.62rem .82rem!important;
+  text-decoration:none!important;transition:background .25s ease,border-color .25s ease,box-shadow .25s ease,transform .25s ease!important;
+}
+html body header.site-header .primary-nav a:hover,
+html body header.site-header .owner-sign-in-button:hover{
+  background:rgba(220,183,109,.17)!important;border-color:#e0bd79!important;
+  box-shadow:0 0 15px rgba(218,174,97,.22)!important;transform:translateY(-2px)!important;
+}
+html body header.site-header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,#e3bd75 20%,#f0d99f 50%,#e3bd75 80%,transparent);opacity:.85;animation:footer-glint 8s ease-in-out infinite}
+html[data-theme="dark"] body header.site-header,
+body[data-theme="dark"] header.site-header,
+html.theme-dark body header.site-header,
+body.theme-dark header.site-header,
+body.dark-mode header.site-header{
+  background:linear-gradient(110deg,#634a38 0%,#59402f 40%,#51382b 72%,#493128 100%)!important;
+  background-color:#59402f!important;color:#fff0d2!important;border-bottom:3px double #d0ab68!important;
+  box-shadow:inset 0 1px rgba(231,190,116,.24),0 7px 22px rgba(0,0,0,.35)!important;
+}
+html[data-theme="dark"] body header.site-header .wordmark,
+html[data-theme="dark"] body header.site-header .wordmark strong,
+html[data-theme="dark"] body header.site-header .wordmark small,
+html[data-theme="dark"] body header.site-header .primary-nav a,
+html[data-theme="dark"] body header.site-header .owner-sign-in-button,
+body[data-theme="dark"] header.site-header .wordmark,
+body[data-theme="dark"] header.site-header .wordmark strong,
+body[data-theme="dark"] header.site-header .wordmark small,
+body[data-theme="dark"] header.site-header .primary-nav a,
+body[data-theme="dark"] header.site-header .owner-sign-in-button,
+html.theme-dark body header.site-header .wordmark,
+html.theme-dark body header.site-header .wordmark strong,
+html.theme-dark body header.site-header .wordmark small,
+html.theme-dark body header.site-header .primary-nav a,
+html.theme-dark body header.site-header .owner-sign-in-button,
+body.theme-dark header.site-header .wordmark,
+body.theme-dark header.site-header .wordmark strong,
+body.theme-dark header.site-header .wordmark small,
+body.theme-dark header.site-header .primary-nav a,
+body.theme-dark header.site-header .owner-sign-in-button,
+body.dark-mode header.site-header .wordmark,
+body.dark-mode header.site-header .wordmark strong,
+body.dark-mode header.site-header .wordmark small,
+body.dark-mode header.site-header .primary-nav a,
+body.dark-mode header.site-header .owner-sign-in-button{color:#fff0d2!important}
+@media(max-width:800px){html body header.site-header .wordmark strong{font-size:1.8rem!important}}
+@media(max-width:420px){html body header.site-header .wordmark strong{font-size:1.5rem!important}}
