@@ -6626,3 +6626,18 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow
   padding:.55rem 0!important;
  }
 }
+
+/* Location Registry uses .location-page as its page-level wrapper. */
+.location-page{position:relative!important;isolation:isolate!important}
+.location-page::before{
+ content:"";position:absolute;z-index:-1;pointer-events:none;top:0;left:50%;
+ transform:translateX(-50%);width:100vw;height:clamp(300px,35vw,430px);
+ background:radial-gradient(ellipse at 18% 8%,rgba(210,171,107,.22),transparent 54%),
+ linear-gradient(105deg,rgba(222,198,153,.88),rgba(239,222,188,.82) 48%,rgba(206,170,119,.74));
+ border-bottom:1px solid rgba(111,67,43,.24);
+}
+body.dark-mode .location-page::before{
+ background:radial-gradient(ellipse at 18% 8%,rgba(180,125,58,.19),transparent 54%),
+ linear-gradient(105deg,rgba(49,32,24,.98),rgba(61,40,28,.97) 48%,rgba(39,25,21,.98));
+ border-bottom-color:rgba(190,145,83,.38);
+}
