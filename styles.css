@@ -6270,3 +6270,41 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
 }
 html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-thumbnail-controls,
 body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-thumbnail-controls{border-color:#715332!important}
+
+
+/* Pencil overlay and in-place crop/reposition editor for the original scan thumbnail. */
+.chrono-main #chrono-timeline .chrono-source-preview{
+ position:relative!important;isolation:isolate!important;
+}
+.chrono-main #chrono-timeline .chrono-source-preview>img{
+ transform-origin:center center!important;transition:transform .08s ease-out,object-position .08s ease-out!important;
+}
+.chrono-main #chrono-timeline .chrono-thumbnail-pencil{
+ position:absolute!important;z-index:4!important;right:8px!important;bottom:8px!important;
+ display:grid!important;place-items:center!important;width:30px!important;height:30px!important;
+ padding:0!important;border:1px solid rgba(239,218,178,.75)!important;border-radius:50%!important;
+ background:rgba(48,31,20,.88)!important;color:#f1d6a4!important;
+ box-shadow:0 2px 8px rgba(0,0,0,.35)!important;font-family:Georgia,serif!important;
+ font-size:21px!important;line-height:1!important;cursor:pointer!important;
+}
+.chrono-main #chrono-timeline .chrono-thumbnail-pencil:hover,
+.chrono-main #chrono-timeline .chrono-thumbnail-pencil.is-active{
+ background:#8b6239!important;color:#fff0d0!important;transform:scale(1.06)!important;
+}
+.chrono-main #chrono-timeline .chrono-thumbnail-editor{
+ position:absolute!important;z-index:3!important;left:7px!important;right:43px!important;bottom:7px!important;
+ display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:4px 7px!important;
+ padding:6px 8px!important;border:1px solid rgba(226,195,145,.65)!important;border-radius:4px!important;
+ background:rgba(39,27,19,.94)!important;color:#f4e4c8!important;
+ box-shadow:0 2px 9px rgba(0,0,0,.35)!important;font-size:.68rem!important;
+}
+.chrono-main #chrono-timeline .chrono-thumbnail-editor[hidden]{display:none!important}
+.chrono-main #chrono-timeline .chrono-thumbnail-hint{flex:1 1 100%!important;font-size:.65rem!important;color:#e2c89f!important}
+.chrono-main #chrono-timeline .chrono-thumbnail-zoom-label{font-size:.65rem!important;color:#f4e4c8!important}
+.chrono-main #chrono-timeline .chrono-thumbnail-editor input[type="range"]{flex:1 1 70px!important;min-width:55px!important;height:14px!important;accent-color:#c49a61!important}
+.chrono-main #chrono-timeline .chrono-thumbnail-actions{display:flex!important;gap:4px!important;margin-left:auto!important}
+.chrono-main #chrono-timeline .chrono-thumbnail-editor .small-button{
+ min-height:23px!important;padding:2px 7px!important;font-size:.64rem!important;line-height:1.1!important;
+}
+.chrono-main #chrono-timeline .chrono-source-preview.is-editing>img{cursor:grab!important;touch-action:none!important}
+.chrono-main #chrono-timeline .chrono-source-preview.is-editing>img:active{cursor:grabbing!important}
