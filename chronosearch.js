@@ -26,8 +26,6 @@
   const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
- const thumbnailView=record=>{const m=String(record.description||"").match(/^Chrono thumbnail view:\s*(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/im);return m?{x:Math.max(0,Math.min(100,+m[1])),y:Math.max(0,Math.min(100,+m[2])),zoom:Math.max(1,Math.min(2.4,+m[3]))}:{x:50,y:50,zoom:1};};
- const saveThumbnailView=(record,view)=>{const raw=String(record.description||"").split(/\r?\n/).filter(line=>!/^Chrono thumbnail(?: view)?:/i.test(line.trim())).join("\n").replace(/\n{3,}/g,"\n\n").trim();return (raw?raw+"\n\n":"")+"Chrono thumbnail view: "+view.x.toFixed(1)+","+view.y.toFixed(1)+","+view.zoom.toFixed(2);};
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
   const box=node("div","",("chrono-info-box "+cls).trim());
@@ -89,31 +87,6 @@
     event.append(node("p",eventDescription(r),"chrono-event-description"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
-    const view=thumbnailView(r);
-    const imageFile=!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
-    if(imageFile){
-     const thumb=node("div","","record-thumbnail chrono-source-preview");
-     const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Chronological card thumbnail for "+(r.title||"record");img.loading="lazy";img.draggable=false;img.style.objectPosition=view.x+"% "+view.y+"%";img.style.transform="scale("+view.zoom+")";thumb.append(img);
-     if(ownerUser){
-      const pencil=node("button","✎","chrono-thumbnail-pencil");pencil.type="button";pencil.title="Adjust thumbnail framing";pencil.setAttribute("aria-label","Adjust thumbnail framing");
-      const editor=node("div","","chrono-thumbnail-editor");editor.hidden=true;
-      const hint=node("span","Drag image to reposition","chrono-thumbnail-hint");
-      const zoomLabel=node("label","Zoom","chrono-thumbnail-zoom-label");const zoom=document.createElement("input");zoom.type="range";zoom.min="1";zoom.max="2.4";zoom.step=".05";zoom.value=String(view.zoom);zoom.setAttribute("aria-label","Thumbnail zoom");
-      const actions=node("div","","chrono-thumbnail-actions");const save=node("button","Save","small-button chrono-thumbnail-save");save.type="button";const cancel=node("button","Cancel","small-button chrono-thumbnail-cancel");cancel.type="button";
-      editor.append(hint,zoomLabel,zoom,actions);actions.append(save,cancel);thumb.append(pencil,editor);
-      let draft={...view},drag=null;
-      const applyView=()=>{img.style.objectPosition=draft.x+"% "+draft.y+"%";img.style.transform="scale("+draft.zoom+")";zoom.value=String(draft.zoom);};
-      pencil.addEventListener("click",e=>{e.stopPropagation();editor.hidden=!editor.hidden;pencil.classList.toggle("is-active",!editor.hidden);thumb.classList.toggle("is-editing",!editor.hidden);});
-      editor.addEventListener("click",e=>e.stopPropagation());
-      zoom.addEventListener("input",()=>{draft.zoom=+zoom.value;applyView();});
-      img.addEventListener("pointerdown",e=>{if(editor.hidden)return;e.preventDefault();img.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,originX:draft.x,originY:draft.y};});
-      img.addEventListener("pointermove",e=>{if(!drag)return;const rect=thumb.getBoundingClientRect();draft.x=Math.max(0,Math.min(100,drag.originX-(e.clientX-drag.x)/Math.max(1,rect.width)*100));draft.y=Math.max(0,Math.min(100,drag.originY-(e.clientY-drag.y)/Math.max(1,rect.height)*100));applyView();});
-      img.addEventListener("pointerup",()=>{drag=null;});img.addEventListener("pointercancel",()=>{drag=null;});img.addEventListener("click",e=>{if(!editor.hidden)e.stopPropagation();});
-      save.addEventListener("click",async e=>{e.stopPropagation();save.disabled=true;save.textContent="Saving…";try{const description=saveThumbnailView(r,draft);const result=await client.from("archive_records").update({description}).eq("id",r.id);if(result.error)throw result.error;r.description=description;editor.hidden=true;pencil.classList.remove("is-active");thumb.classList.remove("is-editing");}catch(error){alert("Could not save thumbnail framing: "+(error.message||"Unknown error."));}finally{save.disabled=false;save.textContent="Save";}});
-      cancel.addEventListener("click",e=>{e.stopPropagation();draft=thumbnailView(r);applyView();editor.hidden=true;pencil.classList.remove("is-active");thumb.classList.remove("is-editing");});
-     }
-     card.append(thumb);
-    }else card.classList.add("chrono-no-thumbnail");
     const info=node("div","","chrono-card-info");
     const family=familyValues(r);
     const hasFamily=Object.values(family).some(Boolean);
