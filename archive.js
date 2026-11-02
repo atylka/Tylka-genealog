@@ -60,7 +60,7 @@
     return values;
   }
   function readTranscriptionNotes(record){
-    return String(record?.description||"").split(/\r?\n/).filter(line=>! /^\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Page name identifications|Face identifications):/i.test(line)).join("\n").trim();
+    return String(record?.description||"").split(/\r?\n/).filter(line=>! /^\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Page name identifications|Face identifications):/i.test(line)).join("\n").trim();
   }
   let activePageNameHighlight=null,activeFaceHighlight=null;
   function readFaceIdentifications(record){const m=String(record?.description||"").match(/^Face identifications:\s*(\[.*\])\s*$/im);if(!m)return[];try{const a=JSON.parse(m[1]);return Array.isArray(a)?a.filter(x=>x&&typeof x.name==="string"&&x.rect):[];}catch(_){return[];}}
