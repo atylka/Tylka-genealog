@@ -115,6 +115,7 @@
     $("detail-confidence").textContent="Research confidence: "+confidenceLabel(confidence);
     $("detail-confidence").className="detail-confidence confidence-"+confidence;
     if($("detail-confidence-select"))$("detail-confidence-select").value=confidence;
+    if($("confidence-editor"))$("confidence-editor").hidden=!currentUser;
     if($("save-confidence"))$("save-confidence").hidden=!currentUser;
     if($("confidence-save-status"))$("confidence-save-status").textContent="";
     const img=$("detail-image"),fallback=$("detail-file-fallback"),download=$("download-record-image");
@@ -150,6 +151,7 @@
     user=currentUser;if($("open-add-record"))$("open-add-record").hidden=!user;if($("owner-tools"))$("owner-tools").hidden=!user;if(document.body.dataset.page==="upload"&&$("private-archive"))$("private-archive").hidden=!user;
     if($("archive-heading"))$("archive-heading").textContent=user?"Your archive":"Browse records";
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
+    if($("confidence-editor"))$("confidence-editor").hidden=!user;
     if(recordsList)renderRecords();
     // Refresh the portrait action after the asynchronous owner session check completes.
     syncFaceButton();
