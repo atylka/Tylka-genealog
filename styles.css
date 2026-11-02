@@ -4429,3 +4429,98 @@ html[data-theme="dark"] #family-map .registry-pin-popup-container .leaflet-popup
 }
 html[data-theme="dark"] #family-map .registry-pin-popup-container .leaflet-popup-content,
 html[data-theme="dark"] #family-map .registry-pin-popup-title{color:#493020!important}
+
+
+/* FINAL LOCATION PREVIEW OVERRIDE — remove stacked legacy popup layers in every theme. */
+#family-map .leaflet-popup.registry-pin-popup-container{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  padding:0!important;
+}
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper{
+  display:block!important;
+  background:#fff8e8!important;
+  background-image:none!important;
+  color:#382316!important;
+  border:1px solid #c69b58!important;
+  border-radius:9px!important;
+  box-shadow:0 4px 12px rgba(40,24,12,.22)!important;
+  outline:0!important;
+  overflow:hidden!important;
+}
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content{
+  margin:10px 12px!important;
+  padding:0!important;
+  background:transparent!important;
+  color:#382316!important;
+}
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-tip-container{
+  background:transparent!important;
+  filter:none!important;
+}
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-tip{
+  background:#fff8e8!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#family-map .leaflet-popup.registry-pin-popup-container:before,
+#family-map .leaflet-popup.registry-pin-popup-container:after,
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper:before,
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper:after,
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content:before,
+#family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content:after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  box-shadow:none!important;
+}
+#family-map .registry-pin-popup{
+  min-width:170px!important;
+  max-width:230px!important;
+  background:transparent!important;
+  color:#382316!important;
+}
+#family-map .registry-pin-popup-title,
+#family-map .registry-pin-popup-image span,
+#family-map .registry-pin-popup-more{
+  color:#382316!important;
+  text-shadow:none!important;
+  opacity:1!important;
+}
+#family-map .registry-pin-popup-image{
+  background:#ead8b8!important;
+  border:1px solid #bd9658!important;
+}
+#family-map .registry-pin-popup-more{
+  background:#f0dfbd!important;
+  border:1px solid #bd9658!important;
+}
+#family-map .registry-pin-popup-container .leaflet-popup-close-button{
+  color:#70451f!important;
+  text-shadow:none!important;
+}
+html[data-theme="dark"] #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper,
+body[data-theme="dark"] #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper,
+html.theme-dark #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper,
+body.dark-mode #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper,
+.dark-mode #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content-wrapper{
+  background:#fff8e8!important;
+  background-image:none!important;
+  color:#382316!important;
+  border-color:#c69b58!important;
+}
+html[data-theme="dark"] #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content,
+body[data-theme="dark"] #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content,
+html.theme-dark #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content,
+body.dark-mode #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content,
+.dark-mode #family-map .leaflet-popup.registry-pin-popup-container .leaflet-popup-content,
+html[data-theme="dark"] #family-map .registry-pin-popup,
+body[data-theme="dark"] #family-map .registry-pin-popup,
+html.theme-dark #family-map .registry-pin-popup,
+body.dark-mode #family-map .registry-pin-popup,
+.dark-mode #family-map .registry-pin-popup{
+  background:transparent!important;
+  color:#382316!important;
+}
