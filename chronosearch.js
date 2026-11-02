@@ -16,7 +16,19 @@
  const displayPeople=value=>{
   if(Array.isArray(value))return value.map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
   if(value&&typeof value==="object")return Object.values(value).flat().map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
-  return String(value||"").replace(/^\s*\[|\]\s*$/g,"").replace(/["{}]/g,"").trim();
+  return String(value||"").replace(/^\\s*\\[|\\]\\s*$/g,"").replace(/["{}]/g,"").trim();
+ };
+ const familyValues=record=>{
+  const raw=String(record.description||"");
+  const read=label=>{const escaped=label.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&");const m=raw.match(new RegExp("^Family - "+escaped+":\\\\s*([^\\\\r\\\\n]+)$","im"));return m?m[1].trim():"";};
+  const values={mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
+  return values;
+ };
+ const appendInfoBox=(parent,label,value,cls="")=>{
+  if(!value)return;
+  const box=node("div","",("chrono-info-box "+cls).trim());
+  box.append(node("span",label,"chrono-info-label"),node("p",value,"chrono-info-value"));
+  parent.append(box);
  };
  const dateText=record=>{const description=record.description||"";const labeled=description.match(/date\s+on\s+(?:the\s+)?record\s*:\s*([^\n\r]+)/i);return String(labeled?.[1]||record.record_date||"").trim();};
  function parseRecordDate(record){
@@ -53,21 +65,51 @@
     event.append(node("div",dateLabel,"chrono-record-date"));
     const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
     const details=node("div","","chrono-record-details");
-    const thumb=node("div","","record-thumbnail chrono-source-preview");
-    const imageFile=(r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|tiff?)$/i.test(r.file_name||r.file_path||"");
-    if(r.file_path&&imageFile){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Source scan preview for "+(r.title||"record");img.loading="lazy";thumb.append(img);}
-    else thumb.append(node("span",r.file_path?(r.mime_type==="application/pdf"?"PDF":"FILE"):"No scan","record-thumbnail-placeholder"));
-    card.append(thumb);
+    const imageFile=!!r.file_path&&((r.mime_type||"").startsWith("image/")||/\\.(?:jpe?g|png|webp|gif|tiff?)$/i.test(r.file_name||r.file_path||""));
+    if(imageFile){
+     const thumb=node("div","","record-thumbnail chrono-source-preview");
+     const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Source scan preview for "+(r.title||"record");img.loading="lazy";thumb.append(img);card.append(thumb);
+    }else card.classList.add("chrono-no-thumbnail");
+    const info=node("div","","chrono-card-info");
     details.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
     details.append(node("h3",r.title||"Untitled record"));
-    if(r.location)details.append(node("p","Place: "+r.location,"chrono-record-location"));
-    const people=displayPeople(r.persons_mentioned);
-    if(people)details.append(node("p","People: "+people,"chrono-record-people"));
-    const excerpt=cleanChronoDescription(r.description||"");
-    if(excerpt)details.append(node("p",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-record-notes"));
-    const sourceLabel=r.file_name||(r.mime_type==="application/pdf"?"PDF document":r.mime_type?.startsWith("image/")?"Image scan":r.file_path?"Attached source":"No digital source attached");
-    if(sourceLabel)details.append(node("span",sourceLabel,"chrono-record-source"));
-    card.append(details);
+    const facts=node("div","","chrono-facts-grid");
+    appendInfoBox(facts,"Record date",formatRecordDate(r),"chrono-date-box");
+    appendInfoBox(facts,"Location",r.location,"chrono-place-box");
+    if(facts.childElementCount)details.append(facts);
+    const family=familyValues(r);
+    const hasFamily=Object.values(family).some(Boolean);
+    if(hasFamily){
+     const familyPanel=node("section","","chrono-family-panel");
+     familyPanel.append(node("h4","Parents","chrono-panel-title"));
+     const parents=node("div","","chrono-family-grid");
+     appendInfoBox(parents,"Father",family.father);
+     appendInfoBox(parents,"Mother",family.mother);
+     if(parents.childElementCount)familyPanel.append(parents);
+     const grandparents=node("div","","chrono-grandparents");
+     const maternal=node("div","","chrono-family-group");
+     maternal.append(node("h5","Maternal grandparents","chrono-subpanel-title"));
+     const maternalGrid=node("div","","chrono-family-grid");
+     appendInfoBox(maternalGrid,"Grandfather",family.maternalGrandfather);
+     appendInfoBox(maternalGrid,"Grandmother",family.maternalGrandmother);
+     if(maternalGrid.childElementCount)maternal.append(maternalGrid);
+     const paternal=node("div","","chrono-family-group");
+     paternal.append(node("h5","Paternal grandparents","chrono-subpanel-title"));
+     const paternalGrid=node("div","","chrono-family-grid");
+     appendInfoBox(paternalGrid,"Grandfather",family.paternalGrandfather);
+     appendInfoBox(paternalGrid,"Grandmother",family.paternalGrandmother);
+     if(paternalGrid.childElementCount)paternal.append(paternalGrid);
+     if(maternalGrid.childElementCount||paternalGrid.childElementCount)grandparents.append(maternal,paternal);
+     if(grandparents.childElementCount)familyPanel.append(grandparents);
+     details.append(familyPanel);
+    }
+    if(r.category==="photos"){
+     const people=displayPeople(r.persons_mentioned);
+     if(people){const peopleBox=node("div","","chrono-info-box chrono-photo-people");peopleBox.append(node("span","People","chrono-info-label"),node("p",people,"chrono-info-value"));details.append(peopleBox);}
+    }
+    const excerpt=cleanChronoDescription(r.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Date on record|Parish|Research confidence):/i.test(line)).join("\\n").trim();
+    if(excerpt)appendInfoBox(details,"Record notes",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-notes-box");
+    info.append(details);card.append(info);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
    });
    timeline.append(column);
