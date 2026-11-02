@@ -60,7 +60,7 @@
     return values;
   }
   function readTranscriptionNotes(record){
-    return String(record?.description||"").split(/\r?\n/).filter(line=>! /^\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Page name identifications|Face identifications):/i.test(line)).join("\n").trim();
+    return String(record?.description||"").split(/\r?\n/).filter(line=>! /^\s*(?:Date on record|Parish|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Page name identifications|Face identifications):/i.test(line)).join("\n").trim();
   }
   let activePageNameHighlight=null,activeFaceHighlight=null;
   function readFaceIdentifications(record){const m=String(record?.description||"").match(/^Face identifications:\s*(\[.*\])\s*$/im);if(!m)return[];try{const a=JSON.parse(m[1]);return Array.isArray(a)?a.filter(x=>x&&typeof x.name==="string"&&x.rect):[];}catch(_){return[];}}
@@ -187,19 +187,19 @@
     if(!currentUser)return;
     editingRecordId=record.id;
     const raw=String(record.description||"");
-    const dateMatch=raw.match(/^Date on record:\s*([^\r\n]+)$/im);
+    const dateMatch=raw.match(/^Date on record:\s*([^\r\n]+)$/im),parishMatch=raw.match(/^Parish:\s*([^\r\n]*)$/im);
     const confidence=readConfidence(raw);
     const brideMatch=raw.match(/^Bride:\s*([^\r\n]*)$/im),groomMatch=raw.match(/^Groom:\s*([^\r\n]*)$/im);
     const familyFields={"mother":"Mother","father":"Father","maternal-grandfather":"Mother’s father","maternal-grandmother":"Mother’s mother","paternal-grandfather":"Father’s father","paternal-grandmother":"Father’s mother","bride-father":"Bride’s father","bride-mother":"Bride’s mother","groom-father":"Groom’s father","groom-mother":"Groom’s mother"};
     Object.entries(familyFields).forEach(([id,label])=>{const match=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]*)$","im"));const field=$("record-"+id);if(field)field.value=match?match[1].trim():"";});
-    const notes=raw.replace(/^Page name identifications:\s*[^\r\n]+\s*/im,"").replace(/^Face identifications:\s*[^\r\n]+\s*/im,"").replace(/^Date on record:\s*[^\r\n]+\s*/im,"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").replace(/^Bride:\s*[^\r\n]*\s*/im,"").replace(/^Groom:\s*[^\r\n]*\s*/im,"").replace(/^Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother):\s*[^\r\n]*\s*/gim,"").trim();
+    const notes=raw.replace(/^Parish:\s*[^\r\n]*\s*/im,"").replace(/^Page name identifications:\s*[^\r\n]+\s*/im,"").replace(/^Face identifications:\s*[^\r\n]+\s*/im,"").replace(/^Date on record:\s*[^\r\n]+\s*/im,"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").replace(/^Bride:\s*[^\r\n]*\s*/im,"").replace(/^Groom:\s*[^\r\n]*\s*/im,"").replace(/^Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother):\s*[^\r\n]*\s*/gim,"").trim();
     $("record-bride").value=brideMatch?brideMatch[1].trim():"";
     $("record-groom").value=groomMatch?groomMatch[1].trim():"";
     updateMarriageFields();
     $("record-title").value=record.title||"";
     $("record-category").value=canonical(record.category)||"notes";updateMarriageFields();
     $("record-date").value=record.record_date|| (dateMatch?dateMatch[1].trim():"");
-    $("record-location").value=record.location||"";
+    $("record-location").value=record.location||"";if($("record-parish"))$("record-parish").value=parishMatch?parishMatch[1].trim():"";
     $("record-persons").value=record.persons_mentioned||"";
     updateMarriageFields();
     $("record-confidence").value=confidence;
@@ -216,7 +216,7 @@
   }
   function updateMarriageFields(){
     const isPoland=/(?:poland|polska|rzeczpospolita)/i.test($("record-location")?.value||"");
-    const isPolishBirth=$("record-category")?.value==="births"&&isPoland,isPolishMarriage=$("record-category")?.value==="marriages"&&isPoland;
+    const isPolishBirth=$("record-category")?.value==="births"&&isPoland,isPolishMarriage=$("record-category")?.value==="marriages"&&isPoland,parishField=$("record-parish-field");if(parishField)parishField.hidden=!isPoland;
     const familySection=$("polish-birth-family-section"),marriageFamilySection=$("polish-marriage-family-section"),generalPeople=$("general-persons-section");
     if(familySection)familySection.hidden=!isPolishBirth;
     if(marriageFamilySection)marriageFamilySection.hidden=!isPolishMarriage;
@@ -241,7 +241,7 @@
   const uploadForm=$("upload-form");
   if(uploadForm)uploadForm.addEventListener("submit",async e=>{
     e.preventDefault();if(!client||!currentUser)return setMessage($("upload-message"),"Sign in to edit records.",true);
-    const category=$("record-category").value,location=$("record-location").value.trim(),isPoland=/(?:poland|polska|rzeczpospolita)/i.test(location),isPolishBirth=category==="births"&&isPoland,isPolishMarriage=category==="marriages"&&isPoland,bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim(),title=category==="marriages"?(groom+" + "+bride):$("record-title").value.trim(),familyFields={"mother":"Mother","father":"Father","maternal-grandfather":"Mother’s father","maternal-grandmother":"Mother’s mother","paternal-grandfather":"Father’s father","paternal-grandmother":"Father’s mother","bride-father":"Bride’s father","bride-mother":"Bride’s mother","groom-father":"Groom’s father","groom-mother":"Groom’s mother"},birthKeys=["mother","father","maternal-grandfather","maternal-grandmother","paternal-grandfather","paternal-grandmother"],marriageKeys=["bride-father","bride-mother","groom-father","groom-mother"],familyKeys=isPolishBirth?birthKeys:isPolishMarriage?marriageKeys:[],familyNames=familyKeys.map(id=>$("record-"+id).value.trim()),personsSource=(isPolishBirth||isPolishMarriage)?familyNames:$("record-persons").value.split(/[\n,;]+/).map(name=>name.trim()),personsMentioned=[...new Set([bride,groom,...personsSource].filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"",category==="marriages"?"Bride: "+bride:"",category==="marriages"?"Groom: "+groom:"",...familyKeys.map(id=>{const value=$("record-"+id).value.trim();return value?"Family - "+familyFields[id]+": "+value:"";}),"Research confidence: "+($("record-confidence")?.value||"unassessed"),notes,...(editingRecordId&&records.find(r=>r.id===editingRecordId)?["Page name identifications","Face identifications"].map(label=>{const rawDescription=String(records.find(r=>r.id===editingRecordId).description||"");const match=rawDescription.match(new RegExp("^"+label+":\\s*([^\\r\\n]+)$","im"));return match?label+": "+match[1]:"";}):[])].filter(Boolean).join(String.fromCharCode(10,10)),file=$("record-file").files[0];
+    const category=$("record-category").value,location=$("record-location").value.trim(),isPoland=/(?:poland|polska|rzeczpospolita)/i.test(location),isPolishBirth=category==="births"&&isPoland,isPolishMarriage=category==="marriages"&&isPoland,bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim(),title=category==="marriages"?(groom+" + "+bride):$("record-title").value.trim(),familyFields={"mother":"Mother","father":"Father","maternal-grandfather":"Mother’s father","maternal-grandmother":"Mother’s mother","paternal-grandfather":"Father’s father","paternal-grandmother":"Father’s mother","bride-father":"Bride’s father","bride-mother":"Bride’s mother","groom-father":"Groom’s father","groom-mother":"Groom’s mother"},birthKeys=["mother","father","maternal-grandfather","maternal-grandmother","paternal-grandfather","paternal-grandmother"],marriageKeys=["bride-father","bride-mother","groom-father","groom-mother"],familyKeys=isPolishBirth?birthKeys:isPolishMarriage?marriageKeys:[],familyNames=familyKeys.map(id=>$("record-"+id).value.trim()),personsSource=(isPolishBirth||isPolishMarriage)?familyNames:$("record-persons").value.split(/[\n,;]+/).map(name=>name.trim()),personsMentioned=[...new Set([bride,groom,...personsSource].filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"",isPoland&&$("record-parish")?.value.trim()?"Parish: "+$("record-parish").value.trim():"",category==="marriages"?"Bride: "+bride:"",category==="marriages"?"Groom: "+groom:"",...familyKeys.map(id=>{const value=$("record-"+id).value.trim();return value?"Family - "+familyFields[id]+": "+value:"";}),"Research confidence: "+($("record-confidence")?.value||"unassessed"),notes,...(editingRecordId&&records.find(r=>r.id===editingRecordId)?["Page name identifications","Face identifications"].map(label=>{const rawDescription=String(records.find(r=>r.id===editingRecordId).description||"");const match=rawDescription.match(new RegExp("^"+label+":\\s*([^\\r\\n]+)$","im"));return match?label+": "+match[1]:"";}):[])].filter(Boolean).join(String.fromCharCode(10,10)),file=$("record-file").files[0];
     if(!title)return setMessage($("upload-message"),"Enter a record title.",true);
     if(category==="marriages"&&(!bride||!groom))return setMessage($("upload-message"),"Enter both the bride and groom for this marriage record.",true);
     if(file&&file.size>20*1024*1024)return setMessage($("upload-message"),"Files must be 20 MB or smaller.",true);
