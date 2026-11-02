@@ -7248,3 +7248,90 @@ body.dark-mode .location-page-header::before{
     right:12px!important;
   }
 }
+
+
+/* 2026-11-02: keep navigation transitions inside the page content.
+   The shared header/footer remain stationary; no full-screen color veil is used. */
+main.page-enter{
+  opacity:0!important;
+  transform:translateY(9px)!important;
+  filter:blur(2px)!important;
+}
+main.page-enter.page-enter-active{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  transition:opacity .34s ease,transform .42s ease,filter .34s ease!important;
+}
+main.page-leaving.page-leave{
+  opacity:0!important;
+  transform:translateY(-5px)!important;
+  filter:blur(2px)!important;
+  transition:opacity .28s ease,transform .28s ease,filter .28s ease!important;
+}
+body.page-leaving,body.page-enter,body.page-enter-active,body.page-leave{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+}
+body.page-leaving .site-header,
+body.page-leaving .site-footer{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+}
+body.page-leaving #tylka-page-veil,
+#tylka-page-veil{
+  display:none!important;
+}
+
+/* Masthead layout is scoped to the two pages that actually own these headers. */
+.home-search-page #home-search-workspace > .home-search-header,
+.chronosearch-page .chrono-main > .chrono-search-layout{
+  position:relative!important;
+  left:50%!important;
+  right:auto!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  transform:translateX(-50%)!important;
+  box-sizing:border-box!important;
+  min-width:0!important;
+}
+.home-search-page #home-search-workspace > .home-search-header{
+  grid-column:1 / -1!important;
+  justify-self:stretch!important;
+}
+.home-search-page #home-search-workspace > .home-search-header::before,
+.home-search-page #home-search-workspace > .home-search-header::after,
+.chronosearch-page .chrono-main > .chrono-search-layout::before,
+.chronosearch-page .chrono-main > .chrono-search-layout::after{
+  left:0!important;
+  right:0!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+}
+.home-search-page #home-search-workspace > .home-search-header::after,
+.chronosearch-page .chrono-main > .chrono-search-layout::after{
+  left:22px!important;
+  right:22px!important;
+}
+@media(max-width:800px){
+  .home-search-page #home-search-workspace > .home-search-header,
+  .chronosearch-page .chrono-main > .chrono-search-layout{
+    left:50%!important;
+    width:100vw!important;
+    max-width:100vw!important;
+    margin:0!important;
+    transform:translateX(-50%)!important;
+    padding-left:1rem!important;
+    padding-right:1rem!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .home-search-page #home-search-workspace > .home-search-header::after,
+  .chronosearch-page .chrono-main > .chrono-search-layout::after{
+    left:12px!important;
+    right:12px!important;
+  }
+}
