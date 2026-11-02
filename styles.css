@@ -4899,3 +4899,6 @@ html { scroll-behavior: auto; }
  .home-search-page #home-search-workspace.home-search-layout{grid-template-columns:minmax(0,1fr)!important;gap:1rem!important}
  .home-search-page .home-search-intro,.home-search-page #home-search-workspace>.home-search-box,.home-search-page #home-search-workspace>#home-results{grid-column:1!important;grid-row:auto!important}
 }
+
+/* Slightly wider search panel, tucked closer to its heading. */
+@media(min-width:761px){.home-search-page #home-search-workspace.home-search-layout{grid-template-columns:minmax(0,.92fr) minmax(380px,1.18fr)!important;column-gap:clamp(1rem,2.2vw,2rem)!important}.home-search-page #home-search-workspace>.home-search-box{width:100%;padding:clamp(1.35rem,3vw,2.15rem)}}
