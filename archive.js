@@ -59,7 +59,7 @@
     return values;
   }
   function readTranscriptionNotes(record){
-    return String(record?.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Page name identifications):/i.test(line)).join("\\n").trim();
+    return String(record?.description||"").split(/\r?\n/).filter(line=>! /^\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Page name identifications):/i.test(line)).join("\n").trim();
   }
   let activePageNameHighlight=null;
   function highlightPageName(index){
