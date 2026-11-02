@@ -22,7 +22,7 @@
   function escapeText(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function initMap(){
     if(map || !window.L) return;
-    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([48,8],3);
+    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([20,0],2);
     L.tileLayer(document.documentElement.dataset.theme==="dark"||document.body.dataset.theme==="dark"?"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
     let appliedTheme=document.documentElement.dataset.theme||"light";
@@ -70,6 +70,8 @@
     const person=personIndex.get(key); markerLayer.clearLayers();
     if(!person){if(personStatus)personStatus.textContent="Choose a person to highlight every location linked to their name in the records.";return;}
     const matches=[...person.places.values()];
+    selected=null;renderList();detail.replaceChildren();const prompt=document.createElement("p");prompt.className="empty-state";prompt.textContent="Choose one of the highlighted map pins to view this person’s associated records.";detail.append(prompt);
+    const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;
     if(!matches.length){personStatus.textContent=person.name+" is mentioned in "+person.records.length+" record(s), but none has a saved location.";return;}
     personStatus.textContent="Mapping "+matches.length+" location(s) mentioned for "+person.name+"…";
     const plotted=[];
@@ -129,7 +131,7 @@
     try{return await request;}catch(error){coordinateCache.delete(key);throw error;}
   }
   async function selectPlace(place,preserveMarkers=false){
-    selected=place;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
+    selected=place;const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
       initMap();
       const [lat,lng]=await coordinatesFor(place);
@@ -181,7 +183,7 @@
 
   const yearOf=record=>{const text=[record.title,record.description].join(" ");const m=text.match(/(?:18|19|20)\d{2}/);return m?Number(m[0]):9999;};
   async function buildMigrationRoute(){const output=document.getElementById("route-status");const button=document.getElementById("build-family-route");button.disabled=true;output.textContent="Geocoding places and ordering records…";try{const ordered=[...places].map(p=>({...p,firstYear:Math.min(...p.records.map(yearOf))})).sort((a,b)=>a.firstYear-b.firstYear);const plotted=[];for(const place of ordered){try{plotted.push({place,point:await coordinatesFor(place)});}catch(_){}}if(plotted.length<2)throw new Error("Add at least two specific locations with town and country details to build a route.");const coords=plotted.map(item=>item.point);markerLayer.clearLayers();const line=L.polyline(coords,{color:"#a32632",weight:4,opacity:.82,dashArray:"8 9"}).addTo(map);plotted.forEach((item,index)=>L.circleMarker(item.point,{radius:7,color:"#741923",fillColor:"#c34443",fillOpacity:1}).addTo(markerLayer).bindPopup("<strong>"+(index+1)+". "+escapeText(item.place.name)+"</strong>"));map.fitBounds(line.getBounds().pad(.18),{animate:true});output.textContent="Journey plotted across "+plotted.length+" places, ordered by the earliest year found in their linked records."}catch(error){output.textContent=error.message;}finally{button.disabled=false;}}
-  const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.addEventListener("click",buildMigrationRoute);
+  const routeButton=document.getElementById("build-family-route");if(routeButton){routeButton.disabled=true;routeButton.addEventListener("click",buildMigrationRoute);}
 
   async function loadRegistry(){
     count.textContent="Loading public family locations…";
@@ -201,7 +203,8 @@
     renderPeople();
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
     renderList();initMap();
-    if(places.length){const requested=new URLSearchParams(window.location.search).get("place");const initial=(requested&&places.find(p=>normalize(p.name)===normalize(requested)))||places[0];if(requested)search.value=requested;renderList();selectPlace(initial);}
+    const requested=new URLSearchParams(window.location.search).get("place");
+    if(requested){const initial=places.find(p=>normalize(p.name)===normalize(requested));if(initial){search.value=requested;renderList();selectPlace(initial);}}
   }
   async function start(){
     if(!configured||!window.supabase){count.textContent="Supabase connection is not configured.";list.textContent="The public location registry could not connect.";return;}
