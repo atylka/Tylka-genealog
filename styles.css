@@ -4524,3 +4524,12 @@ body.dark-mode #family-map .registry-pin-popup,
   background:transparent!important;
   color:#382316!important;
 }
+
+
+/* Hide the small gold location marker while keeping its preview popup anchored on the map. */
+#family-map .leaflet-marker-icon.registry-pin-icon{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
