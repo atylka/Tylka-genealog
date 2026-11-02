@@ -6,12 +6,14 @@
   const search = document.getElementById("location-search");
   const detail = document.getElementById("location-detail");
   const count = document.getElementById("location-count");
-  const personSelect = document.getElementById("person-location-select");
+  const personTrigger = document.getElementById("person-location-trigger");
+  const personTriggerLabel = document.getElementById("person-location-trigger-label");
+  const personMenu = document.getElementById("person-location-menu");
   const personStatus = document.getElementById("person-location-status");
   if (!workspace) return;
   let currentUser = null;
 
-  let client = null, map = null, markerLayer = null, places = [], selected = null, personIndex = new Map();
+  let client = null, map = null, markerLayer = null, places = [], selected = null, personIndex = new Map(), portraitIndex = new Map();
   const coordinateCache=new Map();
   let selectionSequence=0;
 
@@ -48,11 +50,21 @@
     return index;
   }
   function renderPeople(){
-    if(!personSelect)return;
-    const current=personSelect.value;
-    personSelect.replaceChildren(new Option("Choose a person…",""));
-    [...personIndex.entries()].sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([key,person])=>personSelect.append(new Option(person.name,key)));
-    if(personIndex.has(current))personSelect.value=current;
+    if(!personMenu)return;
+    personMenu.replaceChildren();
+    const entries=[...personIndex.entries()].sort((a,b)=>a[1].name.localeCompare(b[1].name));
+    if(!entries.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="No people have been added to saved records yet.";personMenu.append(empty);return;}
+    entries.forEach(([key,person])=>{
+      const button=document.createElement("button");button.type="button";button.className="person-picker-option";button.setAttribute("role","option");
+      const portrait=portraitIndex.get(key);
+      if(portrait){const image=document.createElement("img");image.className="person-picker-avatar";image.src=portrait;image.alt="";image.loading="lazy";button.append(image);}
+      else{const placeholder=document.createElement("span");placeholder.className="person-picker-avatar person-picker-avatar-empty";placeholder.setAttribute("aria-hidden","true");button.append(placeholder);}
+      const name=document.createElement("span");name.className="person-picker-name";name.textContent=person.name;
+      const meta=document.createElement("small");meta.textContent=person.places.size+" location"+(person.places.size===1?"":"s");
+      const textWrap=document.createElement("span");textWrap.className="person-picker-copy";textWrap.append(name,meta);button.append(textWrap);
+      button.addEventListener("click",()=>{personTriggerLabel.textContent=person.name;personTrigger.setAttribute("aria-expanded","false");personMenu.hidden=true;selectPerson(key);});
+      personMenu.append(button);
+    });
   }
   async function selectPerson(key){
     const person=personIndex.get(key); markerLayer.clearLayers();
@@ -177,6 +189,15 @@
     if(error){count.textContent="Could not load records: "+error.message;list.textContent="Check that the location registry database update has been run.";return;}
     places=buildPlaces(data||[]);
     personIndex=buildPersonIndex(data||[]);
+    const {data:portraitRows,error:portraitError}=await client.from("ancestor_portraits").select("name,portrait_url,portraits");
+    portraitIndex=new Map();
+    if(!portraitError)(portraitRows||[]).forEach(row=>{
+      const key=normalize(row.name);
+      const faces=Array.isArray(row.portraits)?row.portraits:[];
+      const firstFace=faces.find(face=>face&&(face.url||face.portrait_url));
+      const url=row.portrait_url||(firstFace&&(firstFace.url||firstFace.portrait_url));
+      if(key&&url)portraitIndex.set(key,url);
+    });
     renderPeople();
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
     renderList();initMap();
@@ -191,6 +212,13 @@
     // Avoid a duplicate location query when site-ui broadcasts the same event.
   }
   search.addEventListener("input",renderList);
-  if(personSelect)personSelect.addEventListener("change",()=>selectPerson(personSelect.value));
+  if(personTrigger)personTrigger.addEventListener("click",()=>{
+    const opening=personMenu.hidden;personMenu.hidden=!opening;personTrigger.setAttribute("aria-expanded",String(opening));
+  });
+  document.addEventListener("click",event=>{
+    if(personMenu&&!personMenu.hidden&&!personMenu.contains(event.target)&&!personTrigger.contains(event.target)){
+      personMenu.hidden=true;personTrigger.setAttribute("aria-expanded","false");
+    }
+  });
   start();
 })();
