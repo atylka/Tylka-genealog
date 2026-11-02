@@ -22,11 +22,10 @@
   function escapeText(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function initMap(){
     if(map || !window.L) return;
-    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:false,zoomAnimation:false,markerZoomAnimation:false,zoomSnap:1}).setView([20,0],2);
+    map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:true,zoomAnimation:true,markerZoomAnimation:true,zoomSnap:1}).setView([20,0],2);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
-    let appliedTheme=document.documentElement.dataset.theme||"light";
-    new MutationObserver(()=>{const theme=document.documentElement.dataset.theme||"light";if(theme===appliedTheme)return;appliedTheme=theme;const dark=theme==="dark";map.eachLayer(layer=>{if(layer instanceof L.TileLayer)map.removeLayer(layer);});L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+    // Keep the standard OpenStreetMap tile colors in both site themes; theme changes do not rebuild the layer.
   }
 
   function splitPeople(value){
@@ -85,7 +84,7 @@
       pin.on("click",()=>selectPlace(place,true)); bounds.push(point);
     });
     map.stop();map.invalidateSize();
-    if(bounds.length===1)map.setView(bounds[0],12,{animate:false});else map.fitBounds(L.latLngBounds(bounds).pad(.2),{animate:false});
+    if(bounds.length===1)map.flyTo(bounds[0],12,{animate:true,duration:1.15,easeLinearity:.22});else map.flyToBounds(L.latLngBounds(bounds).pad(.2),{animate:true,duration:1.25,easeLinearity:.22});
     personStatus.textContent=person.name+" appears in "+person.records.length+" record(s) across "+plotted.length+" mapped location(s). Select a pin to review its records.";
   }
 
@@ -166,7 +165,7 @@
         .openPopup();
       map.stop();
       map.invalidateSize();
-      map.setView([lat,lng],13,{animate:false});
+      map.flyTo([lat,lng],13,{animate:true,duration:1.1,easeLinearity:.22});
       marker.setZIndexOffset(2000);
       const heading=document.createElement("h3");heading.textContent=place.name;
       const context=document.createElement("p");context.textContent=place.context || "Location recorded in the family archive.";
@@ -197,7 +196,7 @@
   }
 
   const yearOf=record=>{const text=[record.title,record.description].join(" ");const m=text.match(/(?:18|19|20)\d{2}/);return m?Number(m[0]):9999;};
-  async function buildMigrationRoute(){const output=document.getElementById("route-status");const button=document.getElementById("build-family-route");button.disabled=true;output.textContent="Geocoding places and ordering records…";try{initMap();if(!places.length)throw new Error("No saved locations yet. Add a location to at least two family records first.");const ordered=[...places].map(p=>({...p,firstYear:Math.min(...p.records.map(yearOf))})).sort((a,b)=>a.firstYear-b.firstYear);const plotted=[];for(const place of ordered){try{plotted.push({place,point:await coordinatesFor(place)});}catch(_){}}if(plotted.length<2)throw new Error("Add at least two specific locations with town and country details to build a route.");const coords=plotted.map(item=>item.point);markerLayer.clearLayers();const line=L.polyline(coords,{color:"#a32632",weight:4,opacity:.82,dashArray:"8 9"}).addTo(map);plotted.forEach((item,index)=>L.circleMarker(item.point,{radius:7,color:"#741923",fillColor:"#c34443",fillOpacity:1}).addTo(markerLayer).bindPopup("<strong>"+(index+1)+". "+escapeText(item.place.name)+"</strong>"));map.invalidateSize();map.fitBounds(line.getBounds().pad(.18),{animate:false});output.textContent="Journey plotted across "+plotted.length+" places, ordered by the earliest year found in their linked records."}catch(error){output.textContent=error.message;}finally{button.disabled=false;}}
+  async function buildMigrationRoute(){const output=document.getElementById("route-status");const button=document.getElementById("build-family-route");button.disabled=true;output.textContent="Geocoding places and ordering records…";try{initMap();if(!places.length)throw new Error("No saved locations yet. Add a location to at least two family records first.");const ordered=[...places].map(p=>({...p,firstYear:Math.min(...p.records.map(yearOf))})).sort((a,b)=>a.firstYear-b.firstYear);const plotted=[];for(const place of ordered){try{plotted.push({place,point:await coordinatesFor(place)});}catch(_){}}if(plotted.length<2)throw new Error("Add at least two specific locations with town and country details to build a route.");const coords=plotted.map(item=>item.point);markerLayer.clearLayers();const line=L.polyline(coords,{color:"#a32632",weight:4,opacity:.82,dashArray:"8 9"}).addTo(map);plotted.forEach((item,index)=>L.circleMarker(item.point,{radius:7,color:"#741923",fillColor:"#c34443",fillOpacity:1}).addTo(markerLayer).bindPopup("<strong>"+(index+1)+". "+escapeText(item.place.name)+"</strong>"));map.invalidateSize();map.flyToBounds(line.getBounds().pad(.18),{animate:true,duration:1.3,easeLinearity:.22});output.textContent="Journey plotted across "+plotted.length+" places, ordered by the earliest year found in their linked records."}catch(error){output.textContent=error.message;}finally{button.disabled=false;}}
   const routeButton=document.getElementById("build-family-route");if(routeButton){routeButton.disabled=false;routeButton.addEventListener("click",buildMigrationRoute);}
 
   async function loadRegistry(){
