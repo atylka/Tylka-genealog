@@ -58,47 +58,60 @@
     });
     return values;
   }
-  let activePageNameHighlight="";
-  function highlightPageName(name){
-    activePageNameHighlight=name||"";
+  function readTranscriptionNotes(record){
+    return String(record?.description||"").split(/\\r?\\n/).filter(line=>!/^\\s*(?:Date on record|Research confidence|Bride|Groom|Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother)|Page name identifications):/i.test(line)).join("\\n").trim();
+  }
+  let activePageNameHighlight=null;
+  function highlightPageName(index){
+    activePageNameHighlight=Number.isInteger(index)?index:null;
     drawPageNameOverlay(window.tylkaActiveDetailRecord);
   }
   function renderPageNameList(record){
-    const section=$("detail-family-information"),list=$("page-name-list"),familyList=$("detail-family-list");
+    const section=$("detail-family-information"),list=$("page-name-list"),familyList=$("detail-family-list"),otherNames=$("other-page-names");
     if(!section||!list||!familyList)return;
     familyList.replaceChildren();list.replaceChildren();
-    const family=readFamilyRelationships(record);
-    const pageNames=readPageNames(record);
-    family.forEach(([role,name])=>{
-      const card=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong");
-      card.className="identified-family-card";label.textContent=role;value.textContent=name;card.append(label,value);
-      card.tabIndex=0;card.setAttribute("role","group");card.setAttribute("aria-label",role+": "+name);
-      card.addEventListener("mouseenter",()=>highlightPageName(name));
-      card.addEventListener("mouseleave",()=>highlightPageName(""));
-      card.addEventListener("focus",()=>highlightPageName(name));
-      card.addEventListener("blur",()=>highlightPageName(""));
-      if(currentUser){const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));card.append(edit);}
-      familyList.append(card);
+    const family=readFamilyRelationships(record),pageNames=readPageNames(record);
+    const groups=[{title:"Parents",roles:["Mother","Father"]},{title:"Grandparents",roles:["Mother’s father","Mother’s mother","Father’s father","Father’s mother"]}];
+    groups.forEach(group=>{
+      const entries=family.filter(([role])=>group.roles.includes(role));
+      if(!entries.length)return;
+      const wrapper=document.createElement("section"),heading=document.createElement("h4"),grid=document.createElement("div");
+      wrapper.className="identified-family-group";heading.textContent=group.title;grid.className="identified-family-grid";wrapper.append(heading,grid);
+      entries.forEach(([role,name])=>{
+        const card=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong"),actions=document.createElement("div");
+        const matchIndex=pageNames.findIndex(entry=>entry.name.trim().toLocaleLowerCase()===name.trim().toLocaleLowerCase());
+        card.className="identified-family-card";label.textContent=role;value.textContent=name;actions.className="identified-name-actions";
+        card.append(label,value);
+        card.tabIndex=0;card.setAttribute("role","group");card.setAttribute("aria-label",role+": "+name);
+        card.addEventListener("mouseenter",()=>highlightPageName(matchIndex));
+        card.addEventListener("mouseleave",()=>highlightPageName(null));
+        card.addEventListener("focus",()=>highlightPageName(matchIndex));
+        card.addEventListener("blur",()=>highlightPageName(null));
+        if(currentUser){
+          const box=document.createElement("button");box.type="button";box.className="small-button";box.textContent=matchIndex>=0?"Rebox":"Box name";
+          box.addEventListener("click",()=>matchIndex>=0?editPageName(matchIndex):openPageNameTool(name));
+          actions.append(box);
+          if(matchIndex>=0){const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Remove box";remove.addEventListener("click",()=>removePageName(matchIndex));actions.append(remove);}
+        }
+        card.append(actions);grid.append(card);
+      });
+      familyList.append(wrapper);
     });
-    const seen=new Set(family.map(([,value])=>value.toLocaleLowerCase()));
-    String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>{
-      const key=name.toLocaleLowerCase();if(seen.has(key))return;seen.add(key);
-      const li=document.createElement("li"),label=document.createElement("span");label.textContent=name+" · Mentioned in record";
-      li.append(label);li.addEventListener("mouseenter",()=>highlightPageName(name));li.addEventListener("mouseleave",()=>highlightPageName(""));
-      list.append(li);
-    });
-    pageNames.forEach((entry,index)=>{
+    const familyKeys=new Set(family.map(([,name])=>name.trim().toLocaleLowerCase()));
+    const other=pageNames.map((entry,index)=>({entry,index})).filter(({entry})=>!familyKeys.has(entry.name.trim().toLocaleLowerCase()));
+    other.forEach(({entry,index})=>{
       const li=document.createElement("li"),label=document.createElement("span"),actions=document.createElement("div");
-      li.className="identified-name-row";label.textContent=entry.name+" · Identified on page";actions.className="identified-name-actions";
-      li.addEventListener("mouseenter",()=>highlightPageName(entry.name));li.addEventListener("mouseleave",()=>highlightPageName(""));
+      li.className="identified-name-row";label.textContent=entry.name;actions.className="identified-name-actions";
+      li.addEventListener("mouseenter",()=>highlightPageName(index));li.addEventListener("mouseleave",()=>highlightPageName(null));
       if(currentUser){
-        const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>editPageName(index));
-        const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Delete";remove.addEventListener("click",()=>removePageName(index));
+        const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Rebox";edit.addEventListener("click",()=>editPageName(index));
+        const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Remove box";remove.addEventListener("click",()=>removePageName(index));
         actions.append(edit,remove);
       }
       li.append(label,actions);list.append(li);
     });
-    section.hidden=!family.length&&!list.children.length;
+    if(otherNames)otherNames.hidden=!other.length;
+    section.hidden=!family.length&&!pageNames.length;
     drawPageNameOverlay(record);
   }
   async function openRecordDetail(record){
@@ -109,7 +122,7 @@
     if(record.record_date)meta.push("Record date: "+record.record_date);
     if(record.location)meta.push(record.location);
     $("detail-meta").textContent=meta.join(" · ");
-    $("detail-description").textContent=(record.description||"No transcription or notes have been added.").replace(/^(?:Date on record|Research confidence|Bride|Groom|Family - Mother|Family - Father|Family - Mother’s father|Family - Mother’s mother|Family - Father’s father|Family - Father’s mother|Page name identifications):\\s*[^\\r\\n]+\\s*/gim,"").trim()||"No transcription or notes have been added.";
+    const transcriptionNotes=readTranscriptionNotes(record);$("detail-description").textContent=transcriptionNotes;$("detail-transcription-panel").hidden=!transcriptionNotes;
     renderPageNameList(record);
     const confidence=readConfidence(record.description);
     $("detail-confidence").textContent="Research confidence: "+confidenceLabel(confidence);
@@ -249,11 +262,11 @@
   const pageCanvas=$("page-name-canvas"),pageCtx=pageCanvas?.getContext("2d");
   let pageSourceImage=null,pageSelection=null,pageDragStart=null,pageNameEditingIndex=null;
   function readPageNames(record){const m=String(record?.description||"").match(/^Page name identifications:\s*(\[.*\])\s*$/im);if(!m)return[];try{const a=JSON.parse(m[1]);return Array.isArray(a)?a.filter(x=>x&&typeof x.name==="string"&&x.rect):[];}catch(_){return[];}}
-  function drawPageNameOverlay(record){const overlay=$("page-name-overlay"),image=$("detail-image");if(!overlay||!image)return;const width=image.naturalWidth||0,height=image.naturalHeight||0;if(!width||!height){overlay.width=overlay.height=0;return;}overlay.width=width;overlay.height=height;const ctx=overlay.getContext("2d");ctx.clearRect(0,0,width,height);const entries=readPageNames(record);const scale=Math.max(1,width/1100);entries.forEach(entry=>{const r=entry.rect,x=r.x*width,y=r.y*height,w=r.w*width,h=r.h*height,active=activePageNameHighlight&&entry.name.toLocaleLowerCase()===activePageNameHighlight.toLocaleLowerCase();ctx.save();ctx.fillStyle=active?"rgba(255,220,70,.58)":"rgba(255,220,70,.16)";ctx.strokeStyle=active?"rgba(255,174,0,1)":"rgba(255,196,35,.62)";ctx.lineWidth=active?Math.max(4,5*scale):Math.max(1.5,2*scale);ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.font="600 "+Math.max(15,18*scale)+"px Arial,sans-serif";const label=entry.name,pad=7*scale,tagH=Math.max(25,28*scale),tagW=Math.min(width-x,ctx.measureText(label).width+pad*2);const tagY=Math.max(0,y-tagH);ctx.fillStyle=active?"rgba(255,196,45,1)":"rgba(255,218,91,.78)";ctx.strokeStyle="rgba(125,83,15,.95)";ctx.lineWidth=Math.max(1,1.5*scale);ctx.fillRect(x,tagY,tagW,tagH);ctx.strokeRect(x,tagY,tagW,tagH);ctx.fillStyle="#38260b";ctx.textBaseline="middle";ctx.fillText(label,x+pad,tagY+tagH/2,Math.max(10,tagW-pad*2));ctx.restore();});applyViewerTransform();}
+  function drawPageNameOverlay(record){const overlay=$("page-name-overlay"),image=$("detail-image");if(!overlay||!image)return;const width=image.naturalWidth||0,height=image.naturalHeight||0;if(!width||!height){overlay.width=overlay.height=0;return;}overlay.width=width;overlay.height=height;const ctx=overlay.getContext("2d");ctx.clearRect(0,0,width,height);const entries=readPageNames(record);const scale=Math.max(1,width/1100);entries.forEach((entry,index)=>{const r=entry.rect,x=r.x*width,y=r.y*height,w=r.w*width,h=r.h*height,active=activePageNameHighlight===index;ctx.save();ctx.fillStyle=active?"rgba(255,220,70,.58)":"rgba(255,220,70,.16)";ctx.strokeStyle=active?"rgba(255,174,0,1)":"rgba(255,196,35,.62)";ctx.lineWidth=active?Math.max(4,5*scale):Math.max(1.5,2*scale);ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.font="600 "+Math.max(15,18*scale)+"px Arial,sans-serif";const label=entry.name,pad=7*scale,tagH=Math.max(25,28*scale),tagW=Math.min(width-x,ctx.measureText(label).width+pad*2);const tagY=Math.max(0,y-tagH);ctx.fillStyle=active?"rgba(255,196,45,1)":"rgba(255,218,91,.78)";ctx.strokeStyle="rgba(125,83,15,.95)";ctx.lineWidth=Math.max(1,1.5*scale);ctx.fillRect(x,tagY,tagW,tagH);ctx.strokeRect(x,tagY,tagW,tagH);ctx.fillStyle="#38260b";ctx.textBaseline="middle";ctx.fillText(label,x+pad,tagY+tagH/2,Math.max(10,tagW-pad*2));ctx.restore();});applyViewerTransform();}
   function drawPageCanvas(){if(!pageCtx||!pageSourceImage)return;pageCtx.clearRect(0,0,pageCanvas.width,pageCanvas.height);pageCtx.drawImage(pageSourceImage,0,0,pageCanvas.width,pageCanvas.height);if(pageSelection){pageCtx.save();pageCtx.fillStyle="rgba(93,53,31,.22)";pageCtx.fillRect(0,0,pageCanvas.width,pageCanvas.height);pageCtx.clearRect(pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.drawImage(pageSourceImage,pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h,pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.strokeStyle="#f2c66c";pageCtx.lineWidth=Math.max(3,pageCanvas.width/500);pageCtx.strokeRect(pageSelection.x,pageSelection.y,pageSelection.w,pageSelection.h);pageCtx.restore();}}
   function pageCanvasPoint(e){const r=pageCanvas.getBoundingClientRect();return{x:Math.max(0,Math.min(pageCanvas.width,(e.clientX-r.left)*pageCanvas.width/r.width)),y:Math.max(0,Math.min(pageCanvas.height,(e.clientY-r.top)*pageCanvas.height/r.height))};}
-  function openPageNameTool(){const image=$("detail-image"),record=window.tylkaActiveDetailRecord;if(!currentUser)return setMessage($("page-name-status"),"Sign in as the archive owner to identify names.",true);if(!record||!isImage(record)||!record.file_path)return setMessage($("page-name-status"),"Open a record with an attached page-scan image first.",true);if(!image?.complete||!image.naturalWidth)return setMessage($("page-name-status"),"The scan is still loading. Try again in a moment.",true);pageSourceImage=image;pageCanvas.width=image.naturalWidth;pageCanvas.height=image.naturalHeight;pageSelection=null;pageNameEditingIndex=null;drawPageCanvas();$("page-person-name").value="";$("save-page-name").textContent="Save identified name";setMessage($("page-name-status"),"");showModal("page-name-modal");}
-  $("mark-page-name")?.addEventListener("click",openPageNameTool);
+  function openPageNameTool(prefillName=""){const image=$("detail-image"),record=window.tylkaActiveDetailRecord;if(!currentUser)return setMessage($("page-name-status"),"Sign in as the archive owner to identify names.",true);if(!record||!isImage(record)||!record.file_path)return setMessage($("page-name-status"),"Open a record with an attached page-scan image first.",true);if(!image?.complete||!image.naturalWidth)return setMessage($("page-name-status"),"The scan is still loading. Try again in a moment.",true);pageSourceImage=image;pageCanvas.width=image.naturalWidth;pageCanvas.height=image.naturalHeight;pageSelection=null;pageNameEditingIndex=null;drawPageCanvas();$("page-person-name").value=typeof prefillName==="string"?prefillName:"";$("save-page-name").textContent="Save identified name";setMessage($("page-name-status"),"");showModal("page-name-modal");}
+  $("mark-page-name")?.addEventListener("click",()=>openPageNameTool());
   pageCanvas?.addEventListener("pointerdown",e=>{if(!pageSourceImage)return;e.preventDefault();try{pageCanvas.setPointerCapture(e.pointerId);}catch(_){}pageDragStart=pageCanvasPoint(e);pageSelection={x:pageDragStart.x,y:pageDragStart.y,w:1,h:1};drawPageCanvas();});
   pageCanvas?.addEventListener("pointermove",e=>{if(!pageDragStart)return;e.preventDefault();const p=pageCanvasPoint(e);pageSelection={x:Math.min(p.x,pageDragStart.x),y:Math.min(p.y,pageDragStart.y),w:Math.abs(p.x-pageDragStart.x),h:Math.abs(p.y-pageDragStart.y)};drawPageCanvas();});
   const finishPageDrag=e=>{if(e)e.preventDefault();pageDragStart=null;};pageCanvas?.addEventListener("pointerup",finishPageDrag);pageCanvas?.addEventListener("pointercancel",finishPageDrag);pageCanvas?.addEventListener("lostpointercapture",finishPageDrag);
