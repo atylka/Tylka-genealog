@@ -5174,3 +5174,46 @@ html[data-theme="dark"] #ancestor-grid .ancestor-card-open .ancestor-life-dates,
 body[data-theme="dark"] #ancestor-grid .ancestor-card-open .ancestor-life-dates,
 html.theme-dark #ancestor-grid .ancestor-card-open .ancestor-life-dates,
 body.dark-mode #ancestor-grid .ancestor-card-open .ancestor-life-dates{color:#e1c18b!important}
+
+
+/* Homepage search: tighten the title-to-panel spacing and separate results with a strong archival red rule. */
+.home-search-page #home-search-workspace.home-search-layout{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:.35rem!important;max-width:1120px;margin:0 auto;
+}
+.home-search-page .home-search-intro{grid-column:1!important;margin:0!important;padding:0!important}
+.home-search-page .home-search-intro .eyebrow{margin-bottom:.45rem!important}
+.home-search-page .home-search-intro h1{margin:0 0 .25rem!important;line-height:1.02}
+.home-search-page .home-search-intro .section-intro{margin:.35rem 0 .25rem!important;max-width:760px}
+.home-search-page #home-search-workspace>.home-search-box{
+  grid-column:1!important;margin:.25rem 0 .35rem!important;width:100%;
+  padding:clamp(1rem,2.2vw,1.5rem)!important;
+}
+.home-search-page .home-search-divider{
+  grid-column:1!important;display:block!important;position:relative;
+  width:min(100%,980px);height:15px;margin:1.15rem auto 1.55rem!important;
+  border:0!important;background:transparent!important;
+}
+.home-search-page .home-search-divider::before{
+  content:"";position:absolute;left:0;right:0;top:7px;height:2px;
+  background:linear-gradient(90deg,transparent 0%,#6f1721 9%,#8f202b 50%,#6f1721 91%,transparent 100%);
+  box-shadow:0 1px 0 rgba(48,13,16,.28),0 0 9px rgba(117,24,34,.2);
+}
+.home-search-page .home-search-divider::after{
+  content:"";position:absolute;left:50%;top:1px;transform:translateX(-50%) rotate(45deg);
+  width:13px;height:13px;background:#7d1b27;border:2px solid #c7a878;
+  box-shadow:0 0 0 3px var(--paper);
+}
+.home-search-page #home-search-workspace>#home-results{grid-column:1!important;margin-top:.15rem!important}
+@media(max-width:700px){
+ .home-search-page #home-search-workspace.home-search-layout{gap:.25rem!important}
+ .home-search-page .home-search-intro h1{font-size:clamp(2.5rem,12vw,3.8rem)}
+ .home-search-page #home-search-workspace>.home-search-box{margin-top:.2rem!important}
+ .home-search-page .home-search-divider{margin:.8rem auto 1.1rem!important}
+}
+
+/* Keep every saved ancestor visible, including people whose portrait is not attached yet. */
+#ancestor-grid .ancestor-card-open{width:100%;height:100%;display:flex;flex-direction:column;align-items:stretch;text-align:left;overflow:hidden}
+#ancestor-grid .ancestor-portrait-placeholder{height:148px;display:grid;place-items:center;background:linear-gradient(135deg,#b7a17d,#d8c6a4);color:#493321;border-bottom:1px solid var(--line);font:italic 1rem var(--serif)}
+#ancestor-grid .ancestor-card-open:disabled{cursor:default;opacity:1}
+#ancestor-grid .ancestor-life-dates{display:block;margin:.3rem 0 0;color:#60452e;font-size:.78rem;line-height:1.4}
