@@ -109,27 +109,6 @@
     }
   }, true);
 
-  // A non-horizontal presentation for the timeline, with the same records and filters.
-  const timeline = document.getElementById("chrono-timeline");
-  if (timeline && !document.getElementById("chrono-view-toggle")) {
-    const toggle = document.createElement("button");
-    toggle.id = "chrono-view-toggle";
-    toggle.type = "button";
-    toggle.className = "small-button chrono-view-toggle";
-    toggle.textContent = "Use vertical list view";
-    toggle.setAttribute("aria-pressed", "false");
-    const hint = document.querySelector(".chrono-scroll-hint");
-    if (hint) hint.insertAdjacentElement("afterend", toggle); else timeline.insertAdjacentElement("beforebegin", toggle);
-    toggle.addEventListener("click", () => {
-      const listMode = !document.querySelector(".chrono-main").classList.contains("chrono-list-mode");
-      document.querySelector(".chrono-main").classList.toggle("chrono-list-mode", listMode);
-      toggle.setAttribute("aria-pressed", String(listMode));
-      toggle.textContent = listMode ? "Use horizontal timeline view" : "Use vertical list view";
-      const status = document.getElementById("chrono-count");
-      if (status) status.textContent = status.textContent + (listMode ? " · Vertical list view" : " · Horizontal timeline view");
-    });
-  }
-
   // A map is a visual aid, not the only way to reach place records.
   const map = document.getElementById("family-map");
   if (map) {
