@@ -22,9 +22,28 @@
   function renderRecords() {
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
-    const personFilter=$("person-filter")?.value||"";const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned].join(" ").toLowerCase().includes(term)&&(!personFilter||String(r.persons_mentioned||"").split(/[\\n,;]+/).some(n=>n.trim().toLocaleLowerCase()===personFilter)));
+    const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned].join(" ").toLowerCase().includes(term));
     if(!filtered.length){const p=document.createElement("p");p.className="empty-state";p.textContent=records.length?"No records match this search.":"No records have been added yet.";recordsList.append(p);return;}
     filtered.forEach(record=>{
+      if(activeFolder==="all"){
+        const card=document.createElement("article");card.className="record-card record-card-expanded home-search-record-card";
+        card.tabIndex=0;card.setAttribute("role","link");card.setAttribute("aria-label","Open full record details for "+(record.title||"Untitled record"));
+        const open=()=>openRecordDetail(record);
+        card.addEventListener("click",e=>{if(e.target.closest("a,button"))return;open();});
+        card.addEventListener("keydown",e=>{if(e.target!==card)return;if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
+        const hasScan=!!(record.file_path&&isImage(record));
+        if(hasScan){const thumb=makeThumbnail(record);thumb.classList.add("record-thumbnail");card.classList.add("has-scan");card.append(thumb);}else card.classList.add("no-scan");
+        const details=document.createElement("div");details.className="home-search-record-details";
+        const category=document.createElement("span");category.className="record-category";category.textContent=categoryNames[canonical(record.category)]||record.category; 
+        const title=document.createElement("h3");title.textContent=record.title||"Untitled record";
+        const view=document.createElement("button");view.type="button";view.className="small-button record-view-button";view.textContent="View record details";view.setAttribute("aria-label","View record details: "+(record.title||"Untitled record"));view.addEventListener("click",open);
+        details.append(category,title,view);
+        if(record.location){const place=document.createElement("p");place.className="record-location";place.textContent="Location: "+record.location;details.append(place);}
+        if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
+        card.append(details);
+        if(currentUser){const actions=document.createElement("div");actions.className="record-actions";const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async()=>{if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(edit,del);card.append(actions);}
+        recordsList.append(card);return;
+      }
       const card=document.createElement("article");card.className="record-card record-card-expanded";
       const details=document.createElement("div");
       card.append(makeThumbnail(record));
@@ -155,12 +174,11 @@
 
   $("detail-edit-record")?.addEventListener("click",()=>{const record=window.tylkaActiveDetailRecord;if(record&&currentUser)beginEditRecord(record);});
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
-  function populatePersonFilter(){const select=$("person-filter");if(!select)return;const selected=select.value;const people=new Map();records.forEach(record=>String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>people.set(name.toLocaleLowerCase(),name)));select.replaceChildren(new Option("All people",""));[...people.values()].sort((a,b)=>a.localeCompare(b)).forEach(name=>select.add(new Option(name,name.toLocaleLowerCase())));if([...select.options].some(option=>option.value===selected))select.value=selected;}
   async function loadRecords(){
     recordsList.textContent="Loading records…";
     const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){recordsList.textContent="Could not load records. "+error.message;return;}
-    records=data||[];populatePersonFilter();renderRecords();
+    records=data||[];renderRecords();
   }
   async function start(){
     if(!configured||!window.supabase){recordsList.textContent="Archive connection is not configured.";return;}
@@ -272,7 +290,7 @@
     }
   }
   if(folderContainer)folderContainer.addEventListener("click",e=>{const button=e.target.closest(".archive-folder");if(!button)return;activeFolder=canonical(button.dataset.folder||"all");folderContainer.querySelectorAll(".archive-folder").forEach(item=>{item.classList.toggle("is-active",item===button);item.setAttribute("aria-pressed",String(item===button));});$("folder-heading").textContent=button.textContent.trim();if(recordSearch)recordSearch.value="";renderRecords();});
-  if(recordSearch)recordSearch.addEventListener("input",renderRecords);if($("person-filter"))$("person-filter").addEventListener("change",renderRecords);
+  if(recordSearch)recordSearch.addEventListener("input",renderRecords);
 
   // Manual name markers for scanned record pages; labels and normalized boxes are stored with the record.
   const pageCanvas=$("page-name-canvas"),pageCtx=pageCanvas?.getContext("2d");
