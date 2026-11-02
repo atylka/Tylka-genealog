@@ -6295,3 +6295,52 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>.chrono-even
 }
 .chrono-main #chrono-timeline .chrono-source-preview.is-editing>img{cursor:grab!important;touch-action:none!important}
 .chrono-main #chrono-timeline .chrono-source-preview.is-editing>img:active{cursor:grabbing!important}
+
+
+/* Ancestors introduction: title and description read naturally left-to-right. */
+.ancestor-page>.section-intro{
+ display:grid!important;
+ grid-template-columns:minmax(250px,.82fr) minmax(0,1.18fr)!important;
+ column-gap:clamp(1.5rem,4vw,4.5rem)!important;
+ row-gap:.45rem!important;
+ align-items:center!important;
+ max-width:none!important;
+ width:100%!important;
+}
+.ancestor-page>.section-intro>.eyebrow{
+ grid-column:1/-1!important;
+ margin:0 0 .15rem!important;
+}
+.ancestor-page>.section-intro>h1{
+ grid-column:1!important;
+ grid-row:2!important;
+ align-self:center!important;
+ margin:0!important;
+ max-width:100%!important;
+}
+.ancestor-page>.section-intro>p:not(.eyebrow):not(.connection-status){
+ grid-column:2!important;
+ grid-row:2!important;
+ align-self:center!important;
+ max-width:62ch!important;
+ margin:0!important;
+ font-size:1rem!important;
+ line-height:1.75!important;
+}
+.ancestor-page>.section-intro>.connection-status{
+ grid-column:1/-1!important;
+ margin:.55rem 0 0!important;
+}
+@media(max-width:700px){
+ .ancestor-page>.section-intro{
+  grid-template-columns:minmax(0,1fr)!important;
+  row-gap:.55rem!important;
+ }
+ .ancestor-page>.section-intro>.eyebrow,
+ .ancestor-page>.section-intro>h1,
+ .ancestor-page>.section-intro>p:not(.eyebrow):not(.connection-status),
+ .ancestor-page>.section-intro>.connection-status{
+  grid-column:1!important;grid-row:auto!important;
+ }
+ .ancestor-page>.section-intro>p:not(.eyebrow):not(.connection-status){max-width:68ch!important}
+}
