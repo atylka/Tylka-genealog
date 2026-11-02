@@ -4297,3 +4297,8 @@ html[data-theme="dark"] .ancestor-face-viewer{background:#211713;color:var(--ink
 html[data-theme="dark"] .ancestor-multi-card,body[data-theme="dark"] .ancestor-multi-card,html.theme-dark .ancestor-multi-card,body.dark-mode .ancestor-multi-card{background:linear-gradient(145deg,#35251b,#261914)!important;border-color:#80603a!important}
 html[data-theme="dark"] .ancestor-card-open .small-button,body[data-theme="dark"] .ancestor-card-open .small-button,html.theme-dark .ancestor-card-open .small-button,body.dark-mode .ancestor-card-open .small-button{background:#3b281e;color:#f0dfbf;border-color:#927044}
 @media(max-width:560px){.ancestor-grid{gap:11px!important}.ancestor-multi-card{padding:7px!important}.ancestor-card-open .ancestor-portrait{height:150px}.ancestor-card-open .ancestor-card-body{padding:11px 5px 6px!important}.ancestor-card-open .ancestor-card-body h3{font-size:1.16rem}}
+
+/* Birth and death dates shown on ancestor cards. */
+.ancestor-card-open .ancestor-life-dates{margin:3px 0 2px!important;color:#68452e;font-size:.88rem;line-height:1.5;font-family:Georgia,serif;font-variant-numeric:oldstyle-nums;overflow-wrap:anywhere}
+.ancestor-card-open .ancestor-life-dates[hidden]{display:none!important}
+html[data-theme="dark"] .ancestor-card-open .ancestor-life-dates,body[data-theme="dark"] .ancestor-card-open .ancestor-life-dates,html.theme-dark .ancestor-card-open .ancestor-life-dates,body.dark-mode .ancestor-card-open .ancestor-life-dates{color:#e1c18b}
