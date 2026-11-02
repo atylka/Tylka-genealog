@@ -34,15 +34,19 @@
    const column=node("section","","chrono-year-column");
    const header=node("header","","chrono-year-heading");header.append(node("h2",key),node("span",groups.get(key).length+" record"+(groups.get(key).length===1?"":"s")));column.append(header);
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
-    const card=node("article","","chrono-record-card");card.dataset.recordId=r.id||"";
-    card.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
-    if(r.file_path){const thumb=node("div","","record-thumbnail");if((r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}else thumb.append(node("span",r.mime_type==="application/pdf"?"PDF":"FILE","record-thumbnail-placeholder"));card.append(thumb);}
-    card.append(node("h3",r.title||"Untitled record"));
-    if(r.location)card.append(node("p","⌖ "+r.location,"chrono-record-location"));
-    const dateLabel=formatRecordDate(r);
-    if(dateLabel)card.append(node("p",dateLabel,"chrono-record-date"));
-    if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)card.append(node("p",excerpt.length>220?excerpt.slice(0,217)+"…":excerpt,"chrono-record-notes"));}
-    const thumbnails=card.querySelectorAll(".record-thumbnail");thumbnails.forEach((thumb,index)=>{if(index>0)thumb.remove();});
+    const dateLabel=dateText(r);
+    if(dateLabel)column.append(node("p",dateLabel,"chrono-record-date"));
+    const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
+    const details=node("div","","chrono-record-details");
+    const thumb=node("div","","record-thumbnail");
+    if(r.file_path&&(r.mime_type||"").startsWith("image/")){const img=document.createElement("img");img.src=publicUrl(r.file_path);img.alt="Thumbnail of "+r.title;img.loading="lazy";thumb.append(img);}
+    else thumb.append(node("span",r.file_path?(r.mime_type==="application/pdf"?"PDF":"FILE"):"No scan","record-thumbnail-placeholder"));
+    card.append(thumb);
+    details.append(node("span",names[r.category]||r.category||"Uncategorized","record-category"));
+    details.append(node("h3",r.title||"Untitled record"));
+    if(r.location)details.append(node("p","Location: "+r.location,"chrono-record-location"));
+    if(r.description){const excerpt=r.description.replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").trim();if(excerpt)details.append(node("p",excerpt.length>180?excerpt.slice(0,177)+"…":excerpt,"chrono-record-notes"));}
+    card.append(details);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id);};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});column.append(card);
    });
    timeline.append(column);
