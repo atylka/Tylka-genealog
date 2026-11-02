@@ -4681,3 +4681,12 @@ html[data-theme="dark"] #family-map .leaflet-tile-pane{
 #family-map .leaflet-popup-tip{
   background:#ead8b5!important;color:#342012!important;border-color:#805a35!important;
 }
+
+
+/* Location Registry: retain Leaflet's original, unfiltered OpenStreetMap colors. */
+#family-map .leaflet-tile-pane{
+  filter:none!important;
+}
+html[data-theme="dark"] #family-map .leaflet-tile-pane{
+  filter:none!important;
+}
