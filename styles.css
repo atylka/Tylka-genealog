@@ -7184,3 +7184,67 @@ body.dark-mode .location-page-header::before{
     padding-right:1rem!important;
   }
 }
+
+
+/* 2026-11-02: definitive masthead centering.
+   Center each full-viewport banner on the centered page container. The home
+   masthead is one grid item containing both title and search controls, so it
+   must span the full parent grid rather than occupying only its first column. */
+.home-search-header,
+.chrono-search-layout{
+  position:relative!important;
+  left:50%!important;
+  right:auto!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  transform:translateX(-50%)!important;
+  box-sizing:border-box!important;
+  min-width:0!important;
+}
+.home-search-header{
+  grid-column:1 / -1!important;
+  justify-self:stretch!important;
+}
+.home-search-header::before,
+.home-search-header::after,
+.chrono-search-layout::before,
+.chrono-search-layout::after{
+  left:0!important;
+  right:0!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+}
+.home-search-header::after,
+.chrono-search-layout::after{
+  left:22px!important;
+  right:22px!important;
+}
+.home-search-header .home-search-intro,
+.home-search-header .home-search-box,
+.chrono-search-layout .chrono-search-intro,
+.chrono-search-layout .chrono-filter-panel{
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:800px){
+  .home-search-header,
+  .chrono-search-layout{
+    left:50%!important;
+    width:100vw!important;
+    max-width:100vw!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    transform:translateX(-50%)!important;
+    padding-left:1rem!important;
+    padding-right:1rem!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .home-search-header{grid-column:1 / -1!important}
+  .home-search-header::after,
+  .chrono-search-layout::after{
+    left:12px!important;
+    right:12px!important;
+  }
+}
