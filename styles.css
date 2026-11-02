@@ -4815,3 +4815,6 @@ body:after,
 .identified-name-row>span{overflow-wrap:anywhere}
 @media(max-width:760px){.identified-family-group .identified-family-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:420px){.identified-family-group .identified-family-grid{grid-template-columns:1fr}}
+
+/* Photograph face identifications use the right-hand record panel. */
+.detail-face-identifications{min-width:0}.detail-face-identifications .combined-identified-names{margin-top:.35rem;padding-top:0;border-top:0}.detail-face-identifications .identified-name-row{cursor:pointer;border-radius:4px;padding:.55rem .45rem;transition:background .16s ease}.detail-face-identifications .identified-name-row:hover,.detail-face-identifications .identified-name-row:focus{outline:none;background:rgba(255,213,83,.2)}
