@@ -6498,3 +6498,131 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1{
   width:100%!important;
  }
 }
+
+
+/* Corrected banner treatment: one broad header-like field behind each page's
+   title and search controls, not separate cards around individual elements. */
+.home-search-intro,
+.chrono-search-intro,
+.ancestor-page>.section-intro,
+.home-search-box,
+.chrono-filter-panel,
+.location-tool-box,
+.location-records-panel,
+.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow,
+.archive-page:not(.home-search-page):not(.chrono-main) > h1{
+ border:0!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+}
+.home-search-layout,
+.chrono-search-layout,
+.ancestor-page,
+.location-registry-page,
+.archive-page:not(.home-search-page):not(.chrono-main){
+ position:relative!important;
+ isolation:isolate!important;
+}
+.home-search-layout::before,
+.chrono-search-layout::before,
+.ancestor-page>.section-intro::before,
+.location-registry-page::before,
+.archive-page:not(.home-search-page):not(.chrono-main)::before{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ pointer-events:none;
+ top:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100vw;
+ height:clamp(255px,30vw,390px);
+ background:
+  radial-gradient(ellipse at 18% 8%,rgba(210,171,107,.22),transparent 54%),
+  linear-gradient(105deg,rgba(222,198,153,.88),rgba(239,222,188,.82) 48%,rgba(206,170,119,.74));
+ border-bottom:1px solid rgba(111,67,43,.24);
+ box-shadow:inset 0 1px rgba(255,250,230,.45);
+}
+.home-search-intro,
+.chrono-search-intro,
+.ancestor-page>.section-intro{
+ background:transparent!important;
+ padding:clamp(.5rem,1.4vw,1rem) 0 clamp(.7rem,1.8vw,1.25rem)!important;
+}
+.home-search-box,
+.chrono-filter-panel,
+.location-tool-box,
+.location-records-panel{
+ background:transparent!important;
+ padding:clamp(.65rem,1.5vw,1rem) 0!important;
+}
+.home-search-box input,
+.home-search-box select,
+.chrono-filter-panel input,
+.chrono-filter-panel select,
+.location-tool-box input,
+.location-tool-box select,
+.location-tool-box .person-picker-trigger{
+ border-color:rgba(105,69,45,.5)!important;
+ box-shadow:inset 0 1px 2px rgba(70,45,28,.07)!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main) > h1{
+ width:fit-content!important;
+ max-width:100%!important;
+ padding:.35rem 0!important;
+ margin:.1rem 0 .55rem!important;
+ border:0!important;
+ border-left:0!important;
+ background:transparent!important;
+}
+.archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
+ width:fit-content!important;
+ max-width:100%!important;
+ padding:.2rem 0!important;
+ margin-bottom:.2rem!important;
+ background:transparent!important;
+}
+.location-layout .location-tool-box,
+.location-records-panel{
+ border-bottom:1px solid rgba(111,67,43,.2)!important;
+}
+body.dark-mode .home-search-layout::before,
+body.dark-mode .chrono-search-layout::before,
+body.dark-mode .ancestor-page>.section-intro::before,
+body.dark-mode .location-registry-page::before,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
+ background:
+  radial-gradient(ellipse at 18% 8%,rgba(180,125,58,.19),transparent 54%),
+  linear-gradient(105deg,rgba(49,32,24,.98),rgba(61,40,28,.97) 48%,rgba(39,25,21,.98));
+ border-bottom-color:rgba(190,145,83,.38);
+ box-shadow:inset 0 1px rgba(229,193,130,.08);
+}
+body.dark-mode .home-search-intro,
+body.dark-mode .chrono-search-intro,
+body.dark-mode .ancestor-page>.section-intro,
+body.dark-mode .home-search-box,
+body.dark-mode .chrono-filter-panel,
+body.dark-mode .location-tool-box,
+body.dark-mode .location-records-panel,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > h1,
+body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main) > .eyebrow{
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+ color:inherit!important;
+}
+@media(max-width:700px){
+ .home-search-layout::before,
+ .chrono-search-layout::before,
+ .ancestor-page>.section-intro::before,
+ .location-registry-page::before,
+ .archive-page:not(.home-search-page):not(.chrono-main)::before{
+  height:clamp(300px,78vw,430px);
+ }
+ .home-search-intro,.chrono-search-intro,.ancestor-page>.section-intro{
+  padding:.4rem 0 .7rem!important;
+ }
+ .home-search-box,.chrono-filter-panel,.location-tool-box,.location-records-panel{
+  padding:.55rem 0!important;
+ }
+}
