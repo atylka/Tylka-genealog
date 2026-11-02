@@ -6641,3 +6641,22 @@ body.dark-mode .location-page::before{
  linear-gradient(105deg,rgba(49,32,24,.98),rgba(61,40,28,.97) 48%,rgba(39,25,21,.98));
  border-bottom-color:rgba(190,145,83,.38);
 }
+
+
+/* Banner visibility fix: keep the broad page banner above the main background,
+   while all real page content remains layered clearly in front of it. */
+.home-search-layout::before,
+.chrono-search-layout::before,
+.ancestor-page>.section-intro::before,
+.archive-page:not(.home-search-page):not(.chrono-main)::before,
+.location-page::before{
+ z-index:0!important;
+}
+.home-search-layout>*,
+.chrono-search-layout>*,
+.ancestor-page>.section-intro>*,
+.archive-page:not(.home-search-page):not(.chrono-main)>*,
+.location-page>*{
+ position:relative;
+ z-index:1;
+}
