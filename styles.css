@@ -4880,3 +4880,22 @@ html { scroll-behavior: auto; }
 @media(max-width:600px){
  .home-search-page #home-activity-log.activity-log-section{width:100%!important;max-width:330px!important;margin:1.25rem 0 0!important;padding:.85rem!important}
 }
+
+
+/* Homepage search header: title on the left, query controls on the right. */
+.home-search-page #home-search-workspace.home-search-layout{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(320px,1.08fr)!important;
+  align-items:center!important;
+  column-gap:clamp(1.5rem,4vw,4rem)!important;
+  row-gap:1.25rem!important;
+}
+.home-search-page .home-search-intro{grid-column:1;align-self:center;max-width:620px}
+.home-search-page .home-search-intro h1{margin:.2rem 0 .7rem}
+.home-search-page .home-search-intro .section-intro{margin:0;max-width:48ch}
+.home-search-page #home-search-workspace>.home-search-box{grid-column:2;grid-row:1;margin:0;min-width:0}
+.home-search-page #home-search-workspace>#home-results{grid-column:1/-1;grid-row:2;min-width:0}
+@media(max-width:760px){
+ .home-search-page #home-search-workspace.home-search-layout{grid-template-columns:minmax(0,1fr)!important;gap:1rem!important}
+ .home-search-page .home-search-intro,.home-search-page #home-search-workspace>.home-search-box,.home-search-page #home-search-workspace>#home-results{grid-column:1!important;grid-row:auto!important}
+}
