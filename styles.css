@@ -4323,3 +4323,15 @@ html[data-theme="dark"] .ancestor-card-open .ancestor-life-dates,body[data-theme
 html[data-theme="dark"] .location-tool-box,body[data-theme="dark"] .location-tool-box,html.theme-dark .location-tool-box{background:#2a1c13;color:#ead9b7;border-color:#715332}
 html[data-theme="dark"] .person-picker-trigger,html[data-theme="dark"] .person-picker-menu,body[data-theme="dark"] .person-picker-trigger,body[data-theme="dark"] .person-picker-menu{background:#21160f;color:#ead9b7;border-color:#715332}
 html[data-theme="dark"] .person-picker-option:hover,body[data-theme="dark"] .person-picker-option:hover{background:#493020}
+
+
+/* Compact record previews inside the selected-location map pin popup */
+.registry-pin-popup-container .leaflet-popup-content-wrapper{background:var(--panel,#241a16);color:var(--ink,#f1e2c4);border:1px solid rgba(190,151,91,.65);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.registry-pin-popup-container .leaflet-popup-tip{background:var(--panel,#241a16)}
+.registry-pin-popup{min-width:170px;max-width:230px}
+.registry-pin-popup-title{display:block;font-family:inherit;font-size:14px;line-height:1.35;margin:0 0 9px;color:inherit}
+.registry-pin-popup-images{display:flex;align-items:center;gap:7px}
+.registry-pin-popup-image{width:70px;height:54px;flex:0 0 70px;overflow:hidden;border-radius:6px;background:rgba(166,127,75,.18);border:1px solid rgba(190,151,91,.45);display:flex;align-items:center;justify-content:center}
+.registry-pin-popup-image img{width:100%;height:100%;object-fit:cover;display:block}
+.registry-pin-popup-image span{font-size:10px;text-align:center;padding:4px;color:inherit;opacity:.8}
+.registry-pin-popup-more{font-weight:700;font-size:13px;color:inherit;white-space:nowrap;padding:5px 7px;border-radius:20px;background:rgba(166,127,75,.2);border:1px solid rgba(190,151,91,.45)}
