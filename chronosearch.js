@@ -8,6 +8,7 @@
   return String(value||"").split(/\r?\n/).filter(line=>{
    const s=line.trim();
    if(!s)return false;
+   if(/^Chrono thumbnail:/i.test(s))return false;
    return !/(?:face|name)[\s_-]*(?:identif(?:y|ication|ied|ier)|recognition|detection)[\s_-]*(?:coordinates?|coords?|points?|regions?|boxes?|bounds?)/i.test(s)
     &&!/(?:coordinates?|coords?|bounding[\s_-]*boxes?|normalized[\s_-]*(?:x|y)|face[\s_-]*(?:box|region|landmark)|name[\s_-]*(?:box|region|landmark))/i.test(s)
     &&!/^[\s{}[\](),.:;"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
@@ -23,8 +24,8 @@
   const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
- const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\\s*([^\\r\\n]+)$/im);return m?m[1].trim():"";};
- const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").trim();return (raw?raw+"\\n\\n":"")+"Chrono thumbnail: "+path;};
+ const chronoThumbPath=record=>{const m=String(record.description||"").match(/^Chrono thumbnail:\s*([^\r\n]+)$/im);return m?m[1].trim():"";};
+ const withChronoThumb=(record,path)=>{const raw=String(record.description||"").replace(/^Chrono thumbnail:\s*[^\r\n]*\s*$/im,"").trim();return (raw?raw+"\\n\\n":"")+"Chrono thumbnail: "+path;};
  const withoutChronoThumb=record=>String(record.description||"").replace(/^Chrono thumbnail:\\s*[^\\r\\n]*\\s*$/im,"").replace(/\\n{3,}/g,"\\n\\n").trim();
  const appendInfoBox=(parent,label,value,cls="")=>{
   if(!value)return;
