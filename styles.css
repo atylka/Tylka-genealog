@@ -4727,3 +4727,19 @@ html[data-theme="dark"] #family-map .leaflet-tile-pane{
 
 /* Saved name labels are drawn directly over the original scan and follow zoom/pan. */
 #page-name-overlay{position:absolute;left:50%;top:50%;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;pointer-events:none;z-index:2}
+
+
+/* Unified record identity panel: relationships and page-name identifications share the right column. */
+.record-detail-grid{align-items:start}
+.detail-transcription{display:flex;flex-direction:column;min-width:0}
+.detail-family-information{margin:1.15rem 0 0;padding:1rem 1.1rem;border:1px solid var(--line);border-radius:8px;background:var(--paper-light);box-shadow:inset 0 1px rgba(255,255,255,.35)}
+.detail-family-information h3{margin:0 0 .7rem;font-family:var(--serif);font-size:1.08rem}
+.detail-family-information dl{display:grid;grid-template-columns:minmax(105px,.8fr) minmax(0,1.5fr);gap:.38rem .8rem;margin:0}
+.detail-family-information dt{font-size:.82rem;font-weight:700;color:var(--muted)}
+.detail-family-information dd{margin:0;font-size:.9rem;overflow-wrap:anywhere}
+.combined-identified-names{display:grid;gap:.35rem;margin:.7rem 0 0;padding:.65rem 0 0;border-top:1px solid var(--line);list-style:none}
+.combined-identified-names:empty{display:none}
+.combined-identified-names li{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.28rem 0;font-size:.88rem;border-bottom:1px solid var(--line)}
+.combined-identified-names li:last-child{border-bottom:0}
+html[data-theme="dark"] .detail-family-information,body[data-theme="dark"] .detail-family-information{background:#2a1c13;border-color:#715332;color:#ead9b7}
+@media(max-width:760px){.detail-family-information dl{grid-template-columns:1fr;gap:.15rem}.detail-family-information dd{margin-bottom:.45rem}}
