@@ -5134,3 +5134,43 @@ html.theme-dark #home-results .home-search-record-details .record-category,
 body.theme-dark #home-results .home-search-record-details .record-category,
 body.dark-mode #home-results .home-search-record-details .record-category,
 .dark-mode #home-results .home-search-record-details .record-category{color:#d7a66f!important}
+
+
+/* Ancestor gallery: compact portrait cards with legible life dates. */
+#ancestor-grid.ancestor-grid{
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important;
+  gap:.75rem!important;align-items:stretch;
+}
+#ancestor-grid .ancestor-card{min-width:0;max-width:100%;border-radius:4px}
+#ancestor-grid .ancestor-card-open .ancestor-portrait{
+  width:100%;height:148px!important;aspect-ratio:1/1;object-fit:cover;
+}
+#ancestor-grid .ancestor-card-open .ancestor-card-body{
+  padding:.62rem .7rem .7rem!important;display:flex;flex-direction:column;align-items:flex-start;gap:.18rem;
+}
+#ancestor-grid .ancestor-card-open .ancestor-card-body h3{
+  margin:0!important;font-size:1rem!important;line-height:1.18;overflow-wrap:anywhere;
+}
+#ancestor-grid .ancestor-card-open .ancestor-source{
+  margin:0!important;font-size:.72rem;line-height:1.25;
+}
+#ancestor-grid .ancestor-card-open .ancestor-life-dates{
+  display:block;margin:.2rem 0 .1rem!important;font-size:.73rem!important;line-height:1.35!important;
+  font-family:Georgia,serif;font-variant-numeric:oldstyle-nums;overflow-wrap:anywhere;
+}
+#ancestor-grid .ancestor-card-open .ancestor-life-dates[hidden]{display:none!important}
+#ancestor-grid .ancestor-card-open .small-button{
+  margin-top:.28rem!important;padding:.32rem .55rem!important;font-size:.68rem;min-height:30px;
+}
+@media(max-width:760px){
+  #ancestor-grid.ancestor-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.6rem!important}
+  #ancestor-grid .ancestor-card-open .ancestor-portrait{height:clamp(112px,34vw,150px)!important}
+}
+@media(max-width:360px){
+  #ancestor-grid .ancestor-card-open .ancestor-card-body{padding:.5rem!important}
+  #ancestor-grid .ancestor-card-open .ancestor-card-body h3{font-size:.9rem!important}
+}
+html[data-theme="dark"] #ancestor-grid .ancestor-card-open .ancestor-life-dates,
+body[data-theme="dark"] #ancestor-grid .ancestor-card-open .ancestor-life-dates,
+html.theme-dark #ancestor-grid .ancestor-card-open .ancestor-life-dates,
+body.dark-mode #ancestor-grid .ancestor-card-open .ancestor-life-dates{color:#e1c18b!important}
