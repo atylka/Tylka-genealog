@@ -6690,3 +6690,78 @@ body.dark-mode .home-search-header::before{
   .home-search-header .home-search-box{padding:.45rem .25rem .5rem!important}
   .home-search-header::after{inset:12px}
 }
+
+
+/* Every page masthead is a self-contained header: no banner behind page content. */
+.ancestor-page::before,.ancestor-page::after,
+.location-page::before,.location-page::after,
+.archive-page:not(.home-search-page):not(.chrono-main)::before,
+.archive-page:not(.home-search-page):not(.chrono-main)::after{
+  content:none!important;
+  display:none!important;
+}
+.archive-page-header,.ancestor-page-header,.location-page-header{
+  position:relative;
+  isolation:isolate;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  padding:1.55rem clamp(1.25rem,8vw,8rem) 1.5rem;
+}
+.archive-page-header::before,.ancestor-page-header::before,.location-page-header::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(255,190,151,.16),transparent 48%),
+    linear-gradient(120deg,#681018 0%,#941b25 52%,#b92c35 100%);
+  border-bottom:5px solid #c99a68;
+}
+.archive-page-header::after,.ancestor-page-header::after,.location-page-header::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:18px 22px 22px;
+  border:1px solid rgba(255,235,218,.22);
+}
+.archive-page-header>*,.ancestor-page-header>*,.location-page-header>*{
+  position:relative;
+  z-index:1;
+  max-width:1200px;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.archive-page-header .eyebrow,.ancestor-page-header .eyebrow,.location-page-header .eyebrow,
+.archive-page-header h1,.ancestor-page-header h1,.location-page-header h1,
+.archive-page-header .section-intro,.ancestor-page-header .section-intro,.location-page-header .section-intro{
+  color:#f5e4d9!important;
+}
+.archive-page-header h1,.ancestor-page-header h1,.location-page-header h1{
+  margin-top:.2rem!important;
+  margin-bottom:.55rem!important;
+}
+.archive-page-header .section-intro,.ancestor-page-header .section-intro,.location-page-header .section-intro{
+  max-width: min(900px,100%)!important;
+  margin-top:.3rem!important;
+  margin-bottom:0!important;
+}
+.location-page-header{padding-top:1.55rem;padding-bottom:1.5rem}
+html[data-theme="dark"] .archive-page-header::before,
+html[data-theme="dark"] .ancestor-page-header::before,
+html[data-theme="dark"] .location-page-header::before,
+body.dark-mode .archive-page-header::before,
+body.dark-mode .ancestor-page-header::before,
+body.dark-mode .location-page-header::before{
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(220,139,102,.12),transparent 48%),
+    linear-gradient(120deg,#400b12 0%,#68121c 52%,#861c26 100%);
+  border-bottom-color:#98734e;
+}
+@media(max-width:800px){
+  .archive-page-header,.ancestor-page-header,.location-page-header{
+    padding:1.25rem 1rem 1.1rem;
+  }
+  .archive-page-header::after,.ancestor-page-header::after,.location-page-header::after{inset:12px}
+}
