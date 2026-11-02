@@ -20,6 +20,7 @@
   const addRecordButton=$("open-add-record");
   if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
+    recordsList.classList.toggle("all-records-view",activeFolder==="all");
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
     const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned].join(" ").toLowerCase().includes(term));
