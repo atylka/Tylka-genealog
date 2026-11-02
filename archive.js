@@ -240,6 +240,7 @@
     const location=$("record-location")?.value||"",isPoland=/(?:poland|polska|rzeczpospolita)/i.test(location),isUnitedStates=/(?:united states|united states of america|\busa\b|\bu\.s\.a\.?\b)/i.test(location);
     const isPolishBirth=$("record-category")?.value==="births"&&isPoland,isUSBirth=$("record-category")?.value==="births"&&isUnitedStates&&!isPoland,isPolishMarriage=$("record-category")?.value==="marriages"&&isPoland,parishField=$("record-parish-field");if(parishField)parishField.hidden=!isPoland;
     const familySection=$("polish-birth-family-section"),usBirthSection=$("us-birth-family-section"),marriageFamilySection=$("polish-marriage-family-section"),generalPeople=$("general-persons-section");
+    const registerFields=$("polish-birth-register-fields");if(registerFields)registerFields.hidden=!isPolishBirth;
     if(familySection)familySection.hidden=!isPolishBirth;
     if(usBirthSection)usBirthSection.hidden=!isUSBirth;
     if(marriageFamilySection)marriageFamilySection.hidden=!isPolishMarriage;
