@@ -9,6 +9,7 @@
   if(!faces.length&&person.portrait_url)faces=[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id,created_at:person.updated_at}];
   return faces.filter(face=>face&&(face.url||face.portrait_url)).map(face=>({...face,url:face.url||face.portrait_url}));
  }
+ function yearFrom(value){const match=String(value||"").match(/(?:18|19|20)\\d{2}/);return match?match[0]:"Year not recorded";}
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
@@ -31,7 +32,7 @@
   box.querySelector(".ancestor-viewer-image").alt="Portrait "+(activeIndex+1)+" of "+activePerson.name;
   box.querySelector(".ancestor-viewer-name").textContent=activePerson.name;
   box.querySelector(".ancestor-face-position").textContent="Face "+(activeIndex+1)+" of "+faces.length;
-  box.querySelector(".ancestor-face-source").textContent=face.source_title?"Source: "+face.source_title:"Portrait source not recorded";
+  box.querySelector(".ancestor-face-source").textContent="Year: "+(face.source_year||"Year not recorded")+" · "+(face.source_title?"Source: "+face.source_title:"Portrait source not recorded");
   const thumbButton=box.querySelector(".ancestor-set-thumbnail");
   thumbButton.textContent=activePerson.portrait_url===face.url?"Current card thumbnail":"Use as card thumbnail";
   thumbButton.disabled=activePerson.portrait_url===face.url;
@@ -73,7 +74,10 @@
   if(!client){count.textContent="Archive connection unavailable";return;}
   const {data,error}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").order("name");
   if(error){count.textContent=error.message.includes("portraits")?"Run the multiple-face portraits migration in Supabase.":"Could not load shared portraits.";return;}
-  render(data||[]);
+  const people=data||[];
+  const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
+  if(ids.length){const {data:records}=await client.from("archive_records").select("id,record_date").in("id",ids);const dates=new Map((records||[]).map(record=>[String(record.id),yearFrom(record.record_date)]));people.forEach(person=>faceList(person).forEach(face=>{if(!face.source_year&&face.source_record_id&&dates.has(String(face.source_record_id)))face.source_year=dates.get(String(face.source_record_id));}));}
+  render(people);
  }
  load();window.addEventListener("tylka:auth-changed",load);
 })();
