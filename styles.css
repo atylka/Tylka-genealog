@@ -4717,3 +4717,10 @@ html[data-theme="dark"] #family-map .leaflet-tile-pane{
   box-shadow:none!important;
 }
 .chrono-year-heading span{background:transparent!important;border:0!important;box-shadow:none!important}
+
+.page-name-identifications{margin:1rem 0;padding:.8rem 1rem;border:1px solid var(--line);border-radius:8px;background:var(--paper-light)}
+.page-name-identifications h3{margin:0 0 .45rem;font-family:var(--serif);font-size:1rem}
+.page-name-identifications ul{display:grid;gap:.35rem;margin:0;padding:0;list-style:none}
+.page-name-identifications li{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+#page-name-canvas{display:block;width:100%;height:auto;max-height:65vh;object-fit:contain;touch-action:none;cursor:crosshair}
+#page-name-modal .face-crop-canvas-wrap{max-height:68vh;overflow:auto}
