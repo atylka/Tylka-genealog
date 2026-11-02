@@ -6617,3 +6617,76 @@ body.dark-mode .archive-page:not(.home-search-page):not(.chrono-main)::before{
     linear-gradient(120deg,#400b12 0%,#68121c 52%,#861c26 100%)!important;
   border-bottom-color:#98734e!important;
 }
+
+
+/* Homepage masthead ends after the search controls; result cards stay on parchment. */
+.home-search-layout::before,
+.home-search-layout::after{content:none!important;display:none!important}
+.home-search-header{
+  position:relative;
+  isolation:isolate;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  padding:0 clamp(1.25rem,8vw,8rem) 1.2rem;
+}
+.home-search-header::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(255,190,151,.16),transparent 48%),
+    linear-gradient(120deg,#681018 0%,#941b25 52%,#b92c35 100%);
+  border-bottom:5px solid #c99a68;
+}
+.home-search-header::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:18px 22px 22px;
+  border:1px solid rgba(255,235,218,.22);
+}
+.home-search-header .home-search-intro,
+.home-search-header .home-search-box{
+  position:relative;
+  z-index:1;
+  max-width:1200px;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.home-search-header .home-search-intro{
+  padding:1.55rem 1rem .65rem!important;
+}
+.home-search-header .home-search-box{
+  margin-top:0!important;
+  margin-bottom:0!important;
+  padding:.5rem 1rem .6rem!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.home-search-header .home-search-box label{color:#fff3e9!important}
+.home-search-header .home-search-box input,
+.home-search-header .home-search-box select{
+  background:#fffaf6!important;
+  color:#3b241b!important;
+}
+.home-search-header .home-search-box .connection-status{color:#f1dcd4!important}
+.home-search-divider{margin-top:1.4rem!important}
+#home-results{position:relative;z-index:0;margin-top:0!important}
+html[data-theme="dark"] .home-search-header::before,
+body.dark-mode .home-search-header::before{
+  background:
+    radial-gradient(ellipse at 80% 14%,rgba(220,139,102,.12),transparent 48%),
+    linear-gradient(120deg,#400b12 0%,#68121c 52%,#861c26 100%);
+  border-bottom-color:#98734e;
+}
+@media(max-width:800px){
+  .home-search-header{padding:0 1rem 1rem}
+  .home-search-header .home-search-intro{padding:1.25rem .25rem .55rem!important}
+  .home-search-header .home-search-box{padding:.45rem .25rem .5rem!important}
+  .home-search-header::after{inset:12px}
+}
