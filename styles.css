@@ -5984,3 +5984,41 @@ html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>article.chro
 html body,html body *:not(svg):not(svg *){
  font-family:'IM Fell English',Georgia,'Times New Roman',serif!important;
 }
+
+
+/* Ancestors intro: keep the heading on the left and move its description to the right. */
+html body main.ancestor-page>.section-intro{
+ display:grid!important;
+ grid-template-columns:minmax(260px,.9fr) minmax(0,1.1fr)!important;
+ grid-template-rows:auto auto auto!important;
+ column-gap:clamp(1.5rem,4vw,4rem)!important;
+ row-gap:.35rem!important;
+ align-items:center!important;
+}
+html body main.ancestor-page>.section-intro>.eyebrow{
+ grid-column:1/-1!important;grid-row:1!important;margin:0 0 .25rem!important;
+}
+html body main.ancestor-page>.section-intro>h1{
+ grid-column:1!important;grid-row:2!important;align-self:center!important;
+ margin:0!important;
+}
+html body main.ancestor-page>.section-intro>p:not(.connection-status){
+ grid-column:2!important;grid-row:2!important;align-self:center!important;
+ max-width:58ch!important;margin:0!important;font-size:1.04rem!important;line-height:1.55!important;
+}
+html body main.ancestor-page>.section-intro>.connection-status{
+ grid-column:1/-1!important;grid-row:3!important;margin:.6rem 0 0!important;
+}
+@media(max-width:700px){
+ html body main.ancestor-page>.section-intro{
+  grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important;
+  row-gap:.45rem!important;
+ }
+ html body main.ancestor-page>.section-intro>.eyebrow,
+ html body main.ancestor-page>.section-intro>h1,
+ html body main.ancestor-page>.section-intro>p:not(.connection-status),
+ html body main.ancestor-page>.section-intro>.connection-status{
+  grid-column:1!important;grid-row:auto!important;
+ }
+ html body main.ancestor-page>.section-intro>p:not(.connection-status){margin:.2rem 0!important}
+}
