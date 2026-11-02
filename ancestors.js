@@ -9,10 +9,11 @@
   if(!faces.length&&person.portrait_url)faces=[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id,created_at:person.updated_at}];
   return faces.filter(face=>face&&(face.url||face.portrait_url)).map(face=>({...face,url:face.url||face.portrait_url}));
  }
- function yearFrom(value){const match=String(value||"").match(/(?:18|19|20)\d{2}/);return match?match[0]:"Year not recorded";}
- function normalizeName(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase().replace(/[^a-z0-9]+/g," ").trim();}
- function recordedDate(value){const raw=String(value||"").trim();if(!raw)return "";const iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const date=new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));return date.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}return raw;}
- function personDates(records){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[ &-]+/g,"_");const kind=["birth","baptism","births"].includes(category)?"birth":["death","burials","deaths"].includes(category)?"death":null;if(!kind||!record.record_date)return;const date=recordedDate(record.record_date);String(record.persons_mentioned||"").split(/[\n,;]+/).map(normalizeName).filter(Boolean).forEach(name=>{if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
+ function extractRecordDate(record){const direct=String(record?.record_date||"").trim();if(direct)return direct;const description=String(record?.description||"");const match=description.match(/^Date on record:\\s*([^\\r\\n]+)/im);return match?match[1].trim():"";}
+ function yearFrom(value){const match=String(value||"").match(/(?:17|18|19|20)\\d{2}/);return match?match[0]:"Year not recorded";}
+ function normalizeName(value){return String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLocaleLowerCase().replace(/[^a-z0-9]+/g," ").trim();}
+ function recordedDate(value){const raw=String(value||"").trim();if(!raw)return "";const iso=raw.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);if(iso){const date=new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));return date.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}return raw;}
+ function personDates(records){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,"");const kind=category.includes("birth")||category.includes("bapt")?"birth":category.includes("death")||category.includes("burial")?"death":null;const raw=extractRecordDate(record);if(!kind||!raw)return;const date=recordedDate(raw);String(record.persons_mentioned||"").split(/[\\n,;|]+/).map(name=>normalizeName(name.replace(/^[-•*]+\\s*/,""))).filter(Boolean).forEach(name=>{if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
@@ -80,8 +81,9 @@
   if(error){count.textContent=error.message.includes("portraits")?"Run the multiple-face portraits migration in Supabase.":"Could not load shared portraits.";return;}
   const people=data||[];
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
-  if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(record.record_date)]));people.forEach(person=>faceList(person).forEach(face=>{if(!face.source_year&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
-  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("category,persons_mentioned,record_date").in("category",["births","birth","baptism","deaths","death","burials"]).not("record_date","is",null);
+  if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
+  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("category,persons_mentioned,record_date,description");
+  if(lifeError)console.warn("Could not load ancestor life dates:",lifeError.message);
   const lifeDates=personDates(lifeError?[]:lifeRecords);
   render(people,lifeDates);
  }
