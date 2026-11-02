@@ -32,10 +32,26 @@
   box.querySelector(".ancestor-viewer-name").textContent=activePerson.name;
   box.querySelector(".ancestor-face-position").textContent="Face "+(activeIndex+1)+" of "+faces.length;
   box.querySelector(".ancestor-face-source").textContent=face.source_title?"Source: "+face.source_title:"Portrait source not recorded";
+  const thumbButton=box.querySelector(".ancestor-set-thumbnail");
+  thumbButton.textContent=activePerson.portrait_url===face.url?"Current card thumbnail":"Use as card thumbnail";
+  thumbButton.disabled=activePerson.portrait_url===face.url;
+  thumbButton.onclick=()=>setCardThumbnail(face.url,thumbButton);
   box.querySelector(".ancestor-face-prev").disabled=faces.length<2;
   box.querySelector(".ancestor-face-next").disabled=faces.length<2;
   const thumbs=box.querySelector(".ancestor-face-thumbnails");thumbs.replaceChildren();
   faces.forEach((item,i)=>{const button=document.createElement("button");button.type="button";button.className="ancestor-face-thumb"+(i===activeIndex?" is-active":"");button.setAttribute("aria-label","View face "+(i+1));const img=document.createElement("img");img.src=item.url;img.alt="";button.append(img);button.addEventListener("click",()=>showFace(i));thumbs.append(button);});
+ }
+ async function setCardThumbnail(url,button){
+  if(!activePerson||!client)return;
+  button.disabled=true;button.textContent="Saving…";
+  const {error}=await client.from("ancestor_portraits").update({portrait_url:url,updated_at:new Date().toISOString()}).eq("id",activePerson.id);
+  if(error){button.disabled=false;button.textContent="Could not save — try again";return;}
+  activePerson.portrait_url=url;renderThumbnailForActive();button.textContent="Current card thumbnail";showFace(activeIndex);
+ }
+ function renderThumbnailForActive(){
+  if(!activePerson)return;
+  const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));
+  if(card){const image=card.querySelector(".ancestor-portrait");image.src=activePerson.portrait_url||faceList(activePerson)[0].url;}
  }
  function openPerson(person){activePerson=person;ensureModal().hidden=false;showFace(0);}
  function render(people){
@@ -43,9 +59,9 @@
   grid.replaceChildren();count.textContent=people.length+" "+(people.length===1?"person":"people");empty.hidden=people.length>0;
   people.forEach(person=>{
    const faces=faceList(person);if(!faces.length)return;
-   const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";
+   const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";card.dataset.personId=person.id;
    const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";trigger.setAttribute("aria-label","View all "+faces.length+" portraits of "+person.name);
-   const image=document.createElement("img");image.className="ancestor-portrait";image.src=faces[0].url;image.alt="Portrait of "+person.name;
+   const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Portrait of "+person.name;
    const body=document.createElement("div");body.className="ancestor-card-body";
    const title=document.createElement("h3");title.textContent=person.name;
    const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length+" saved "+(faces.length===1?"face":"faces");
