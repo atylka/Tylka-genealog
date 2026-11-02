@@ -4620,3 +4620,31 @@ html[data-theme="dark"] #family-map .leaflet-tile-pane{
   color:#2e1b10!important;
   border-color:#79532e!important;
 }
+
+
+/* Match all map lettering to the site's antique parchment typeface. */
+#family-map,
+#family-map .leaflet-tooltip,
+#family-map .leaflet-popup,
+#family-map .leaflet-popup-content,
+#family-map .leaflet-popup-content strong,
+#family-map .registry-location-label,
+#family-map .registry-pin-popup,
+#family-map .registry-pin-popup-title,
+#family-map .registry-pin-popup-image span,
+#family-map .registry-pin-popup-more{
+  font-family:"IM Fell English","EB Garamond",Georgia,serif!important;
+}
+#family-map .registry-location-label{
+  font-size:13px!important;
+  font-weight:400!important;
+  letter-spacing:.015em!important;
+}
+#family-map .leaflet-tooltip{
+  font-size:13px;
+  letter-spacing:.01em;
+}
+#family-map .registry-pin-popup-title{
+  font-size:16px!important;
+  font-weight:400!important;
+}
