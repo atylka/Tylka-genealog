@@ -74,9 +74,6 @@
   keys.forEach(key=>{
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
-   const yearHeading=node("header","","chrono-year-heading");
-   yearHeading.append(node("h2",key),node("span",groups.get(key).length+" "+(groups.get(key).length===1?"record":"records")));
-   column.append(yearHeading);
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
     const event=node("div","","chrono-event");
     const dateLabel=formatRecordDate(r)||"Date not recorded";
