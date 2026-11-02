@@ -5451,3 +5451,43 @@ body[data-theme="dark"] .chrono-record-details .chrono-record-location{color:#c0
   .chrono-year-column .chrono-record-card .record-thumbnail{height:104px!important}
   .chrono-record-details h3{font-size:.96rem!important}
 }
+
+
+/* Final ChronoSearch card normalization: apply to every card, not only later timeline items */
+.chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card.record-card.record-card-expanded{
+  display:grid!important;flex:none!important;grid-template-columns:minmax(112px,148px) minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,auto)!important;align-items:center!important;justify-content:initial!important;
+  gap:.85rem!important;width:100%!important;max-width:none!important;min-width:0!important;
+  min-height:0!important;height:auto!important;margin:.0rem 0 .65rem!important;padding:.7rem!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+}
+.chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card .record-thumbnail{
+  display:flex!important;position:relative!important;grid-column:1!important;grid-row:1!important;
+  flex:none!important;width:100%!important;max-width:none!important;height:112px!important;min-height:112px!important;
+  aspect-ratio:auto!important;margin:0!important;padding:0!important;box-sizing:border-box!important;
+}
+.chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card .record-thumbnail img{
+  display:block!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain!important;
+}
+.chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card .chrono-record-details{
+  display:block!important;grid-column:2!important;grid-row:1!important;min-width:0!important;width:auto!important;
+}
+.chrono-main .chrono-timeline .chrono-year-column .chrono-record-date,
+.chrono-main .chrono-timeline .chrono-year-column>div.chrono-record-date{
+  display:block!important;position:static!important;width:auto!important;min-height:0!important;
+  margin:1rem 0 .3rem!important;padding:0!important;
+  border:0!important;border-radius:0!important;outline:0!important;
+  background:none!important;background-color:transparent!important;box-shadow:none!important;
+  color:var(--accent-dark)!important;font-size:.8rem!important;font-weight:700!important;
+  line-height:1.35!important;letter-spacing:.02em!important;
+}
+.chrono-main .chrono-timeline .chrono-year-column .chrono-record-date:before,
+.chrono-main .chrono-timeline .chrono-year-column .chrono-record-date:after{display:none!important;content:none!important}
+html[data-theme="dark"] .chrono-main .chrono-timeline .chrono-year-column .chrono-record-date,
+body[data-theme="dark"] .chrono-main .chrono-timeline .chrono-year-column .chrono-record-date{background:none!important;background-color:transparent!important;color:#d8bd8b!important}
+@media(max-width:650px){
+ .chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card.record-card.record-card-expanded{
+  grid-template-columns:minmax(92px,34%) minmax(0,1fr)!important;gap:.6rem!important;padding:.58rem!important
+ }
+ .chrono-main .chrono-timeline .chrono-year-column article.chrono-record-card .record-thumbnail{height:104px!important;min-height:104px!important}
+}
