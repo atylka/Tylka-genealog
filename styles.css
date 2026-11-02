@@ -4302,3 +4302,24 @@ html[data-theme="dark"] .ancestor-card-open .small-button,body[data-theme="dark"
 .ancestor-card-open .ancestor-life-dates{margin:3px 0 2px!important;color:#68452e;font-size:.88rem;line-height:1.5;font-family:Georgia,serif;font-variant-numeric:oldstyle-nums;overflow-wrap:anywhere}
 .ancestor-card-open .ancestor-life-dates[hidden]{display:none!important}
 html[data-theme="dark"] .ancestor-card-open .ancestor-life-dates,body[data-theme="dark"] .ancestor-card-open .ancestor-life-dates,html.theme-dark .ancestor-card-open .ancestor-life-dates,body.dark-mode .ancestor-card-open .ancestor-life-dates{color:#e1c18b}
+
+/* Separate location, person, and migration controls */
+.location-sidebar{display:grid;gap:.8rem;align-content:start}
+.location-tool-box{position:relative;min-width:0;padding:.9rem;border:1px solid var(--line);border-radius:6px;background:rgba(238,229,210,.78);box-shadow:0 4px 14px rgba(65,25,30,.045)}
+.location-tool-box>.eyebrow{margin:0 0 .65rem}
+.location-tool-box .search-input{width:100%;margin:.35rem 0 .5rem}
+.person-picker-trigger{display:flex;width:100%;min-height:48px;align-items:center;justify-content:space-between;gap:.8rem;padding:.65rem .8rem;border:1px solid var(--line);border-radius:4px;background:var(--paper-light);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.person-picker-trigger:hover,.person-picker-trigger[aria-expanded="true"]{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,115,61,.12)}
+.person-picker-menu{display:grid;gap:.3rem;max-height:310px;overflow:auto;margin-top:.45rem;padding:.35rem;border:1px solid var(--line);border-radius:5px;background:var(--paper-light);box-shadow:0 12px 28px rgba(30,18,12,.18)}
+.person-picker-menu[hidden]{display:none}
+.person-picker-option{display:flex;width:100%;align-items:center;gap:.7rem;padding:.45rem .5rem;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+.person-picker-option:hover,.person-picker-option:focus-visible{border-color:var(--accent);background:var(--paper-dark)}
+.person-picker-avatar{flex:0 0 42px;width:42px;height:42px;object-fit:cover;border:1px solid var(--line);border-radius:50%;background:var(--paper-dark)}
+.person-picker-avatar-empty{display:block;background:linear-gradient(135deg,var(--paper-dark),var(--paper-light))}
+.person-picker-copy{display:grid;min-width:0;gap:2px}
+.person-picker-name{overflow-wrap:anywhere;font-family:var(--serif);font-size:.98rem}
+.person-picker-copy small{color:var(--muted);font-size:.7rem}
+.location-tool-box .connection-status{margin:.55rem 0 0;font-size:.76rem;line-height:1.45}
+html[data-theme="dark"] .location-tool-box,body[data-theme="dark"] .location-tool-box,html.theme-dark .location-tool-box{background:#2a1c13;color:#ead9b7;border-color:#715332}
+html[data-theme="dark"] .person-picker-trigger,html[data-theme="dark"] .person-picker-menu,body[data-theme="dark"] .person-picker-trigger,body[data-theme="dark"] .person-picker-menu{background:#21160f;color:#ead9b7;border-color:#715332}
+html[data-theme="dark"] .person-picker-option:hover,body[data-theme="dark"] .person-picker-option:hover{background:#493020}
