@@ -91,6 +91,7 @@
     const notes=raw.replace(/^Date on record:\s*[^\r\n]+\s*/im,"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").replace(/^Bride:\s*[^\r\n]*\s*/im,"").replace(/^Groom:\s*[^\r\n]*\s*/im,"").trim();
     $("record-bride").value=brideMatch?brideMatch[1].trim():"";
     $("record-groom").value=groomMatch?groomMatch[1].trim():"";
+    updateMarriageFields();
     $("record-title").value=record.title||"";
     $("record-category").value=canonical(record.category)||"notes";updateMarriageFields();
     $("record-date").value=record.record_date|| (dateMatch?dateMatch[1].trim():"");
@@ -104,19 +105,28 @@
     $("upload-message").textContent=record.file_name?"Current attachment: "+record.file_name+" (choose a new file to replace it).":"No attachment currently saved.";
     closeModals();showModal("add-record-modal");
   }
+  function updateMarriageTitle(){
+    const bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim();
+    $("record-title").value=bride&&groom?groom+" + "+bride:"";
+  }
   function updateMarriageFields(){
     const isMarriage=$("record-category")?.value==="marriages";
     const section=$("marriage-parties-section");
     if(section)section.hidden=!isMarriage;
     $("record-bride").required=isMarriage;
     $("record-groom").required=isMarriage;
+    $("record-title").readOnly=isMarriage;
+    $("record-title").placeholder=isMarriage?"Automatically set from groom + bride":"e.g. Michał Tylka baptism record";
+    if(isMarriage)updateMarriageTitle();
   }
   $("record-category")?.addEventListener("change",updateMarriageFields);
+  $("record-bride")?.addEventListener("input",updateMarriageTitle);
+  $("record-groom")?.addEventListener("input",updateMarriageTitle);
   updateMarriageFields();
   const uploadForm=$("upload-form");
   if(uploadForm)uploadForm.addEventListener("submit",async e=>{
     e.preventDefault();if(!client||!currentUser)return setMessage($("upload-message"),"Sign in to edit records.",true);
-    const title=$("record-title").value.trim(),category=$("record-category").value,bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim(),personsMentioned=[...new Set([bride,groom,...$("record-persons").value.split(/[\n,;]+/).map(name=>name.trim())].filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"",category==="marriages"?"Bride: "+bride:"",category==="marriages"?"Groom: "+groom:"","Research confidence: "+($("record-confidence")?.value||"unassessed"),notes].filter(Boolean).join(String.fromCharCode(10,10)),location=$("record-location").value.trim(),file=$("record-file").files[0];
+    const category=$("record-category").value,bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim(),title=category==="marriages"?(groom+" + "+bride):$("record-title").value.trim(),personsMentioned=[...new Set([bride,groom,...$("record-persons").value.split(/[\n,;]+/).map(name=>name.trim())].filter(Boolean))].join(", "),notes=$("record-description").value.trim(),recordDate=$("record-date").value.trim(),description=[recordDate?"Date on record: "+recordDate:"",category==="marriages"?"Bride: "+bride:"",category==="marriages"?"Groom: "+groom:"","Research confidence: "+($("record-confidence")?.value||"unassessed"),notes].filter(Boolean).join(String.fromCharCode(10,10)),location=$("record-location").value.trim(),file=$("record-file").files[0];
     if(!title)return setMessage($("upload-message"),"Enter a record title.",true);
     if(category==="marriages"&&(!bride||!groom))return setMessage($("upload-message"),"Enter both the bride and groom for this marriage record.",true);
     if(file&&file.size>20*1024*1024)return setMessage($("upload-message"),"Files must be 20 MB or smaller.",true);
