@@ -49,7 +49,60 @@
   function zoomViewer(factor,originX,originY){const viewport=$("detail-image-viewport");const old=viewerScale;const next=Math.max(.5,Math.min(6,old*factor));if(originX!==undefined){const rect=viewport.getBoundingClientRect(),cx=originX-rect.left-rect.width/2,cy=originY-rect.top-rect.height/2,ratio=next/old;viewerX=cx-(cx-viewerX)*ratio;viewerY=cy-(cy-viewerY)*ratio;}viewerScale=next;applyViewerTransform();}
   function resetViewer(){viewerScale=1;viewerX=0;viewerY=0;applyViewerTransform();}
   function setupViewer(){const viewport=$("detail-image-viewport");if(!viewport||viewport.dataset.ready)return;viewport.dataset.ready="1";viewport.addEventListener("wheel",e=>{if(!$("record-detail-modal")||$("record-detail-modal").hidden)return;e.preventDefault();zoomViewer(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY);},{passive:false});viewport.addEventListener("pointerdown",e=>{if(viewerScale<=1)return;viewerDragging=true;viewerStart={x:e.clientX-viewerX,y:e.clientY-viewerY};viewport.setPointerCapture(e.pointerId);});viewport.addEventListener("pointermove",e=>{if(!viewerDragging)return;viewerX=e.clientX-viewerStart.x;viewerY=e.clientY-viewerStart.y;applyViewerTransform();});const stop=()=>{viewerDragging=false;};viewport.addEventListener("pointerup",stop);viewport.addEventListener("pointercancel",stop);$("image-zoom-in").addEventListener("click",()=>zoomViewer(1.25));$("image-zoom-out").addEventListener("click",()=>zoomViewer(1/1.25));$("image-zoom-reset").addEventListener("click",resetViewer);}
-  async function openRecordDetail(record){window.tylkaActiveDetailRecord=record;$("detail-edit-record").hidden=!currentUser;$("detail-title").textContent=record.title;const meta=[categoryNames[canonical(record.category)]||record.category];if(record.record_date)meta.push("Record date: "+record.record_date);if(record.location)meta.push(record.location);$("detail-meta").textContent=meta.join(" · ");const familyLabels={"Mother":"Mother","Father":"Father","Mother’s father":"Maternal grandfather","Mother’s mother":"Maternal grandmother","Father’s father":"Paternal grandfather","Father’s mother":"Paternal grandmother"};const familyValues=[];Object.entries(familyLabels).forEach(([stored,label])=>{const match=String(record.description||"").match(new RegExp("^Family - "+stored+":\\s*([^\\r\\n]+)$","im"));if(match&&match[1].trim())familyValues.push([label,match[1].trim()]);});const familySection=$("detail-family-information"),familyList=$("detail-family-list");familyList.replaceChildren();familyValues.forEach(([label,value])=>{const term=document.createElement("dt"),definition=document.createElement("dd");term.textContent=label;definition.textContent=value;familyList.append(term,definition);});familySection.hidden=!familyValues.length;$("detail-description").textContent=(record.description||"No transcription or notes have been added.").replace(/^(?:Date on record|Research confidence|Bride|Groom|Family - Mother|Family - Father|Family - Mother’s father|Family - Mother’s mother|Family - Father’s father|Family - Father’s mother|Page name identifications):\s*[^\r\n]+\s*/gim,"").trim()||"No transcription or notes have been added.";renderPageNameList(record);const confidence=readConfidence(record.description);$("detail-confidence").textContent="Research confidence: "+confidenceLabel(confidence);$("detail-confidence").className="detail-confidence confidence-"+confidence;if($("detail-confidence-select"))$("detail-confidence-select").value=confidence;if($("save-confidence"))$("save-confidence").hidden=!currentUser;if($("confidence-save-status"))$("confidence-save-status").textContent="";const img=$("detail-image"),fallback=$("detail-file-fallback"),download=$("download-record-image");if(download){download.hidden=!(record.file_path&&isImage(record));download.onclick=async()=>{if(!record.file_path)return;const url=publicFileUrl(record.file_path);try{const response=await fetch(url);if(!response.ok)throw new Error("Download unavailable");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");link.href=objectUrl;link.download=record.file_name||nextSiteFileName(record.category);document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);}catch{const link=document.createElement("a");link.href=url;link.download=record.file_name||"record-image";link.click();}};}img.hidden=true;img.removeAttribute("src");const nameOverlay=$("page-name-overlay");if(nameOverlay){nameOverlay.width=0;nameOverlay.height=0;}fallback.replaceChildren();resetViewer();setupViewer();if(record.file_path){const url=publicFileUrl(record.file_path);if(isImage(record)){img.crossOrigin="anonymous";img.onload=()=>{syncFaceButton();drawPageNameOverlay(record);};img.onerror=()=>{setMessage($("face-crop-status"),"The image could not be loaded for portrait editing. Try reopening the record.",true);syncFaceButton();};img.src=url;img.alt=record.title+" original scan";img.hidden=false;}else{fallback.textContent="This attachment is a document file and cannot be previewed as an image.";}}else{fallback.textContent="No attachment is saved for this record.";}showModal("record-detail-modal");}
+  function readFamilyRelationships(record){
+    const labels={"Mother":"Mother","Father":"Father","Mother’s father":"Maternal grandfather","Mother’s mother":"Maternal grandmother","Father’s father":"Paternal grandfather","Father’s mother":"Paternal grandmother"};
+    const values=[];
+    Object.entries(labels).forEach(([stored,label])=>{
+      const match=String(record.description||"").match(new RegExp("^Family - "+stored+":\\s*([^\\r\\n]+)$","im"));
+      if(match&&match[1].trim())values.push([label,match[1].trim()]);
+    });
+    return values;
+  }
+  function renderPageNameList(record){
+    const section=$("detail-family-information"),list=$("page-name-list"),familyList=$("detail-family-list");
+    if(!section||!list||!familyList)return;
+    familyList.replaceChildren();list.replaceChildren();
+    const family=readFamilyRelationships(record);
+    family.forEach(([label,value])=>{const term=document.createElement("dt"),definition=document.createElement("dd");term.textContent=label;definition.textContent=value;familyList.append(term,definition);});
+    const seen=new Set(family.map(([,value])=>value.toLocaleLowerCase()));
+    const addName=(name,kind,index)=>{
+      const key=name.trim().toLocaleLowerCase();if(!key||seen.has(key))return;seen.add(key);
+      const li=document.createElement("li"),label=document.createElement("span"),remove=document.createElement("button");
+      label.textContent=name+" · "+kind;li.append(label);
+      if(kind==="Identified on page"){remove.type="button";remove.className="small-button";remove.textContent="Remove";remove.hidden=!currentUser;remove.addEventListener("click",()=>removePageName(index));li.append(remove);}
+      list.append(li);
+    };
+    String(record.persons_mentioned||"").split(/[\\n,;]+/).map(name=>name.trim()).filter(Boolean).forEach(name=>addName(name,"Mentioned in record"));
+    const pageNames=readPageNames(record);
+    pageNames.forEach((entry,index)=>addName(entry.name,"Identified on page",index));
+    section.hidden=!family.length&&!list.children.length;
+    drawPageNameOverlay(record);
+  }
+  async function openRecordDetail(record){
+    window.tylkaActiveDetailRecord=record;
+    $("detail-edit-record").hidden=!currentUser;
+    $("detail-title").textContent=record.title;
+    const meta=[categoryNames[canonical(record.category)]||record.category];
+    if(record.record_date)meta.push("Record date: "+record.record_date);
+    if(record.location)meta.push(record.location);
+    $("detail-meta").textContent=meta.join(" · ");
+    $("detail-description").textContent=(record.description||"No transcription or notes have been added.").replace(/^(?:Date on record|Research confidence|Bride|Groom|Family - Mother|Family - Father|Family - Mother’s father|Family - Mother’s mother|Family - Father’s father|Family - Father’s mother|Page name identifications):\\s*[^\\r\\n]+\\s*/gim,"").trim()||"No transcription or notes have been added.";
+    renderPageNameList(record);
+    const confidence=readConfidence(record.description);
+    $("detail-confidence").textContent="Research confidence: "+confidenceLabel(confidence);
+    $("detail-confidence").className="detail-confidence confidence-"+confidence;
+    if($("detail-confidence-select"))$("detail-confidence-select").value=confidence;
+    if($("save-confidence"))$("save-confidence").hidden=!currentUser;
+    if($("confidence-save-status"))$("confidence-save-status").textContent="";
+    const img=$("detail-image"),fallback=$("detail-file-fallback"),download=$("download-record-image");
+    if(download){download.hidden=!(record.file_path&&isImage(record));download.onclick=async()=>{if(!record.file_path)return;const url=publicFileUrl(record.file_path);try{const response=await fetch(url);if(!response.ok)throw new Error("Download unavailable");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");link.href=objectUrl;link.download=record.file_name||nextSiteFileName(record.category);document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);}catch{const link=document.createElement("a");link.href=url;link.download=record.file_name||"record-image";link.click();}};}
+    img.hidden=true;img.removeAttribute("src");
+    const nameOverlay=$("page-name-overlay");if(nameOverlay){nameOverlay.width=0;nameOverlay.height=0;}
+    fallback.replaceChildren();resetViewer();setupViewer();
+    if(record.file_path){const url=publicFileUrl(record.file_path);if(isImage(record)){img.crossOrigin="anonymous";img.onload=()=>{syncFaceButton();drawPageNameOverlay(record);};img.onerror=()=>{setMessage($("face-crop-status"),"The image could not be loaded for portrait editing. Try reopening the record.",true);syncFaceButton();};img.src=url;img.alt=record.title+" original scan";img.hidden=false;}else{fallback.textContent="This attachment is a document file and cannot be previewed as an image.";}}
+    else{fallback.textContent="No attachment is saved for this record.";}
+    showModal("record-detail-modal");
+  }
 
   $("detail-edit-record")?.addEventListener("click",()=>{const record=window.tylkaActiveDetailRecord;if(record&&currentUser)beginEditRecord(record);});
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
