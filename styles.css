@@ -4767,3 +4767,33 @@ html[data-theme="dark"] .identified-family-card,body[data-theme="dark"] .identif
 
 /* Keep owner-only research assessment controls hidden for public visitors. */
 #confidence-editor[hidden]{display:none!important}
+
+/* LOW-HEAT MODE: preserve the archive palette and interaction transitions,
+   but stop background/looping animations and expensive blur effects. */
+*,*::before,*::after{
+  animation:none!important;
+}
+html[data-theme="dark"] body::before{
+  animation:none!important;
+  filter:none!important;
+  transform:none!important;
+  opacity:.15!important;
+}
+html body header.site-header:before,
+html body header.site-header:after,
+html body header.site-header .wordmark,
+html body header.site-header .wordmark .monogram,
+html body footer.site-footer:before,
+html body footer.site-footer .wordmark,
+html body footer.site-footer .wordmark .monogram,
+body:after,
+#tylka-page-veil,
+#tylka-page-veil:before,
+#tylka-page-veil:after{
+  animation:none!important;
+  filter:none!important;
+}
+.site-header,.site-footer,.site-modal,.modal-card{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
