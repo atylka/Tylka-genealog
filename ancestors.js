@@ -9,11 +9,11 @@
   if(!faces.length&&person.portrait_url)faces=[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id,created_at:person.updated_at}];
   return faces.filter(face=>face&&(face.url||face.portrait_url)).map(face=>({...face,url:face.url||face.portrait_url}));
  }
- function extractRecordDate(record){const direct=String(record?.record_date||"").trim();if(direct)return direct;const description=String(record?.description||"");const match=description.match(/^Date on record:\\s*([^\\r\\n]+)/im);return match?match[1].trim():"";}
- function normalizeName(value){return String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLocaleLowerCase().replace(/[^a-z0-9]+/g," ").trim();}
- function recordedDate(value){const raw=String(value||"").trim();if(!raw)return "";const iso=raw.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);if(iso){const date=new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));return date.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}return raw;}
- function recordNames(record){const raw=[record.persons_mentioned,record.title,record.description].filter(Boolean).join("\\n");return raw.split(/[\\n,;|]+/).map(part=>normalizeName(part.replace(/^\\s*[^:]{1,40}:\\s*/,""))).filter(Boolean);}
- function personDates(records,people){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,"");const kind=category.includes("birth")||category.includes("bapt")?"birth":category.includes("death")||category.includes("burial")?"death":null;const raw=extractRecordDate(record);if(!kind||!raw)return;const date=recordedDate(raw),names=recordNames(record),joined=" "+names.join(" ")+" ";(people||[]).forEach(person=>{const name=normalizeName(person.name);if(!name)return;const matched=names.some(candidate=>candidate===name||(" "+candidate+" ").includes(" "+name+" "))||joined.includes(" "+name+" ");if(!matched)return;if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
+ function extractRecordDate(record){const direct=String(record?.record_date||"").trim();if(direct)return direct;const description=String(record?.description||"");const match=description.match(/^Date on record:\s*([^\r\n]+)/im);return match?match[1].trim():"";}
+ function normalizeName(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase().replace(/[^a-z0-9]+/g," ").trim();}
+ function recordedDate(value){const raw=String(value||"").trim();if(!raw)return "";const iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const date=new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));return date.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}return raw;}
+ function recordNames(record){const raw=[record.persons_mentioned,record.title,record.description].filter(Boolean).join("\n");return raw.split(/[\n,;|]+/).map(part=>normalizeName(part.replace(/^\s*[^:]{1,40}:\s*/,""))).filter(Boolean);}
+ function personDates(records,people){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,"");const kind=category.includes("birth")||category.includes("bapt")?"birth":category.includes("death")||category.includes("burial")?"death":null;const raw=extractRecordDate(record);if(!kind||!raw)return;const date=recordedDate(raw),names=recordNames(record);(people||[]).forEach(person=>{const name=normalizeName(person.name);if(!name)return;const matched=names.some(candidate=>candidate===name||candidate.includes(name));if(!matched)return;if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
  function ensureModal(){
   if(modal)return modal;
   modal=document.createElement("section");modal.className="site-modal ancestor-face-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Ancestor face gallery");
@@ -80,16 +80,16 @@
   people.sort((a,b)=>a.name.localeCompare(b.name));
   grid.replaceChildren();count.textContent=people.length+" "+(people.length===1?"person":"people");empty.hidden=people.length>0;
   people.forEach(person=>{
-   const faces=faceList(person);if(!faces.length)return;
+   const faces=faceList(person);
    const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";card.dataset.personId=person.id;
-   const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";trigger.setAttribute("aria-label","View all "+faces.length+" portraits of "+person.name);
-   const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Portrait of "+person.name;
+   const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";trigger.disabled=!faces.length;trigger.setAttribute("aria-label",faces.length?"View all "+faces.length+" portraits of "+person.name:person.name+" — no portraits saved");
+   if(faces.length){const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Portrait of "+person.name;trigger.append(image);}
+   else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.textContent="Portrait not added";trigger.append(placeholder);}
    const body=document.createElement("div");body.className="ancestor-card-body";
    const title=document.createElement("h3");title.textContent=person.name;
-   const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length+" saved "+(faces.length===1?"face":"faces");
+   const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length?faces.length+" saved "+(faces.length===1?"face":"faces"):"No portraits saved";
    const life=document.createElement("p");life.className="ancestor-life-dates";const personDate=dates.get(normalizeName(person.name))||{};const dateParts=[];if(personDate.birth)dateParts.push("Born: "+personDate.birth);if(personDate.death)dateParts.push("Died: "+personDate.death);life.textContent=dateParts.join(" · ");life.hidden=!dateParts.length;
-   const open=document.createElement("span");open.className="small-button";open.textContent="View all faces";
-   body.append(title,source,life,open);trigger.append(image,body);trigger.addEventListener("click",()=>openPerson(person));card.append(trigger);grid.append(card);
+   const open=document.createElement("span");open.className="small-button";open.textContent=faces.length?"View all faces":"Portrait unavailable";body.append(title,source,life,open);trigger.append(body);if(faces.length)trigger.addEventListener("click",()=>openPerson(person));card.append(trigger);grid.append(card);
   });
  }
  async function load(){
