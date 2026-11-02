@@ -5227,3 +5227,20 @@ body.dark-mode #ancestor-grid .ancestor-card-open .ancestor-life-dates{color:#e1
  #home-results .home-search-record-card.has-scan{grid-template-columns:92px minmax(0,1fr)}
  #home-results .home-search-record-card.no-scan{grid-template-columns:minmax(0,1fr)!important}
 }
+
+
+/* Final homepage flow: explicitly pin every section to its own row so older
+   desktop grid rules cannot push the heading beneath the search results. */
+.home-search-page #home-search-workspace.home-search-layout{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ grid-auto-flow:row!important;grid-auto-rows:auto!important;align-items:start!important;
+ row-gap:.25rem!important;
+}
+.home-search-page #home-search-workspace>.home-search-intro{grid-column:1!important;grid-row:1!important;order:0!important;}
+.home-search-page #home-search-workspace>.home-search-box{grid-column:1!important;grid-row:2!important;order:0!important;margin:.12rem 0 .15rem!important;}
+.home-search-page #home-search-workspace>.home-search-divider{grid-column:1!important;grid-row:3!important;order:0!important;margin:.55rem auto .85rem!important;}
+.home-search-page #home-search-workspace>#home-results{grid-column:1!important;grid-row:4!important;order:0!important;margin:.1rem 0 1rem!important;}
+.home-search-page .home-search-intro h1{margin:0!important;line-height:1!important;}
+.home-search-page .home-search-intro .section-intro{margin:.2rem 0 .1rem!important;}
+#home-results .home-search-record-card{cursor:pointer;}
+#home-results .home-search-record-card:focus-visible{outline:2px solid #8f202b;outline-offset:3px;}
