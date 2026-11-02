@@ -4902,3 +4902,54 @@ html { scroll-behavior: auto; }
 
 /* Slightly wider search panel, tucked closer to its heading. */
 @media(min-width:761px){.home-search-page #home-search-workspace.home-search-layout{grid-template-columns:minmax(0,.92fr) minmax(380px,1.18fr)!important;column-gap:clamp(1rem,2.2vw,2rem)!important}.home-search-page #home-search-workspace>.home-search-box{width:100%;padding:clamp(1.35rem,3vw,2.15rem)}}
+
+
+/* Desktop performance mode: keep the antique palette and short interactions,
+   but stop continuously repainting decorative layers while the site is open. */
+@media (min-width: 761px) {
+  html:not(.reduce-motion) body::before,
+  html:not(.reduce-motion) body::after,
+  html:not(.reduce-motion) .site-header,
+  html:not(.reduce-motion) .site-header::before,
+  html:not(.reduce-motion) .site-header::after,
+  html:not(.reduce-motion) .site-footer::before,
+  html:not(.reduce-motion) .ticker::after,
+  html:not(.reduce-motion) .ticker i,
+  html:not(.reduce-motion) .wordmark,
+  html:not(.reduce-motion) .wordmark .monogram,
+  html:not(.reduce-motion) .primary-nav a,
+  html:not(.reduce-motion) .archive-toolbar,
+  html:not(.reduce-motion) .chrono-filter-panel,
+  html:not(.reduce-motion) .upload-card,
+  html:not(.reduce-motion) .auth-card,
+  html:not(.reduce-motion) .record-card,
+  html:not(.reduce-motion) .ancestor-card,
+  html:not(.reduce-motion) .location-item,
+  html:not(.reduce-motion) .paper-card,
+  html:not(.reduce-motion) .archive-folder,
+  html:not(.reduce-motion) .brand-banner,
+  html:not(.reduce-motion) input,
+  html:not(.reduce-motion) select,
+  html:not(.reduce-motion) textarea,
+  html:not(.reduce-motion) .chrono-ornament b,
+  html:not(.reduce-motion) .chrono-main::before,
+  html:not(.reduce-motion) .back-to-top::before,
+  html:not(.reduce-motion) .home-search-page * {
+    animation: none !important;
+  }
+  html:not(.reduce-motion) body::before {
+    filter: none !important;
+    opacity: .12 !important;
+  }
+  html:not(.reduce-motion) body::after {
+    display: none !important;
+    animation: none !important;
+  }
+  html:not(.reduce-motion) .site-header,
+  html:not(.reduce-motion) .record-card,
+  html:not(.reduce-motion) .ancestor-card,
+  html:not(.reduce-motion) .location-item,
+  html:not(.reduce-motion) .paper-card {
+    will-change: auto !important;
+  }
+}
