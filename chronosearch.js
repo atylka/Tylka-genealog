@@ -23,7 +23,7 @@
  };
  const familyValues=record=>{
   const raw=String(record.description||"");
-  const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\s*([^\r\n]+)$","im"));return m?m[1].trim():"";};
+  const read=label=>{const m=raw.match(new RegExp("^Family - "+label+":\\s*([^\\r\\n]+)$","im"));return m?m[1].trim():"";};
   return {mother:read("Mother"),father:read("Father"),maternalGrandfather:read("Mother’s father"),maternalGrandmother:read("Mother’s mother"),paternalGrandfather:read("Father’s father"),paternalGrandmother:read("Father’s mother")};
  };
  const thumbnailView=record=>{const m=String(record.description||"").match(/^Chrono thumbnail view:\s*(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/im);return m?{x:Math.max(0,Math.min(100,+m[1])),y:Math.max(0,Math.min(100,+m[2])),zoom:Math.max(1,Math.min(2.4,+m[3]))}:{x:50,y:50,zoom:1};};
