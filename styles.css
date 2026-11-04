@@ -7808,3 +7808,21 @@ body:has(main.ancestor-page) .ancestor-page-header .section-intro>p strong{
  .ancestor-profile-layout{grid-template-columns:1fr!important}.ancestor-profile-facts{grid-template-columns:1fr!important}
  .ancestor-card-open .ancestor-portrait,.ancestor-card-open .ancestor-portrait-placeholder{height:160px!important;min-height:160px!important}
 }
+
+
+/* 2026-11-03: Interactive ancestor relationship links and historical location profile details. */
+.ancestor-relationship-links,.location-profile-people{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ancestor-relationship-link,.location-profile-person{border:1px solid rgba(132,73,48,.42);border-radius:999px;background:rgba(115,34,39,.09);color:var(--ink,#39251e);padding:7px 12px;font:inherit;font-size:.9rem;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.ancestor-relationship-link:hover,.location-profile-person:hover{background:rgba(115,34,39,.18);border-color:rgba(132,73,48,.75);transform:translateY(-1px)}
+.ancestor-relationship-unlinked{display:inline-flex;align-items:center;border:1px dashed rgba(132,73,48,.38);border-radius:999px;padding:7px 12px;font-size:.9rem}
+.location-profile-summary{margin:14px 0 18px;padding:15px;border:1px solid rgba(164,125,76,.42);border-radius:12px;background:rgba(154,112,69,.09)}
+.location-profile-summary h3{margin:0 0 10px;color:var(--heading,#61202a);font-family:Georgia,serif;font-size:1.15rem}
+.location-profile-summary h4{margin:14px 0 6px;font-size:.92rem;color:var(--heading,#61202a)}
+.location-profile-fact,.location-profile-note{margin:7px 0;color:var(--ink,#39251e);line-height:1.55;font-size:.92rem}
+.location-profile-note{font-style:italic;opacity:.82}
+body.dark-mode .ancestor-relationship-link,body.dark-mode .location-profile-person{color:#f0dfc4;border-color:rgba(205,165,104,.42);background:rgba(91,43,31,.48)}
+body.dark-mode .ancestor-relationship-unlinked{color:#e8d5b8;border-color:rgba(205,165,104,.38)}
+body.dark-mode .location-profile-summary{background:rgba(56,29,23,.78);border-color:rgba(190,145,83,.42)}
+body.dark-mode .location-profile-summary h3,body.dark-mode .location-profile-summary h4{color:#e6c58d}
+body.dark-mode .location-profile-fact,body.dark-mode .location-profile-note{color:#eadcc5}
+@media(max-width:640px){.location-profile-summary{padding:12px}.ancestor-relationship-link,.location-profile-person{font-size:.86rem;padding:7px 10px}}
