@@ -4,7 +4,7 @@
   const $ = id => document.getElementById(id);
   const recordsList = $("records-list"), recordSearch = $("record-search");
   const categoryNames = {births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
-  let client = null, currentUser = null, records = [], activeFolder = "all";
+  let client = null, currentUser = null, records = [], activeFolder = "all", catalogFieldsAvailable = true;
   const canonical = value => { const key=String(value||"").toLowerCase().trim().replace(/[ &-]+/g,"_"); const aliases={research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"}; return aliases[key]||key; };
   const setMessage = (node,text,error=false) => { if(node){node.textContent=text;node.classList.toggle("message-error",error);} };
   const publicFileUrl = path => path ? client.storage.from("family-archive").getPublicUrl(path).data.publicUrl : null;
@@ -187,9 +187,14 @@
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
   async function loadRecords(){
     recordsList.textContent="Loading records…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
-    if(error){recordsList.textContent="Could not load records. "+error.message;return;}
-    records=data||[];renderRecords();
+    let result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    if(result.error&&/(?:column .* does not exist|schema cache)/i.test(result.error.message||"")){
+      catalogFieldsAvailable=false;
+      document.querySelectorAll(".archive-catalog-field").forEach(field=>field.hidden=true);
+      result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    }
+    if(result.error){recordsList.textContent="Could not load records. "+result.error.message;return;}
+    records=result.data||[];renderRecords();
   }
   async function start(){
     if(!configured||!window.supabase){recordsList.textContent="Archive connection is not configured.";return;}
@@ -294,7 +299,8 @@
     try{
       const existing=editingRecordId?records.find(r=>r.id===editingRecordId):null;
       if(file){const siteName=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);newFilePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+siteName;const {error}=await client.storage.from("family-archive").upload(newFilePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
-      const values={title,category,description,location,persons_mentioned:personsMentioned,record_date:recordDate||null,collection_name:$("record-collection").value.trim()||null,record_type:$("record-type").value.trim()||null,record_language:$("record-language").value.trim()||null,repository:$("record-repository").value.trim()||null,source_reference:$("record-source-reference").value.trim()||null,provenance:$("record-provenance").value.trim()||null,transcription_status:$("record-transcription-status").value,translation_status:$("record-translation-status").value,preservation_notes:$("record-preservation-notes").value.trim()||null};
+      const values={title,category,description,location,persons_mentioned:personsMentioned,record_date:recordDate||null};
+      if(catalogFieldsAvailable)Object.assign(values,{collection_name:$("record-collection").value.trim()||null,record_type:$("record-type").value.trim()||null,record_language:$("record-language").value.trim()||null,repository:$("record-repository").value.trim()||null,source_reference:$("record-source-reference").value.trim()||null,provenance:$("record-provenance").value.trim()||null,transcription_status:$("record-transcription-status").value,translation_status:$("record-translation-status").value,preservation_notes:$("record-preservation-notes").value.trim()||null});
       if(file){values.file_path=newFilePath;values.file_name=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);values.mime_type=file.type;values.file_size=file.size;}
       let result;
       if(editingRecordId)result=await client.from("archive_records").update(values).eq("id",editingRecordId);
