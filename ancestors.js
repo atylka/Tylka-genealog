@@ -16,6 +16,23 @@
  function recordSubjectName(record){const title=String(record?.title||"").trim();if(!title)return "";const labeled=title.match(/^(?:birth(?:\s+record)?\s+of|baptism(?:\s+record)?\s+of|death(?:\s+record)?\s+of|burial(?:\s+record)?\s+of)\s+(.+)$/i);return normalizeName(labeled?labeled[1]:title);}
  function personDates(records,people){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,"");const kind=category.includes("birth")||category.includes("bapt")?"birth":category.includes("death")||category.includes("burial")?"death":null;const raw=extractRecordDate(record),subject=recordSubjectName(record);if(!kind||!raw||!subject)return;const date=recordedDate(raw);(people||[]).forEach(person=>{const name=normalizeName(person.name);if(!name||subject!==name)return;if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
  function readLabeledValue(description,label){const prefix=label+":";const line=String(description||"").split(/\r?\n/).find(item=>item.trimStart().startsWith(prefix));return line?line.trim().slice(prefix.length).trim():"";}
+ function deduplicatePeople(people){
+  const merged=new Map();
+  (people||[]).forEach(person=>{
+   const key=normalizeName(person.name);
+   if(!key)return;
+   const existing=merged.get(key);
+   if(!existing){merged.set(key,{...person,portraits:faceList(person)});return;}
+   const combined=[...faceList(existing),...faceList(person)];
+   const seen=new Set();
+   existing.portraits=combined.filter(face=>{const url=String(face.url||"").trim();if(!url||seen.has(url))return false;seen.add(url);return true;});
+   if(!existing.portrait_url)existing.portrait_url=person.portrait_url||existing.portraits[0]?.url||null;
+   if(!existing.source_title&&person.source_title)existing.source_title=person.source_title;
+   if(!existing.source_record_id&&person.source_record_id)existing.source_record_id=person.source_record_id;
+   existing.record_mentioned_only=Boolean(existing.record_mentioned_only||person.record_mentioned_only);
+  });
+  return [...merged.values()];
+ }
  function namesFromRecords(records){
   const names=new Map(),add=value=>{const name=String(value||"").trim().replace(/^["']|["']$/g,"");const key=normalizeName(name);if(!key||key.length<2||/^(unknown|not recorded|none|n a)$/.test(key))return;if(!names.has(key))names.set(key,name);};
   (records||[]).forEach(record=>{
@@ -144,7 +161,7 @@
   namesFromRecords(records).forEach(name=>{const key=normalizeName(name);if(!known.has(key)){known.add(key);people.push({id:"record-person-"+key.replace(/\s+/g,"-"),name,portrait_url:null,portraits:[],record_mentioned_only:true});}});
   window.__tylkaAncestorPeople=people;
   const profiles=personProfiles(records,people);
-  render(people,profiles);
+  render(uniquePeople,profiles);
  }
  load().catch(error=>{console.error("Ancestor page failed to load:",error);count.textContent="Could not load ancestor cards.";empty.hidden=false;empty.textContent="The ancestor list encountered an error while loading. Please check the browser console.";});window.addEventListener("tylka:auth-changed",load);
 })();
