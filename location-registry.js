@@ -98,6 +98,23 @@
     });
     return [...found.values()].sort((a,b)=>a.name.localeCompare(b.name));
   }
+  function renderAllLocations(){
+    const container=document.getElementById("all-locations-list");
+    const total=document.getElementById("all-locations-count");
+    if(!container)return;
+    container.replaceChildren();
+    if(total)total.textContent=places.length+" distinct location"+(places.length===1?"":"s");
+    if(!places.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="No locations have been recorded yet. Add a place to a saved family record and it will appear here.";container.append(empty);return;}
+    places.forEach(place=>{
+      const button=document.createElement("button");button.type="button";
+      button.className="all-location-card"+(selected&&normalize(selected.name)===normalize(place.name)?" is-selected":"");
+      const name=document.createElement("strong");name.textContent=place.name;
+      const meta=document.createElement("span");meta.textContent=place.records.length+" linked record"+(place.records.length===1?"":"s");
+      button.append(name,meta);
+      button.addEventListener("click",()=>{search.value="";renderList();selectPlace(place);document.getElementById("family-map")?.scrollIntoView({behavior:"smooth",block:"center"});});
+      container.append(button);
+    });
+  }
   function renderList(){
     list.replaceChildren();
     const term=normalize(search.value);
@@ -144,7 +161,7 @@
   }
 
   async function selectPlace(place,preserveMarkers=false){
-    selected=place;const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
+    selected=place;renderAllLocations();const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
       initMap();
       const [lat,lng]=await coordinatesFor(place);
@@ -229,7 +246,7 @@
     });
     renderPeople();
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
-    renderList();initMap();
+    renderList();renderAllLocations();initMap();
     const requested=new URLSearchParams(window.location.search).get("place");
     if(requested){const initial=places.find(p=>normalize(p.name)===normalize(requested));if(initial){search.value=requested;renderList();selectPlace(initial);}}
   }
