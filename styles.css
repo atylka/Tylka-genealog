@@ -7826,3 +7826,50 @@ body.dark-mode .location-profile-summary{background:rgba(56,29,23,.78);border-co
 body.dark-mode .location-profile-summary h3,body.dark-mode .location-profile-summary h4{color:#e6c58d}
 body.dark-mode .location-profile-fact,body.dark-mode .location-profile-note{color:#eadcc5}
 @media(max-width:640px){.location-profile-summary{padding:12px}.ancestor-relationship-link,.location-profile-person{font-size:.86rem;padding:7px 10px}}
+
+
+/* Ancestor index: compact, consistent-height people cards */
+.ancestor-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-auto-rows:1fr;
+  align-items:stretch;
+  gap:.8rem;
+}
+.ancestor-card{display:flex;min-height:0;height:100%}
+.ancestor-card-open{
+  display:flex;width:100%;height:100%;min-width:0;flex-direction:column;
+  padding:0;border:0;background:transparent;color:inherit;text-align:left;
+}
+.ancestor-portrait,.ancestor-portrait-placeholder{
+  display:block;width:100%;height:112px;min-height:112px;aspect-ratio:auto;
+  object-fit:cover;background:var(--paper-dark);
+}
+.ancestor-portrait-placeholder{
+  display:flex;align-items:center;justify-content:center;padding:.5rem;
+  font-size:.8rem;text-align:center;color:var(--muted);
+}
+.ancestor-card-body{
+  display:flex;flex:1;min-width:0;flex-direction:column;
+  padding:.65rem .7rem .7rem;gap:.2rem;
+}
+.ancestor-card-body h3{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;min-height:2.5em;margin:0 0 .15rem;font-size:1rem;line-height:1.25;
+}
+.ancestor-card-body .ancestor-source,
+.ancestor-card-body .ancestor-life-dates,
+.ancestor-card-body .ancestor-siblings,
+.ancestor-card-body .ancestor-card-evidence{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;margin:.05rem 0;font-size:.78rem;line-height:1.3;
+}
+.ancestor-card-body .ancestor-life-dates[hidden],
+.ancestor-card-body .ancestor-siblings[hidden]{display:none}
+.ancestor-card-body .small-button{margin-top:auto;padding:.38rem .55rem;min-height:32px;font-size:.78rem}
+@media(max-width:1100px){.ancestor-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:850px){.ancestor-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){
+ .ancestor-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+ .ancestor-portrait,.ancestor-portrait-placeholder{height:96px;min-height:96px}
+ .ancestor-card-body{padding:.55rem}
+}
