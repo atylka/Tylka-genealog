@@ -51,3 +51,26 @@ drop trigger if exists archive_records_assign_accession_number on public.archive
 create trigger archive_records_assign_accession_number
 before insert on public.archive_records
 for each row execute function public.assign_archive_accession_number();
+
+-- Keep portrait changes restricted to the configured archive owner.
+drop policy if exists "Owner can insert ancestor portraits" on public.ancestor_portraits;
+create policy "Owner can insert ancestor portraits"
+on public.ancestor_portraits for insert
+with check (
+  auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
+  and auth.uid() = created_by
+);
+
+drop policy if exists "Owner can update ancestor portraits" on public.ancestor_portraits;
+create policy "Owner can update ancestor portraits"
+on public.ancestor_portraits for update
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid)
+with check (
+  auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
+  and auth.uid() = created_by
+);
+
+drop policy if exists "Owner can delete ancestor portraits" on public.ancestor_portraits;
+create policy "Owner can delete ancestor portraits"
+on public.ancestor_portraits for delete
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid);
