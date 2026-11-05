@@ -23,7 +23,7 @@
     recordsList.classList.toggle("all-records-view",activeFolder==="all");
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
-    const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned].join(" ").toLowerCase().includes(term));
+    const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned,r.accession_number,r.collection_name,r.record_type,r.source_reference].join(" ").toLowerCase().includes(term));
     if(!filtered.length){const p=document.createElement("p");p.className="empty-state";p.textContent=records.length?"No records match this search.":"No records have been added yet.";recordsList.append(p);return;}
     filtered.forEach(record=>{
       if(activeFolder==="all"){
@@ -40,7 +40,7 @@
         const view=document.createElement("button");view.type="button";view.className="small-button record-view-button";view.textContent="View record details";view.setAttribute("aria-label","View record details: "+(record.title||"Untitled record"));view.addEventListener("click",open);
         details.append(category,title,view);
         if(record.location){const place=document.createElement("p");place.className="record-location";place.textContent="Location: "+record.location;details.append(place);}
-        if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
+        if(record.accession_number){const accession=document.createElement("p");accession.className="record-date";accession.textContent="Accession: "+record.accession_number;details.append(accession);}if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
         card.append(details);
         if(currentUser){const actions=document.createElement("div");actions.className="record-actions";const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async()=>{if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(edit,del);card.append(actions);}
         recordsList.append(card);return;
@@ -51,7 +51,7 @@
       const category=document.createElement("span");category.className="record-category";category.textContent=categoryNames[canonical(record.category)]||record.category;details.append(category);
       const title=document.createElement("h3");title.textContent=record.title||"Untitled record";details.append(title);const view=document.createElement("button");view.type="button";view.className="small-button record-view-button";view.textContent="View record details";view.setAttribute("aria-label","View record details: "+(record.title||"Untitled record"));view.addEventListener("click",()=>openRecordDetail(record));details.append(view);
       if(record.location){const p=document.createElement("p");p.className="record-location";p.append(document.createTextNode("Location: "));const a=document.createElement("a");a.className="record-location-link";a.textContent=record.location;a.href="location-registry.html?place="+encodeURIComponent(record.location);p.append(a);details.append(p);}
-      if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
+      if(record.accession_number){const accession=document.createElement("p");accession.className="record-date";accession.textContent="Accession: "+record.accession_number;details.append(accession);}if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
       const confidence=readConfidence(record.description);if(confidence!=="unassessed"){const confidenceBadge=document.createElement("span");confidenceBadge.className="confidence-badge confidence-"+confidence;confidenceBadge.textContent="Research: "+confidenceLabel(confidence);details.append(confidenceBadge);}
       card.append(details);
       const actions=document.createElement("div");actions.className="record-actions";
@@ -151,8 +151,18 @@
     $("detail-edit-record").hidden=!currentUser;
     $("detail-title").textContent=record.title;
     const meta=[categoryNames[canonical(record.category)]||record.category];
+    if(record.accession_number)meta.push("Accession: "+record.accession_number);
     if(record.record_date)meta.push("Record date: "+record.record_date);
-    if(record.location)meta.push(record.location);
+    if(record.location)meta.push("Location: "+record.location);
+    if(record.collection_name)meta.push("Collection: "+record.collection_name);
+    if(record.record_type)meta.push("Record type: "+record.record_type);
+    if(record.record_language)meta.push("Language: "+record.record_language);
+    if(record.repository)meta.push("Repository: "+record.repository);
+    if(record.source_reference)meta.push("Source reference: "+record.source_reference);
+    if(record.transcription_status)meta.push("Transcription: "+record.transcription_status.replace(/_/g," "));
+    if(record.translation_status)meta.push("Translation: "+record.translation_status.replace(/_/g," "));
+    if(record.provenance)meta.push("Provenance: "+record.provenance);
+    if(record.preservation_notes)meta.push("Preservation: "+record.preservation_notes);
     $("detail-meta").textContent=meta.join(" · ");
     const transcriptionNotes=readTranscriptionNotes(record);$("detail-description").textContent=transcriptionNotes;$("detail-transcription-panel").hidden=!transcriptionNotes;
     renderPageNameList(record);
@@ -177,7 +187,7 @@
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
   async function loadRecords(){
     recordsList.textContent="Loading records…";
-    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(error){recordsList.textContent="Could not load records. "+error.message;return;}
     records=data||[];renderRecords();
   }
@@ -219,6 +229,16 @@
     $("record-groom").value=groomMatch?groomMatch[1].trim():"";
     updateMarriageFields();
     $("record-title").value=record.title||"";
+    if($("record-accession-number"))$("record-accession-number").value=record.accession_number||"";
+    if($("record-collection"))$("record-collection").value=record.collection_name||"";
+    if($("record-type"))$("record-type").value=record.record_type||"";
+    if($("record-language"))$("record-language").value=record.record_language||"";
+    if($("record-repository"))$("record-repository").value=record.repository||"";
+    if($("record-source-reference"))$("record-source-reference").value=record.source_reference||"";
+    if($("record-provenance"))$("record-provenance").value=record.provenance||"";
+    if($("record-transcription-status"))$("record-transcription-status").value=record.transcription_status||"not_assessed";
+    if($("record-translation-status"))$("record-translation-status").value=record.translation_status||"not_assessed";
+    if($("record-preservation-notes"))$("record-preservation-notes").value=record.preservation_notes||"";
     $("record-category").value=canonical(record.category)||"notes";updateMarriageFields();
     $("record-date").value=record.record_date|| (dateMatch?dateMatch[1].trim():"");
     $("record-location").value=record.location||"";if($("record-parish"))$("record-parish").value=parishMatch?parishMatch[1].trim():"";if($("record-house-number"))$("record-house-number").value=houseMatch?houseMatch[1].trim():"";if($("record-page-entry"))$("record-page-entry").value=pageEntryMatch?pageEntryMatch[1].trim():"";
@@ -274,7 +294,7 @@
     try{
       const existing=editingRecordId?records.find(r=>r.id===editingRecordId):null;
       if(file){const siteName=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);newFilePath=currentUser.id+"/"+category+"/"+crypto.randomUUID()+"-"+siteName;const {error}=await client.storage.from("family-archive").upload(newFilePath,file,{contentType:file.type,upsert:false});if(error)throw error;}
-      const values={title,category,description,location,persons_mentioned:personsMentioned,record_date:recordDate||null};
+      const values={title,category,description,location,persons_mentioned:personsMentioned,record_date:recordDate||null,collection_name:$("record-collection").value.trim()||null,record_type:$("record-type").value.trim()||null,record_language:$("record-language").value.trim()||null,repository:$("record-repository").value.trim()||null,source_reference:$("record-source-reference").value.trim()||null,provenance:$("record-provenance").value.trim()||null,transcription_status:$("record-transcription-status").value,translation_status:$("record-translation-status").value,preservation_notes:$("record-preservation-notes").value.trim()||null};
       if(file){values.file_path=newFilePath;values.file_name=nextSiteFileName(category,editingRecordId?records.find(r=>r.id===editingRecordId)?.file_name:null);values.mime_type=file.type;values.file_size=file.size;}
       let result;
       if(editingRecordId)result=await client.from("archive_records").update(values).eq("id",editingRecordId);
