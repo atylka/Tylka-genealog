@@ -7873,3 +7873,16 @@ body.dark-mode .location-profile-fact,body.dark-mode .location-profile-note{colo
  .ancestor-portrait,.ancestor-portrait-placeholder{height:96px;min-height:96px}
  .ancestor-card-body{padding:.55rem}
 }
+
+/* Complete All Locations gazetteer */
+.all-locations-section{margin:2rem 0 1.5rem;padding:1.2rem 1.3rem;border:1px solid var(--line);background:var(--panel,rgba(230,214,184,.28))}
+.all-locations-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.all-locations-heading h2{margin:.15rem 0 .35rem}
+.all-locations-heading .section-intro{margin:0;max-width:48rem}
+.all-locations-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem}
+.all-location-card{display:flex;min-width:0;flex-direction:column;align-items:flex-start;gap:.3rem;padding:.75rem .85rem;border:1px solid var(--line);border-radius:4px;background:rgba(174,137,88,.09);color:var(--ink);text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.all-location-card:hover,.all-location-card:focus-visible,.all-location-card.is-selected{background:rgba(128,48,42,.13);border-color:var(--accent,#8c3c35);transform:translateY(-1px)}
+.all-location-card strong{overflow-wrap:anywhere}
+.all-location-card span{font-size:.8rem;color:var(--muted)}
+@media(max-width:900px){.all-locations-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.all-locations-section{padding:.9rem}.all-locations-heading{align-items:flex-start;flex-direction:column}.all-locations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.all-location-card{padding:.65rem}}
