@@ -1,4 +1,4 @@
--- Tylka Genealogical Log: private archive schema
+-- Tylka Genealogical Log: public-viewing archive schema
 -- Run this in Supabase SQL Editor. Owner account UUID is configured below.
 
 create extension if not exists pgcrypto;
@@ -18,7 +18,7 @@ create table if not exists public.archive_records (
 
 alter table public.archive_records enable row level security;
 
--- Record metadata is public; owner-only writes and private file storage remain protected.
+-- Record metadata and scans are publicly viewable; record and file writes remain owner-only.
 create policy "Anyone can view archive record details"
 on public.archive_records for select
 to anon, authenticated
@@ -44,16 +44,16 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values (
   'family-archive',
   'family-archive',
-  false,
+  true,
   20971520,
   array['image/jpeg','image/png','image/webp','image/tiff','application/pdf']
 )
 on conflict (id) do update set
-  public = false,
+  public = true,
   file_size_limit = 20971520,
   allowed_mime_types = excluded.allowed_mime_types;
 
-create policy "Owner can view private family archive files"
+create policy "Owner can list family archive files"
 on storage.objects for select to authenticated
 using (
   bucket_id = 'family-archive'
@@ -61,7 +61,7 @@ using (
   and auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
 );
 
-create policy "Owner can upload private family archive files"
+create policy "Owner can upload family archive files"
 on storage.objects for insert to authenticated
 with check (
   bucket_id = 'family-archive'
@@ -69,7 +69,7 @@ with check (
   and auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid
 );
 
-create policy "Owner can delete private family archive files"
+create policy "Owner can delete family archive files"
 on storage.objects for delete to authenticated
 using (
   bucket_id = 'family-archive'
