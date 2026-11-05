@@ -98,22 +98,37 @@
     });
     return [...found.values()].sort((a,b)=>a.name.localeCompare(b.name));
   }
-  function renderAllLocations(){
-    const container=document.getElementById("all-locations-list");
-    const total=document.getElementById("all-locations-count");
-    if(!container)return;
-    container.replaceChildren();
-    if(total)total.textContent=places.length+" distinct location"+(places.length===1?"":"s");
-    if(!places.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="No locations have been recorded yet. Add a place to a saved family record and it will appear here.";container.append(empty);return;}
-    places.forEach(place=>{
-      const button=document.createElement("button");button.type="button";
-      button.className="all-location-card"+(selected&&normalize(selected.name)===normalize(place.name)?" is-selected":"");
-      const name=document.createElement("strong");name.textContent=place.name;
-      const meta=document.createElement("span");meta.textContent=place.records.length+" linked record"+(place.records.length===1?"":"s");
-      button.append(name,meta);
-      button.addEventListener("click",()=>{search.value="";renderList();selectPlace(place);document.getElementById("family-map")?.scrollIntoView({behavior:"smooth",block:"center"});});
-      container.append(button);
-    });
+  async function showAllLocations(){
+    const button=document.getElementById("show-all-locations");
+    const status=document.getElementById("all-locations-status");
+    if(!places.length){if(status)status.textContent="No saved locations to display yet.";return;}
+    button.disabled=true;
+    if(status)status.textContent="Locating "+places.length+" places…";
+    try{
+      initMap();
+      markerLayer.clearLayers();selected=null;selectionSequence++;
+      renderList();detail.replaceChildren();
+      const prompt=document.createElement("p");prompt.className="empty-state";
+      prompt.textContent="All recorded locations are shown on the map. Select any marker to review its associated records.";
+      detail.append(prompt);
+      const bounds=[];let plotted=0,failed=0;
+      for(const place of places){
+        try{
+          const point=await coordinatesFor(place);
+          const pin=L.circleMarker(point,{radius:8,color:"#f0d18c",weight:2,fillColor:"#741923",fillOpacity:.96}).addTo(markerLayer);
+          pin.bindTooltip(escapeText(place.name),{permanent:true,direction:"top",offset:[0,-8],className:"registry-location-label"});
+          pin.bindPopup("<strong>"+escapeText(place.name)+"</strong><br>"+place.records.length+" linked record(s)");
+          pin.on("click",()=>selectPlace(place,true));
+          bounds.push(point);plotted++;
+        }catch(error){failed++;}
+        if(!coordinateCache.has(normalize(place.name)) && plotted+failed<places.length)
+          await new Promise(resolve=>setTimeout(resolve,1050));
+      }
+      map.stop();map.invalidateSize({pan:false,animate:false});
+      if(bounds.length===1)map.flyTo(bounds[0],11,{animate:true,duration:1.1});
+      else if(bounds.length>1)map.flyToBounds(L.latLngBounds(bounds).pad(.15),{animate:true,duration:1.35,easeLinearity:.2});
+      if(status)status.textContent=plotted+" of "+places.length+" locations mapped"+(failed?" · "+failed+" could not be located":"")+".";
+    }finally{button.disabled=false;}
   }
   function renderList(){
     list.replaceChildren();
@@ -161,7 +176,7 @@
   }
 
   async function selectPlace(place,preserveMarkers=false){
-    selected=place;renderAllLocations();const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
+    selected=place;const routeButton=document.getElementById("build-family-route");if(routeButton)routeButton.disabled=false;const sequence=++selectionSequence;renderList();detail.innerHTML='<p class="connection-status">Finding location on the map…</p>';
     try{
       initMap();
       const [lat,lng]=await coordinatesFor(place);
@@ -228,6 +243,7 @@
   const yearOf=record=>{const text=[record.title,record.description].join(" ");const m=text.match(/(?:18|19|20)\d{2}/);return m?Number(m[0]):9999;};
   async function buildMigrationRoute(){const output=document.getElementById("route-status");const button=document.getElementById("build-family-route");button.disabled=true;output.textContent="Geocoding places and ordering records…";try{initMap();if(!places.length)throw new Error("No saved locations yet. Add a location to at least two family records first.");const ordered=[...places].map(p=>({...p,firstYear:Math.min(...p.records.map(yearOf))})).sort((a,b)=>a.firstYear-b.firstYear);const plotted=[];for(const place of ordered){try{plotted.push({place,point:await coordinatesFor(place)});}catch(_){}}if(plotted.length<2)throw new Error("Add at least two specific locations with town and country details to build a route.");const coords=plotted.map(item=>item.point);markerLayer.clearLayers();const line=L.polyline(coords,{color:"#a32632",weight:4,opacity:.82,dashArray:"8 9"}).addTo(map);plotted.forEach((item,index)=>L.circleMarker(item.point,{radius:7,color:"#741923",fillColor:"#c34443",fillOpacity:1}).addTo(markerLayer).bindPopup("<strong>"+(index+1)+". "+escapeText(item.place.name)+"</strong>"));map.invalidateSize();map.flyToBounds(line.getBounds().pad(.18),{animate:true,duration:1.3,easeLinearity:.22});output.textContent="Journey plotted across "+plotted.length+" places, ordered by the earliest year found in their linked records."}catch(error){output.textContent=error.message;}finally{button.disabled=false;}}
   const routeButton=document.getElementById("build-family-route");if(routeButton){routeButton.disabled=false;routeButton.addEventListener("click",buildMigrationRoute);}
+  const allLocationsButton=document.getElementById("show-all-locations");if(allLocationsButton)allLocationsButton.addEventListener("click",showAllLocations);
 
   async function loadRegistry(){
     count.textContent="Loading public family locations…";
@@ -246,7 +262,7 @@
     });
     renderPeople();
     count.textContent=places.length+" indexed places · "+(data||[]).length+" public record descriptions reviewed";
-    renderList();renderAllLocations();initMap();
+    renderList();initMap();
     const requested=new URLSearchParams(window.location.search).get("place");
     if(requested){const initial=places.find(p=>normalize(p.name)===normalize(requested));if(initial){search.value=requested;renderList();selectPlace(initial);}}
   }
