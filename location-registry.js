@@ -23,7 +23,7 @@
   function initMap(){
     if(map || !window.L) return;
     map = L.map("family-map",{scrollWheelZoom:false,preferCanvas:true,fadeAnimation:true,zoomAnimation:true,markerZoomAnimation:true,zoomSnap:1}).setView([20,0],2);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:17,keepBuffer:3,updateWhenIdle:false,updateWhenZooming:true,updateInterval:100,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
     // Keep the standard OpenStreetMap tile colors in both site themes; theme changes do not rebuild the layer.
   }
