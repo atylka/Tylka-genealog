@@ -121,8 +121,7 @@
           pin.on("click",()=>selectPlace(place,true));
           bounds.push(point);plotted++;
         }catch(error){failed++;}
-        if(!coordinateCache.has(normalize(place.name)) && plotted+failed<places.length)
-          await new Promise(resolve=>setTimeout(resolve,1050));
+        if(plotted+failed<places.length) await new Promise(resolve=>setTimeout(resolve,1050));
       }
       map.stop();map.invalidateSize({pan:false,animate:false});
       if(bounds.length===1)map.flyTo(bounds[0],11,{animate:true,duration:1.1});
