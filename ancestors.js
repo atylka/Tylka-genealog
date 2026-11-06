@@ -150,7 +150,7 @@
    data=legacy.data;error=legacy.error;
    if(!error)data=(data||[]).map(person=>({...person,portraits:person.portrait_url?[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id}]:[]}));
   }
-  if(error){console.error("Ancestor people query failed:",error);count.textContent="Could not load people: "+error.message;empty.hidden=false;empty.textContent="The ancestor list could not be loaded. Check the Supabase ancestor_portraits table permissions and schema.";return;}
+  if(error){console.error("Ancestor people query failed; continuing with archive-derived names:",error);data=[];count.textContent="Profile photos unavailable — loading names from archive records";}
   const people=data||[];
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
   if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
