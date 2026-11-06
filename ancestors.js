@@ -159,8 +159,9 @@
   const records=lifeError?[]:(lifeRecords||[]);
   const known=new Set(people.map(person=>normalizeName(person.name)));
   namesFromRecords(records).forEach(name=>{const key=normalizeName(name);if(!known.has(key)){known.add(key);people.push({id:"record-person-"+key.replace(/\s+/g,"-"),name,portrait_url:null,portraits:[],record_mentioned_only:true});}});
-  window.__tylkaAncestorPeople=people;
-  const profiles=personProfiles(records,people);
+  const uniquePeople=deduplicatePeople(people);
+  window.__tylkaAncestorPeople=uniquePeople;
+  const profiles=personProfiles(records,uniquePeople);
   render(uniquePeople,profiles);
  }
  load().catch(error=>{console.error("Ancestor page failed to load:",error);count.textContent="Could not load ancestor cards.";empty.hidden=false;empty.textContent="The ancestor list encountered an error while loading. Please check the browser console.";});window.addEventListener("tylka:auth-changed",load);
