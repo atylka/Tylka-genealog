@@ -7979,3 +7979,31 @@ body[data-theme="dark"] #ancestor-grid .ancestor-view-button,
 html.theme-dark #ancestor-grid .ancestor-view-button,
 body.dark-mode #ancestor-grid .ancestor-view-button{background:#3b281e;color:#f0dfbf;border-color:#927044}
 @media(max-width:560px){#ancestor-grid .ancestor-view-button{width:calc(100% - 12px);margin:0 6px 6px;min-height:32px;font-size:.74rem}}
+
+
+/* 2026-11-09: Owner-only ancestor card management controls. */
+.ancestor-index-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;max-width:none;margin-bottom:1.1rem}
+.ancestor-index-heading h2{font-size:clamp(1.8rem,3vw,2.5rem)}
+.ancestor-index-tools{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+#ancestor-add-button{border-color:#8b6540;background:#4a2b20;color:#f5dfbf;font:600 .82rem Georgia,serif;padding:.55rem .85rem}
+#ancestor-add-button:hover{background:#603723;border-color:#b58a50;color:#fff0d3}
+#ancestor-add-button:focus-visible,.ancestor-remove-card:focus-visible{outline:2px solid #b58a50;outline-offset:2px}
+#ancestor-grid .ancestor-card{position:relative}
+#ancestor-grid .ancestor-remove-card{position:absolute;top:6px;right:6px;z-index:3;min-height:27px;padding:.25rem .48rem;border:1px solid rgba(255,232,204,.8);border-radius:3px;background:rgba(67,27,29,.92);color:#fff0d7;font:600 .68rem Georgia,serif;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.25)}
+#ancestor-grid .ancestor-remove-card:hover{background:#762d34;border-color:#e2bd92}
+#ancestor-grid .ancestor-remove-card:disabled{opacity:.65;cursor:wait}
+.ancestor-add-card{width:min(100%,480px)}
+.ancestor-add-card h2{font:2rem/1.1 Georgia,serif;color:var(--heading,#61202a)}
+.ancestor-add-card>p.connection-status{margin:.35rem 0 1rem;line-height:1.5}
+.ancestor-add-form{display:grid;gap:.55rem}
+.ancestor-add-form input{width:100%;box-sizing:border-box}
+.ancestor-add-status{margin:0;min-height:1.3rem}
+.ancestor-add-actions{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-top:.25rem}
+.ancestor-add-actions .button{margin:0}
+@media(max-width:600px){
+ .ancestor-index-heading{align-items:flex-start;flex-direction:column}
+ .ancestor-index-tools{width:100%;justify-content:space-between}
+ #ancestor-add-button{min-height:36px}
+ #ancestor-grid .ancestor-remove-card{top:5px;right:5px;padding:.2rem .4rem;font-size:.64rem}
+ .ancestor-add-card{padding:1.35rem}
+}
