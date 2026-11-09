@@ -7962,3 +7962,20 @@ body.dark-mode .location-profile-fact,body.dark-mode .location-profile-note{colo
   #ancestor-grid .ancestor-card-open .ancestor-card-body h3{font-size:.92rem!important}
   #ancestor-grid .ancestor-card-open .ancestor-card-date{font-size:.68rem!important}
 }
+
+
+/* 2026-11-09: Restore an explicit profile action on every ancestor card. */
+#ancestor-grid .ancestor-multi-card{cursor:default}
+#ancestor-grid .ancestor-view-button{
+  display:flex;align-items:center;justify-content:center;width:calc(100% - 16px);
+  min-height:34px;margin:0 8px 8px;padding:.42rem .7rem;
+  border:1px solid #9b7445;border-radius:3px;background:#4a2b20;
+  color:#f5dfb5;font:600 .8rem Georgia,serif;cursor:pointer;
+}
+#ancestor-grid .ancestor-view-button:hover{background:#5d351f;border-color:#b58a50}
+#ancestor-grid .ancestor-view-button:focus-visible{outline:2px solid #b58a50;outline-offset:2px}
+html[data-theme="dark"] #ancestor-grid .ancestor-view-button,
+body[data-theme="dark"] #ancestor-grid .ancestor-view-button,
+html.theme-dark #ancestor-grid .ancestor-view-button,
+body.dark-mode #ancestor-grid .ancestor-view-button{background:#3b281e;color:#f0dfbf;border-color:#927044}
+@media(max-width:560px){#ancestor-grid .ancestor-view-button{width:calc(100% - 12px);margin:0 6px 6px;min-height:32px;font-size:.74rem}}
