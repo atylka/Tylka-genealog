@@ -7892,3 +7892,28 @@ body.dark-mode .location-profile-fact,body.dark-mode .location-profile-note{colo
 .location-index-heading{display:flex;align-items:center;justify-content:space-between;gap:.65rem;margin:0 0 .65rem}
 .location-index-heading>.eyebrow{margin:0}
 .location-index-heading .small-button{flex:0 0 auto;margin:0;padding:.42rem .7rem;min-height:34px;font-size:.78rem;white-space:nowrap}
+
+
+/* 2026-11-09: Shorter ancestor index cards. */
+#ancestor-grid.ancestor-grid{grid-auto-rows:auto!important;align-items:stretch!important}
+#ancestor-grid .ancestor-card{height:auto!important;min-height:0!important}
+#ancestor-grid .ancestor-card-open{height:auto!important;min-height:0!important}
+#ancestor-grid .ancestor-card-open .ancestor-portrait,
+#ancestor-grid .ancestor-card-open .ancestor-portrait-placeholder{
+  height:128px!important;min-height:128px!important;max-height:128px!important;
+}
+#ancestor-grid .ancestor-card-open .ancestor-card-body{
+  flex:0 0 auto!important;gap:3px!important;padding:9px 10px 9px!important;
+}
+#ancestor-grid .ancestor-card-open .ancestor-card-body h3{
+  font-size:1.12rem!important;line-height:1.15!important;margin:0 0 2px!important;
+}
+#ancestor-grid .ancestor-card-open .small-button{margin-top:4px!important;padding:.35rem .65rem!important;min-height:30px!important}
+@media(max-width:600px){
+  #ancestor-grid .ancestor-card-open .ancestor-portrait,
+  #ancestor-grid .ancestor-card-open .ancestor-portrait-placeholder{
+    height:100px!important;min-height:100px!important;max-height:100px!important;
+  }
+  #ancestor-grid .ancestor-card-open .ancestor-card-body{padding:7px!important}
+  #ancestor-grid .ancestor-card-open .ancestor-card-body h3{font-size:.98rem!important}
+}
