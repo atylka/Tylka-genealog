@@ -161,7 +161,7 @@
   const box=ensureAddModal();box.hidden=false;box.querySelector("#ancestor-new-name").focus();
  }
  async function insertAncestorRow(name,portraits){
-  const values={name,portrait_url:null,updated_at:new Date().toISOString(),created_by:ownerSession.user.id};
+  const values={name,portrait_url:"",updated_at:new Date().toISOString(),created_by:ownerSession.user.id};
   if(portraitColumnAvailable)values.portraits=Array.isArray(portraits)?portraits:[];
   let result=await client.from("ancestor_portraits").insert(values);
   if(result.error&&portraitColumnAvailable&&isMissingPortraitsColumn(result.error)){
@@ -172,7 +172,7 @@
  async function insertLegacyHiddenMarker(name){
   const markerName=HIDDEN_ROW_PREFIX+normalizeName(name);
   if(savedPeopleRows.some(row=>row.name===markerName))return;
-  const {error}=await client.from("ancestor_portraits").insert({name:markerName,portrait_url:null,updated_at:new Date().toISOString(),created_by:ownerSession.user.id});
+  const {error}=await client.from("ancestor_portraits").insert({name:markerName,portrait_url:"",updated_at:new Date().toISOString(),created_by:ownerSession.user.id});
   if(error)throw error;
  }
  async function addAncestorCard(name){
@@ -206,7 +206,7 @@
    return;
   }
   if(!row&&portraitColumnAvailable){
-   const result=await client.from("ancestor_portraits").insert({name:person.name,portrait_url:null,portraits:[{[HIDDEN_FLAG]:true}],updated_at:new Date().toISOString(),created_by:ownerSession.user.id});
+   const result=await client.from("ancestor_portraits").insert({name:person.name,portrait_url:"",portraits:[{[HIDDEN_FLAG]:true}],updated_at:new Date().toISOString(),created_by:ownerSession.user.id});
    if(result.error&&isMissingPortraitsColumn(result.error)){portraitColumnAvailable=false;await insertLegacyHiddenMarker(person.name);}
    else if(result.error)throw result.error;
    return;
