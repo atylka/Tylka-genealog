@@ -13,7 +13,7 @@
  function normalizeName(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase().replace(/[^a-z0-9]+/g," ").trim();}
  function yearFrom(value){const raw=String(value||"").trim();const match=raw.match(/(?:^|\D)((?:17|18|19|20)\d{2})(?:\D|$)/);return match?match[1]:"Year not recorded";}
  function recordedDate(value){const raw=String(value||"").trim();if(!raw)return "";const iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const date=new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));return date.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}return raw;}
- function recordSubjectName(record){const title=String(record?.title||"").trim();if(!title)return "";const labeled=title.match(/^(?:birth(?:\s+record)?\s+of|baptism(?:\s+record)?\s+of|death(?:\s+record)?\s+of|burial(?:\s+record)?\s+of)\s+(.+)$/i);return normalizeName(labeled?labeled[1]:title);}
+ function recordSubjectName(record){const title=String(record?.title||"").trim();if(!title)return "";const labeled=title.match(/^(?:birth(?:\s+record)?\s+of|baptism(?:\s+record)?\s+of|death(?:\s+record)?\s+of|burial(?:\s+record)?\s+of)\s+(.+)$/i);const suffix=title.match(/^(.+?)\s+(?:birth|baptism|death|burial)(?:\s+record)?$/i);return normalizeName(labeled?labeled[1]:suffix?suffix[1]:title);}
  function personDates(records,people){const dates=new Map();(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,"");const kind=category.includes("birth")||category.includes("bapt")?"birth":category.includes("death")||category.includes("burial")?"death":null;const raw=extractRecordDate(record),subject=recordSubjectName(record);if(!kind||!raw||!subject)return;const date=recordedDate(raw);(people||[]).forEach(person=>{const name=normalizeName(person.name);if(!name||subject!==name)return;if(!dates.has(name))dates.set(name,{});if(!dates.get(name)[kind])dates.get(name)[kind]=date;});});return dates;}
  function readLabeledValue(description,label){const prefix=label+":";const line=String(description||"").split(/\r?\n/).find(item=>item.trimStart().startsWith(prefix));return line?line.trim().slice(prefix.length).trim():"";}
  function deduplicatePeople(people){
@@ -48,7 +48,8 @@
   });
   return [...names.values()];
  }
- function personProfiles(records,people){const profiles=new Map((people||[]).map(person=>[normalizeName(person.name),{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[],siblings:[],locations:[],sources:[]} ]));const add=(list,value)=>{const name=String(value||"").trim();if(name&&!list.some(item=>normalizeName(item)===normalizeName(name)))list.push(name);};(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,""),isBirth=category.includes("birth")||category.includes("bapt"),isDeath=category.includes("death")||category.includes("burial"),isMarriage=category.includes("marriage"),subject=recordSubjectName(record),raw=extractRecordDate(record),place=String(record.location||"").trim();const evidenceText=normalizeName([record.title,record.persons_mentioned,record.description].join(" "));people.forEach(person=>{const key=normalizeName(person.name),p=profiles.get(key);if(key&&p&&evidenceText.includes(key)&&!p.sources.some(item=>String(item.id)===String(record.id))){p.sources.push({id:record.id,title:record.title||"Untitled record",category:record.category||"Record",date:recordedDate(raw),location:place});if(place&&!p.locations.some(item=>normalizeName(item)===normalizeName(place)))p.locations.push(place);}});if((isBirth||isDeath)&&subject&&profiles.has(subject)&&raw){const p=profiles.get(subject);if(isBirth&&!p.birth){p.birth=recordedDate(raw);p.birthPlace=place;}if(isDeath&&!p.death){p.death=recordedDate(raw);p.deathPlace=place;}}if(isBirth&&subject&&profiles.has(subject)){const mother=readLabeledValue(record.description,"Family - Mother"),father=readLabeledValue(record.description,"Family - Father"),child=people.find(person=>normalizeName(person.name)===subject);if(child){const childProfile=profiles.get(subject);add(childProfile.parents,mother);add(childProfile.parents,father);["Mother’s father","Mother’s mother","Father’s father","Father’s mother"].forEach(role=>add(childProfile.grandparents,readLabeledValue(record.description,"Family - "+role)));}if(mother&&profiles.has(normalizeName(mother)))add(profiles.get(normalizeName(mother)).children,child?.name);if(father&&profiles.has(normalizeName(father)))add(profiles.get(normalizeName(father)).children,child?.name);}if(isMarriage){const bride=readLabeledValue(record.description,"Bride"),groom=readLabeledValue(record.description,"Groom");if(bride&&groom){if(profiles.has(normalizeName(bride)))add(profiles.get(normalizeName(bride)).spouses,groom);if(profiles.has(normalizeName(groom)))add(profiles.get(normalizeName(groom)).spouses,bride);}}});
+ function archiveRecordImageUrl(record){const path=String(record?.file_path||"").trim();if(!path)return "";const mime=String(record?.mime_type||"").toLowerCase(),image=mime.startsWith("image/")||/\.(?:jpe?g|png|gif|webp|avif|heic|tiff?)$/i.test(path.split("?")[0]);if(!image)return "";try{return client.storage.from("family-archive").getPublicUrl(path).data?.publicUrl||"";}catch(_){return "";}}
+ function personProfiles(records,people){const profiles=new Map((people||[]).map(person=>[normalizeName(person.name),{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[],siblings:[],locations:[],sources:[]} ]));const add=(list,value)=>{const name=String(value||"").trim();if(name&&!list.some(item=>normalizeName(item)===normalizeName(name)))list.push(name);};(records||[]).forEach(record=>{const category=String(record.category||"").toLowerCase().replace(/[^a-z]+/g,""),isBirth=category.includes("birth")||category.includes("bapt"),isDeath=category.includes("death")||category.includes("burial"),isMarriage=category.includes("marriage"),subject=recordSubjectName(record),raw=extractRecordDate(record),place=String(record.location||"").trim();const evidenceText=normalizeName([record.title,record.persons_mentioned,record.description].join(" "));people.forEach(person=>{const key=normalizeName(person.name),p=profiles.get(key);if(key&&p&&(" "+evidenceText+" ").includes(" "+key+" ")&&!p.sources.some(item=>String(item.id)===String(record.id))){p.sources.push({id:record.id,title:record.title||"Untitled record",category:record.category||"Record",date:recordedDate(raw),location:place,thumbnailUrl:archiveRecordImageUrl(record)});if(place&&!p.locations.some(item=>normalizeName(item)===normalizeName(place)))p.locations.push(place);}});if((isBirth||isDeath)&&subject&&profiles.has(subject)&&raw){const p=profiles.get(subject);if(isBirth&&!p.birth){p.birth=recordedDate(raw);p.birthPlace=place;}if(isDeath&&!p.death){p.death=recordedDate(raw);p.deathPlace=place;}}if(isBirth&&subject&&profiles.has(subject)){const mother=readLabeledValue(record.description,"Family - Mother"),father=readLabeledValue(record.description,"Family - Father"),child=people.find(person=>normalizeName(person.name)===subject);if(child){const childProfile=profiles.get(subject);add(childProfile.parents,mother);add(childProfile.parents,father);["Mother’s father","Mother’s mother","Father’s father","Father’s mother"].forEach(role=>add(childProfile.grandparents,readLabeledValue(record.description,"Family - "+role)));}if(mother&&profiles.has(normalizeName(mother)))add(profiles.get(normalizeName(mother)).children,child?.name);if(father&&profiles.has(normalizeName(father)))add(profiles.get(normalizeName(father)).children,child?.name);}if(isMarriage){const bride=readLabeledValue(record.description,"Bride"),groom=readLabeledValue(record.description,"Groom");if(bride&&groom){if(profiles.has(normalizeName(bride)))add(profiles.get(normalizeName(bride)).spouses,groom);if(profiles.has(normalizeName(groom)))add(profiles.get(normalizeName(groom)).spouses,bride);}}});
   const entries=[...(people||[])];
   entries.forEach(person=>{const profile=profiles.get(normalizeName(person.name));if(!profile)return;entries.forEach(other=>{if(normalizeName(other.name)===normalizeName(person.name))return;const otherProfile=profiles.get(normalizeName(other.name));if(!otherProfile)return;const shared=profile.parents.some(parent=>otherProfile.parents.some(otherParent=>normalizeName(parent)===normalizeName(otherParent)));if(shared)add(profile.siblings,other.name);});});
   return profiles;}
@@ -102,11 +103,21 @@
   if(error){button.disabled=false;button.textContent="Could not save — try again";return;}
   activePerson.portrait_url=url;renderThumbnailForActive();button.textContent="Current card thumbnail";showFace(activeIndex);
  }
- function renderThumbnailForActive(){
-  if(!activePerson)return;
-  const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));
-  if(card){const image=card.querySelector(".ancestor-portrait");if(image)image.src=activePerson.portrait_url||faceList(activePerson)[0]?.url;}
+ function renderCardThumbnail(person){
+  if(!person)return;
+  const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(person.id));
+  const trigger=card?.querySelector(".ancestor-card-open");if(!trigger)return;
+  const faces=faceList(person),face=faces.find(item=>item.url===person.portrait_url)||faces[0];
+  const url=face?.url||person.profile?.recordThumbnailUrl||"";
+  const current=trigger.querySelector(".ancestor-portrait,.ancestor-portrait-placeholder");
+  if(url){
+   if(current?.tagName==="IMG"){current.src=url;current.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;}
+   else{const image=document.createElement("img");image.className="ancestor-portrait";image.src=url;image.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;if(current)current.replaceWith(image);else trigger.prepend(image);}
+  }else if(current?.tagName!=="SPAN"){
+   const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.setAttribute("role","img");placeholder.setAttribute("aria-label","No thumbnail available");if(current)current.replaceWith(placeholder);else trigger.prepend(placeholder);
+  }
  }
+ function renderThumbnailForActive(){renderCardThumbnail(activePerson);}
  function openPerson(person){activePerson=person;const box=ensureModal();box.hidden=false;box.querySelector(".ancestor-viewer-name").textContent=person.name;renderProfileFacts();showFace(0);}
  async function deletePortrait(index){
   if(!activePerson||!client)return;
@@ -119,7 +130,7 @@
    const result=!next.length?await client.from("ancestor_portraits").delete().eq("id",activePerson.id):await client.from("ancestor_portraits").update(values).eq("id",activePerson.id);
    if(result.error)throw result.error;
    try{const pathname=new URL(face.url).pathname,marker="/family-archive/",at=pathname.indexOf(marker);if(at>=0)await client.storage.from("family-archive").remove([decodeURIComponent(pathname.slice(at+marker.length))]);}catch(_){}
-   if(!next.length){const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));card?.remove();activePerson=null;modal.hidden=true;count.textContent=grid.querySelectorAll(".ancestor-card").length+" people";empty.hidden=grid.querySelectorAll(".ancestor-card").length>0;return;}
+   if(!next.length){activePerson={...activePerson,portraits:[],portrait_url:null,source_record_id:null,source_title:null};activeIndex=0;renderCardThumbnail(activePerson);showFace(0);return;}
    activePerson={...activePerson,portraits:next,portrait_url:nextUrl,source_record_id:values.source_record_id,source_title:values.source_title};
    const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));if(card){const img=card.querySelector(".ancestor-portrait");if(img)img.src=nextUrl;const p=card.querySelector(".ancestor-source");if(p)p.textContent=next.length+" saved "+(next.length===1?"photo":"photos");}
    showFace(Math.min(index,next.length-1));
@@ -128,15 +139,19 @@
  function render(people,profiles){
   people.sort((a,b)=>a.name.localeCompare(b.name));grid.replaceChildren();count.textContent=people.length+" "+(people.length===1?"person":"people");empty.hidden=people.length>0;
   people.forEach(person=>{
-   const faces=faceList(person),profile=profiles.get(normalizeName(person.name))||{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[],siblings:[]};person.profile=profile;
+   const faces=faceList(person),profile=profiles.get(normalizeName(person.name))||{birth:"",birthPlace:"",death:"",deathPlace:"",parents:[],grandparents:[],spouses:[],children:[],siblings:[],sources:[]};
+   profile.recordThumbnailUrl=(profile.sources||[]).find(source=>source.thumbnailUrl)?.thumbnailUrl||"";person.profile=profile;
    const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";card.dataset.personId=person.id;
-   const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";trigger.setAttribute("aria-label","Open profile for "+person.name);
-   if(faces.length){const image=document.createElement("img");image.className="ancestor-portrait";image.src=(faces.find(face=>face.url===person.portrait_url)||faces[0]).url;image.alt="Profile photo of "+person.name;trigger.append(image);}
-   else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.textContent="Photograph not added";trigger.append(placeholder);}
-   const body=document.createElement("div");body.className="ancestor-card-body";const title=document.createElement("h3");title.textContent=person.name;
-   const source=document.createElement("p");source.className="ancestor-source";source.textContent=faces.length?faces.length+" saved "+(faces.length===1?"photo":"photos"):(person.record_mentioned_only?"Mentioned in family records":"No photographs saved");
-   const life=document.createElement("p");life.className="ancestor-life-dates";const dateParts=[];if(profile.birth)dateParts.push("Born: "+profile.birth);if(profile.death)dateParts.push("Died: "+profile.death);life.textContent=dateParts.join(" · ");life.hidden=!dateParts.length;
-   const siblings=document.createElement("p");siblings.className="ancestor-siblings";siblings.textContent=profile.siblings?.length?"Siblings: "+profile.siblings.join(" · "):"";siblings.hidden=!profile.siblings?.length;const open=document.createElement("span");open.className="small-button";open.textContent="View profile";const evidence=document.createElement("p");evidence.className="ancestor-card-evidence";evidence.textContent=(profile.sources?.length||0)+" linked "+((profile.sources?.length||0)===1?"record":"records");body.append(title,source,life,siblings,evidence,open);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));card.append(trigger);grid.append(card);
+   const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";
+   trigger.setAttribute("aria-label","Open profile for "+person.name+". Birth: "+(profile.birth||"Not recorded")+". Death: "+(profile.death||"Not recorded"));
+   const face=faces.find(item=>item.url===person.portrait_url)||faces[0],thumbnailUrl=face?.url||profile.recordThumbnailUrl;
+   if(thumbnailUrl){const image=document.createElement("img");image.className="ancestor-portrait";image.src=thumbnailUrl;image.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;image.loading="lazy";trigger.append(image);}
+   else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.setAttribute("role","img");placeholder.setAttribute("aria-label","No thumbnail available");trigger.append(placeholder);}
+   const body=document.createElement("div");body.className="ancestor-card-body";
+   const title=document.createElement("h3");title.textContent=person.name;
+   const birth=document.createElement("p");birth.className="ancestor-card-date";birth.textContent="Birth: "+(profile.birth||"Not recorded");
+   const death=document.createElement("p");death.className="ancestor-card-date";death.textContent="Death: "+(profile.death||"Not recorded");
+   body.append(title,birth,death);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));card.append(trigger);grid.append(card);
   });
  }
  async function load(){
@@ -154,7 +169,7 @@
   const people=data||[];
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
   if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
-  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description");
+  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description,file_path,mime_type");
   if(lifeError)console.warn("Could not load ancestor life dates:",lifeError.message);
   const records=lifeError?[]:(lifeRecords||[]);
   const known=new Set(people.map(person=>normalizeName(person.name)));
