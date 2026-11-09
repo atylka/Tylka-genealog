@@ -41,15 +41,15 @@
    if(isResearchNotesRecord(record))return;
    const mentioned=record.persons_mentioned;
    if(Array.isArray(mentioned))mentioned.forEach(add);
-   else if(typeof mentioned==="string"){let parsed=null;try{parsed=JSON.parse(mentioned);}catch(_){}if(Array.isArray(parsed))parsed.forEach(add);else mentioned.split(/[\\n,;]+/).forEach(add);}
+   else if(typeof mentioned==="string"){let parsed=null;try{parsed=JSON.parse(mentioned);}catch(_){}if(Array.isArray(parsed))parsed.forEach(add);else mentioned.split(/[\n,;]+/).forEach(add);}
    // Only explicitly labeled family fields are read from description.
    // The remaining transcription/notes text is deliberately ignored.
    const description=String(record.description||"");
-   const labels=/^(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Bride|Groom):\\s*(.+)$/gim;
+   const labels=/^(?:Family - (?:Mother|Father|Mother’s father|Mother’s mother|Father’s father|Father’s mother|Bride’s father|Bride’s mother|Groom’s father|Groom’s mother)|Bride|Groom):\s*(.+)$/gim;
    for(const match of description.matchAll(labels))add(match[1]);
    const title=String(record.title||"").trim();
-   const labeled=title.match(/^(?:birth(?:\\s+record)?\\s+of|baptism(?:\\s+record)?\\s+of|death(?:\\s+record)?\\s+of|burial(?:\\s+record)?\\s+of)\\s+(.+)$/i);
-   const suffix=title.match(/^(.+?)\\s+(?:birth|baptism|death|burial)(?:\\s+record)?$/i);if(labeled)add(labeled[1]);else if(suffix)add(suffix[1]);else if(/birth|bapt|death|burial/i.test(String(record.category||""))&&title)add(title);
+   const labeled=title.match(/^(?:birth(?:\s+record)?\s+of|baptism(?:\s+record)?\s+of|death(?:\s+record)?\s+of|burial(?:\s+record)?\s+of)\s+(.+)$/i);
+   const suffix=title.match(/^(.+?)\s+(?:birth|baptism|death|burial)(?:\s+record)?$/i);if(labeled)add(labeled[1]);else if(suffix)add(suffix[1]);else if(/birth|bapt|death|burial/i.test(String(record.category||""))&&title)add(title);
   });
   return [...names.values()];
  }
