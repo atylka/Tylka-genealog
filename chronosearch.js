@@ -18,6 +18,21 @@
     &&!/^[\s{}[\](),.:"']*(?:x|y|w|h|left|top|right|bottom)[\s"'=:,.-]*-?\d+(?:\.\d+)?[\s,;)}\]]*$/i.test(s);
   }).join("\n").replace(/date\s+on\s+(?:the\s+)?record\s*:\s*[^\n\r]+/i,"").replace(/\n{3,}/g,"\n\n").trim();
  };
+ const chronoCardSummary=record=>{
+  const metadata=/^(?:date\s+on\s+(?:the\s+)?record|parish|research confidence|bride|groom|location|persons? mentioned|record type|source(?: title)?|family\s*-?)\s*:/i;
+  const lines=cleanChronoDescription(record.description||"").split(/\r?\n/)
+   .map(line=>line.trim())
+   .filter(line=>line&&!metadata.test(line))
+   .map(line=>line.replace(/^(?:notes?|transcription|description|record notes)\s*:\s*/i,"").trim())
+   .filter(Boolean);
+  let summary=lines.join(" ").replace(/\s+/g," ").trim();
+  if(!summary){
+   const fallback={births:"Birth and baptism record",deaths:"Death and burial record",marriages:"Marriage record",immigration:"Immigration and naturalization record",photos:"Family photograph",notes:"Family history source or research note"};
+   summary=fallback[record.category]||"Family archive record";
+  }
+  if(summary.length>126){const cut=summary.slice(0,123);const boundary=cut.lastIndexOf(" ");summary=(boundary>82?cut.slice(0,boundary):cut).trimEnd()+"…";}
+  return summary;
+ };
  const displayPeople=value=>{
   if(Array.isArray(value))return value.map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
   if(value&&typeof value==="object")return Object.values(value).flat().map(item=>typeof item==="string"?item:(item?.name||item?.full_name||"")).filter(Boolean).join(", ");
@@ -92,8 +107,10 @@
     image.src=isChronoImage(r)?publicUrl(r.file_path):placeholder;
     if(!isChronoImage(r))image.classList.add("is-placeholder");
     image.addEventListener("error",()=>{image.src=placeholder;image.classList.add("is-placeholder");},{once:true});
-    card.append(image);
-    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record"));
+    const summary=chronoCardSummary(r);
+    const summaryText=node("p",summary,"chrono-record-summary");
+    card.append(image,summaryText);
+    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record")+": "+summary);
     const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
     card.addEventListener("click",openArchiveDetail);
     card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});
