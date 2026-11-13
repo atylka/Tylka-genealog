@@ -137,7 +137,7 @@
    person.thumbnail_settings=settings;
    let target=trigger.querySelector(".ancestor-portrait");
    if(!target){target=document.createElement("img");target.className="ancestor-portrait";target.alt="Archive record image mentioning "+person.name;const placeholder=trigger.querySelector(".ancestor-portrait-placeholder");if(placeholder)placeholder.replaceWith(target);else trigger.prepend(target);}
-   target.src=nextUrl;target.style.objectFit="cover";target.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";target.style.transform="scale("+(settings.zoom||1)+")";target.style.transformOrigin="center center";
+   target.src=nextUrl;target.dataset.tylkaPersonThumb=normalizeName(person.name);target.style.objectFit="cover";target.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";target.style.transform="scale("+(settings.zoom||1)+")";target.style.transformOrigin="center center";
   },url);
  }
  function renderThumbnailForActive(){renderCardThumbnail(activePerson);}
