@@ -8094,3 +8094,262 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>article.chro
  .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{gap:.38rem;padding:.35rem .35rem .45rem}
  .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{font-size:.78rem}
 }
+
+
+/* 2026-11-13: Portrait ChronoSearch cards and connected date timeline. */
+body.chronosearch-page #chrono-timeline{
+  position:relative!important;
+  isolation:isolate;
+  align-items:stretch!important;
+  gap:1.05rem!important;
+  padding:1rem .45rem 2rem!important;
+}
+body.chronosearch-page #chrono-timeline::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  top:3.05rem;
+  left:1.2rem;
+  right:1.2rem;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,#b58a50 4%,#8a2834 50%,#b58a50 96%,transparent 100%);
+  box-shadow:0 1px 0 rgba(255,242,215,.45);
+  pointer-events:none;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column{
+  position:relative!important;
+  flex:0 0 clamp(285px,26vw,350px)!important;
+  min-width:0!important;
+  padding:.8rem .8rem 1rem!important;
+  overflow:visible!important;
+  border:1px solid rgba(125,84,52,.55)!important;
+  border-radius:4px!important;
+  background:rgba(235,221,194,.94)!important;
+  box-shadow:0 7px 20px rgba(54,32,21,.09),inset 0 0 0 2px rgba(255,248,229,.52)!important;
+  scroll-snap-align:start;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  top:3.75rem;
+  bottom:1rem;
+  left:1.03rem;
+  width:2px;
+  background:linear-gradient(180deg,#b58a50 0%,rgba(138,40,52,.72) 48%,rgba(181,138,80,.18) 100%);
+  pointer-events:none;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading{
+  position:relative!important;
+  z-index:3!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:.5rem!important;
+  min-height:2.8rem!important;
+  margin:0 0 .95rem!important;
+  padding:.1rem .2rem .65rem 1.45rem!important;
+  border:0!important;
+  border-bottom:1px solid rgba(125,84,52,.35)!important;
+  background:transparent!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading::before{
+  content:"";
+  position:absolute;
+  left:.16rem;
+  top:43%;
+  width:.72rem;
+  height:.72rem;
+  border:2px solid #b58a50;
+  border-radius:50%;
+  background:#8a2834;
+  box-shadow:0 0 0 4px rgba(138,40,52,.11),inset 0 0 0 2px #f1e4ca;
+  transform:translateY(-50%);
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading h2{
+  margin:0!important;
+  color:#702630!important;
+  font:600 1.95rem/1 Georgia,serif!important;
+  letter-spacing:.015em;
+  font-variant-numeric:tabular-nums;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading span{
+  margin:0!important;
+  color:#80684f!important;
+  font:italic .72rem/1.2 Georgia,serif!important;
+  white-space:nowrap;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-column .chrono-event{
+  position:relative!important;
+  z-index:1!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:.42rem!important;
+  min-width:0!important;
+  margin:0 0 1.25rem!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading{
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:.2rem!important;
+  min-width:0!important;
+  padding:0 .15rem 0 1.42rem!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading::before{
+  content:"";
+  position:absolute;
+  left:.16rem;
+  top:.27rem;
+  width:.58rem;
+  height:.58rem;
+  border:2px solid #8a2834;
+  border-radius:50%;
+  background:#f1e4ca;
+  box-shadow:0 0 0 3px rgba(181,138,80,.18);
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date{
+  display:inline-flex!important;
+  align-items:center!important;
+  width:fit-content!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:.18rem .48rem!important;
+  border:1px solid rgba(149,107,59,.58)!important;
+  border-radius:2px!important;
+  background:#f1e4ca!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)!important;
+  color:#7a2632!important;
+  font:700 .69rem/1.3 Georgia,serif!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase;
+  font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-name{
+  margin:0!important;
+  color:#432c20!important;
+  font:600 1.05rem/1.25 Georgia,serif!important;
+  overflow-wrap:anywhere;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-event-location{
+  margin:0!important;
+  color:#80684f!important;
+  font:italic .78rem/1.35 Georgia,serif!important;
+  overflow-wrap:anywhere;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:.46rem!important;
+  width:calc(100% - 1.42rem)!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  margin:0 0 0 1.42rem!important;
+  padding:.42rem .42rem .52rem!important;
+  overflow:hidden!important;
+  border:1px solid rgba(130,85,51,.75)!important;
+  border-radius:3px!important;
+  background:#d8c4a2!important;
+  box-shadow:0 4px 12px rgba(54,32,21,.12),inset 0 0 0 1px rgba(255,247,226,.55)!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image{
+  display:block!important;
+  flex:none!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:340px!important;
+  aspect-ratio:4/5!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border:1px solid rgba(130,85,51,.24)!important;
+  background:#e9ddc5!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  min-height:2.5em!important;
+  max-height:2.5em!important;
+  margin:0!important;
+  padding:.08rem .2rem 0!important;
+  color:#66503b!important;
+  font:italic .82rem/1.25 Georgia,serif!important;
+  overflow-wrap:anywhere;
+  text-align:left;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-card:hover{
+  transform:translateY(-3px)!important;
+  border-color:#8a2834!important;
+  box-shadow:0 9px 18px rgba(54,32,21,.19),inset 0 0 0 1px rgba(255,247,226,.55)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column,
+body.dark-mode.chronosearch-page #chrono-timeline>.chrono-year-column{
+  border-color:rgba(190,145,83,.62)!important;
+  background:rgba(42,28,19,.96)!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.24),inset 0 0 0 2px rgba(190,145,83,.1)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline::before,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline::before,
+body.dark-mode.chronosearch-page #chrono-timeline::before{
+  background:linear-gradient(90deg,transparent 0%,#b58b50 4%,#9a3a46 50%,#b58b50 96%,transparent 100%)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column::after,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column::after,
+body.dark-mode.chronosearch-page #chrono-timeline>.chrono-year-column::after{
+  background:linear-gradient(180deg,#b58b50 0%,rgba(154,58,70,.85) 48%,rgba(181,139,80,.22) 100%)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-year-heading h2,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-year-heading h2,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-year-heading h2{color:#e6c58d!important}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-year-heading span,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-year-heading span,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-year-heading span{color:#c0a98b!important}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date{
+  border-color:rgba(190,145,83,.58)!important;
+  background:#302116!important;
+  color:#e6c58d!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-name,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-name,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-name{color:#f0dfc4!important}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-event-location,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-event-location,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-event-location{color:#c0a98b!important}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+  border-color:#80623e!important;
+  background:#302116!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-summary,
+body[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-summary,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-summary{color:#d4c0a1!important}
+@media(max-width:800px){
+  body.chronosearch-page #chrono-timeline>.chrono-year-column{flex-basis:min(84vw,350px)!important}
+}
+@media(max-width:560px){
+  body.chronosearch-page #chrono-timeline{gap:.7rem!important;padding:.9rem .25rem 1.5rem!important}
+  body.chronosearch-page #chrono-timeline>.chrono-year-column{flex-basis:min(86vw,340px)!important;padding:.72rem .68rem .85rem!important}
+  body.chronosearch-page #chrono-timeline::before{left:.8rem;right:.8rem;top:2.95rem}
+  body.chronosearch-page #chrono-timeline>.chrono-year-column::after{left:.91rem;top:3.65rem}
+  body.chronosearch-page #chrono-timeline .chrono-year-heading{min-height:2.7rem!important;margin-bottom:.85rem!important}
+  body.chronosearch-page #chrono-timeline .chrono-year-heading h2{font-size:1.8rem!important}
+  body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-name{font-size:1rem!important}
+  body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image{max-height:300px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body.chronosearch-page #chrono-timeline .chrono-record-card{transition:none!important;animation:none!important}
+}
