@@ -8032,3 +8032,40 @@ body.dark-mode #ancestor-grid .ancestor-view-button{background:#3b281e;color:#f0
  .chrono-record-card{aspect-ratio:16/11;margin:.7rem 0;padding:.35rem}
 }
 @media(prefers-reduced-motion:reduce){.chrono-record-card{transition:none}}
+
+
+/* ChronoSearch: keep event names and dates above the image-only card. */
+.chrono-main #chrono-timeline .chrono-year-column .chrono-event{
+ display:flex;flex-direction:column;align-items:stretch;gap:.48rem;
+ min-width:0;margin:0 0 1.25rem;
+}
+.chrono-main #chrono-timeline .chrono-record-heading{
+ display:flex;flex-direction:column;align-items:flex-start;gap:.16rem;
+ min-width:0;padding:0 .2rem;
+}
+.chrono-main #chrono-timeline .chrono-record-heading .chrono-record-date{
+ display:block;margin:0;padding:0;border:0;background:none;box-shadow:none;
+ color:#805c3c;font:700 .72rem/1.35 Georgia,serif;letter-spacing:.075em;
+ text-transform:uppercase;font-variant-numeric:tabular-nums;
+}
+.chrono-main #chrono-timeline .chrono-record-heading .chrono-record-name{
+ display:block;max-width:100%;margin:0;color:#432c20;
+ font:600 1.08rem/1.25 Georgia,serif;overflow-wrap:anywhere;
+}
+.chrono-main #chrono-timeline .chrono-record-heading .chrono-event-location{
+ display:block;margin:0;color:#80684f;font:italic .78rem/1.35 Georgia,serif;
+ overflow-wrap:anywhere;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{
+ width:100%;margin:0;
+}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-date,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-date{color:#d0ad7b}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-name,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-name{color:#f0dfc4}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-event-location,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .chrono-event-location{color:#c0a98b}
+@media(max-width:560px){
+ .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-name{font-size:1rem}
+ .chrono-main #chrono-timeline .chrono-year-column .chrono-event{gap:.4rem;margin-bottom:1rem}
+}
