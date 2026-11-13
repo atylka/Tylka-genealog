@@ -131,6 +131,7 @@
     const summary=chronoCardSummary(r);
     const summaryText=node("p",summary,"chrono-record-summary");
     card.append(image,summaryText);
+    window.TylkaThumbnailTools?.attachRecord(image,r,allRecords,card);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record")+": "+summary);
     const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
     card.addEventListener("click",openArchiveDetail);
@@ -141,17 +142,20 @@
    timeline.append(column);
   });
  }
- let ownerUser=null,records=[];
+ let ownerUser=null,records=[],allRecords=[];
  async function start(){
   if(!config.url||!config.anonKey||!window.supabase){count.textContent="The archive connection is not configured.";timeline.replaceChildren(node("p","Could not connect to the family archive.","empty-state"));return;}
   client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey));
   const sessionResult=await client.auth.getSession();ownerUser=sessionResult.data?.session?.user||null;
   client.auth.onAuthStateChange((_event,session)=>{ownerUser=session?.user||null;render(records);});
-  const {data,error}=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
+  let result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_name,file_path,mime_type,created_at,thumbnail_settings").order("created_at",{ascending:true});
+  if(result.error&&/thumbnail_settings/i.test(result.error.message||""))result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_name,file_path,mime_type,created_at").order("created_at",{ascending:true});
+  const {data,error}=result;
   if(error){count.textContent="Could not load records: "+error.message;timeline.replaceChildren(node("p","The chronological timeline could not be loaded.","empty-state"));return;}
+  allRecords=data||[];
   // Deduplicate rows by record id so duplicate database results cannot create duplicate cards or thumbnails.
   const seenIds=new Set();
-  records=(data||[]).filter(record=>{
+  records=allRecords.filter(record=>{
    if(!record?.id)return true;
    if(seenIds.has(record.id))return false;
    seenIds.add(record.id);
