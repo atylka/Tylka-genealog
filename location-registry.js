@@ -57,7 +57,7 @@
       const row=document.createElement("div");row.className="person-picker-row";
       const button=document.createElement("button");button.type="button";const saved=portraitIndex.get(key)||{};button.className="person-picker-option";button.setAttribute("role","option");
       const faces=Array.isArray(saved.portraits)?saved.portraits:[];
-      const selected=allRecords.find(record=>String(record.id)===String(saved.thumbnail_settings?.record_id||"")&&(window.TylkaThumbnailTools?.isImageRecord(record)||(record.file_path&&/\\.(?:jpe?g|png|gif|webp|avif|tiff?)$/i.test(record.file_path))));
+      const selected=allRecords.find(record=>String(record.id)===String(saved.thumbnail_settings?.record_id||"")&&window.TylkaThumbnailTools?.isImageRecord(record));
       const face=faces.find(item=>item&&(item.url||item.portrait_url));
       const portraitUrl=selected?client.storage.from("family-archive").getPublicUrl(selected.file_path).data.publicUrl:(saved.portrait_url||(face&&(face.url||face.portrait_url))||"");
       let avatar=null;
