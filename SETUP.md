@@ -19,10 +19,13 @@ For a new project, run `supabase/schema.sql` in the Supabase SQL Editor first. T
 4. `supabase/migrations/20261102_multiple_ancestor_faces.sql`
 5. `supabase/migrations/20261105_archive_catalog_metadata.sql`
 6. `supabase/public-record-attachments-migration.sql`
+7. `supabase/migrations/20261113_editable_thumbnails.sql`
 
 The catalog migration adds archival metadata columns and assigns stable accession numbers to existing records. It does not overwrite existing titles, descriptions, dates, locations, people, or attachments.
 
-The final attachment migration sets `family-archive` to **public** so visitors can view record scans and photographs through the public URLs used by the site. Public bucket access means anyone with an asset URL can retrieve that file. Uploading, replacing, and deleting files remain restricted by Storage policies to the designated owner. Do not upload private or sensitive documents to this public collection.
+The editable-thumbnail migration adds owner-managed source selection, zoom, and focal-position settings for record and person thumbnails. It does not replace or alter original scans.
+
+The attachment migration sets `family-archive` to **public** so visitors can view record scans and photographs through the public URLs used by the site. Public bucket access means anyone with an asset URL can retrieve that file. Uploading, replacing, and deleting files remain restricted by Storage policies to the designated owner. Do not upload private or sensitive documents to this public collection.
 
 The old `visitor-access-migration.sql` belongs to the retired attachment-request workflow and is not part of the current setup. Do not deploy the old `record-access` Edge Function for the current public-viewing design. If that old migration was previously applied, the unused request table can remain; the current site does not use it.
 
