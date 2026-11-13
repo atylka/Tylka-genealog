@@ -8069,3 +8069,28 @@ body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-record-heading .ch
  .chrono-main #chrono-timeline .chrono-record-heading .chrono-record-name{font-size:1rem}
  .chrono-main #chrono-timeline .chrono-year-column .chrono-event{gap:.4rem;margin-bottom:1rem}
 }
+
+
+/* ChronoSearch: concise saved-description excerpt beneath each record image. */
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{
+ display:flex;flex-direction:column;align-items:stretch;gap:.48rem;
+ width:100%;height:auto;min-height:0;aspect-ratio:auto;
+ margin:0;padding:.42rem .42rem .52rem;overflow:hidden;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image{
+ flex:none;display:block;width:100%;height:auto;aspect-ratio:16/10;
+ object-fit:contain;object-position:center;box-sizing:border-box;
+}
+.chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ overflow:hidden;min-height:2.5em;max-height:2.5em;
+ margin:0;padding:.08rem .2rem 0;
+ color:#66503b;font:italic .82rem/1.25 Georgia,serif;
+ overflow-wrap:anywhere;text-align:left;
+}
+html[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary,
+body[data-theme="dark"] .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{color:#d4c0a1}
+@media(max-width:560px){
+ .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card{gap:.38rem;padding:.35rem .35rem .45rem}
+ .chrono-main #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{font-size:.78rem}
+}
