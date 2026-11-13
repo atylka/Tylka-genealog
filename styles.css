@@ -8538,9 +8538,9 @@ body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-heading .chrono
 .tylka-thumb-edit:focus-visible{outline:2px solid #e0bd87!important;outline-offset:2px!important}
 .tylka-thumb-edit[hidden]{display:none!important}
 .ancestor-card.tylka-person-thumb-host>.tylka-thumb-edit{left:.35rem!important;right:auto!important}
-.person-picker-row{position:relative;min-width:0}
-.person-picker-row>.tylka-thumb-edit{top:.35rem!important;right:.35rem!important}
-.person-picker-row .person-picker-option{padding-right:6.2rem!important}
+.person-picker-row{position:relative;display:flex;align-items:stretch;gap:.3rem;min-width:0}
+.person-picker-row .person-picker-option{flex:1 1 auto;min-width:0;width:auto!important;padding-right:.5rem!important}
+.person-picker-row>.tylka-thumb-edit{position:static!important;flex:0 0 auto;align-self:center;min-height:28px!important;padding:.28rem .38rem!important}
 .tylka-thumb-host img[data-tylka-record-thumb],
 .tylka-thumb-host img[data-tylka-person-thumb]{transition:transform .16s ease!important}
 .tylka-thumbnail-modal .modal-card{
@@ -8569,6 +8569,7 @@ html[data-theme="dark"] .tylka-thumbnail-modal select,
 body[data-theme="dark"] .tylka-thumbnail-modal select{background:#21160f;color:#f0dfc4;border-color:#80613e}
 html[data-theme="dark"] .tylka-thumb-preview,
 body[data-theme="dark"] .tylka-thumb-preview{background:#1d130e;border-color:#80613e}
+ .registry-pin-popup-image>.tylka-thumb-edit{top:auto!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;min-height:16px!important;padding:.08rem .08rem!important;border-radius:0!important;font-size:.47rem!important;white-space:nowrap!important}
 @media(max-width:560px){
  .tylka-thumb-edit{min-height:23px!important;padding:.23rem .36rem!important;font-size:.59rem!important}
  .tylka-thumbnail-modal .modal-card{padding:1rem!important}
