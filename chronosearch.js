@@ -91,6 +91,14 @@
   keys.forEach(key=>{
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
+   const yearHeading=node("div","","chrono-year-heading");
+   const yearTitle=node("h2",key,"chrono-year-label");
+   const recordCount=groups.get(key).length;
+   const yearCount=node("span",recordCount+" "+(recordCount===1?"record":"records"),"chrono-year-count");
+   yearHeading.append(yearTitle,yearCount);
+   yearHeading.setAttribute("aria-label",key+" — "+recordCount+" "+(recordCount===1?"record":"records"));
+   column.setAttribute("aria-label","Records from "+key);
+   column.append(yearHeading);
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
     const event=node("div","","chrono-event");
     const heading=node("div","","chrono-record-heading");
