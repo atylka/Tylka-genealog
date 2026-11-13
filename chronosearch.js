@@ -77,6 +77,12 @@
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
+    const event=node("div","","chrono-event");
+    const heading=node("div","","chrono-record-heading");
+    heading.append(node("span",formatRecordDate(r)||"Date not recorded","chrono-record-date"));
+    heading.append(node("h3",eventDescription(r),"chrono-record-name"));
+    if(r.location)heading.append(node("span",r.location,"chrono-event-location"));
+    event.append(heading);
     const card=node("article","","chrono-record-card");card.dataset.recordId=r.id||"";
     const image=document.createElement("img");
     image.className="chrono-record-image";
@@ -91,7 +97,8 @@
     const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
     card.addEventListener("click",openArchiveDetail);
     card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});
-    column.append(card);
+    event.append(card);
+    column.append(event);
    });
    timeline.append(column);
   });
