@@ -188,6 +188,7 @@
   async function loadRecords(){
     recordsList.textContent="Loading records…";
     let result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at,thumbnail_settings").order("created_at",{ascending:false});
+    if(result.error&&/thumbnail_settings/i.test(result.error.message||""))result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
     if(result.error&&/(?:column .* does not exist|schema cache)/i.test(result.error.message||"")){
       catalogFieldsAvailable=false;
       document.querySelectorAll(".archive-catalog-field").forEach(field=>field.hidden=true);
