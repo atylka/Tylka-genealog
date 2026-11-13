@@ -131,7 +131,7 @@
     const summary=chronoCardSummary(r);
     const summaryText=node("p",summary,"chrono-record-summary");
     card.append(image,summaryText);
-    window.TylkaThumbnailTools?.attachRecord(image,r,allRecords,card);
+    if(isChronoImage(r))window.TylkaThumbnailTools?.attachRecord(image,r,allRecords,card);
     card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record")+": "+summary);
     const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
     card.addEventListener("click",openArchiveDetail);
