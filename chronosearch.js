@@ -74,7 +74,20 @@
  };
  const findYear=value=>{const match=String(value||"").match(/\b(1[5-9]\d{2}|20\d{2}|21\d{2})\b/);return match?Number(match[1]):null;};
  function recordYear(record){return parseRecordDate(record)?.getFullYear()||findYear(dateText(record))||findYear(record.title)||findYear(record.description);}
- function formatRecordDate(record){const raw=dateText(record),yearOnly=raw.match(/^(\d{4})$/),date=parseRecordDate(record);if(yearOnly)return yearOnly[1];return date?new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric",year:"numeric"}).format(date):raw;}
+ function formatRecordDate(record){
+  const raw=dateText(record);
+  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear=raw.match(/^\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s*,?\s*(?:of\s+)?(?:1[5-9]\d{2}|20\d{2}|21\d{2})\s*$/i);
+  if(monthYear)return monthYear[1];
+  const numericMonthYear=raw.match(/^\s*(\d{1,2})[/-](?:1[5-9]\d{2}|20\d{2}|21\d{2})\s*$/);
+  if(numericMonthYear&&+numericMonthYear[1]>=1&&+numericMonthYear[1]<=12)return monthNames[+numericMonthYear[1]-1];
+  const isoMonth=raw.match(/^\s*(?:1[5-9]\d{2}|20\d{2}|21\d{2})[-/](\d{1,2})\s*$/);
+  if(isoMonth&&+isoMonth[1]>=1&&+isoMonth[1]<=12)return monthNames[+isoMonth[1]-1];
+  const date=parseRecordDate(record);
+  if(date&&!/^\d{4}$/.test(raw))return new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric"}).format(date);
+  const withoutYear=raw.replace(/\b(?:1[5-9]\d{2}|20\d{2}|21\d{2})\b/g,"").replace(/^[\s,./–—-]+|[\s,./–—-]+$/g,"").trim();
+  return withoutYear||"Date not recorded";
+}
 
  function render(records){
   const loc=locationInput.value.trim().toLocaleLowerCase(),person=personInput.value.trim().toLocaleLowerCase(),folder=folderInput.value,year=yearInput.value;
@@ -91,7 +104,7 @@
   keys.forEach(key=>{
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
-   const yearHeading=node("div","","chrono-year-heading");
+   const yearHeading=node("header","","chrono-year-heading");
    const yearTitle=node("h2",key,"chrono-year-label");
    const recordCount=groups.get(key).length;
    const yearCount=node("span",recordCount+" "+(recordCount===1?"record":"records"),"chrono-year-count");
