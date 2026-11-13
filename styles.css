@@ -8007,3 +8007,28 @@ body.dark-mode #ancestor-grid .ancestor-view-button{background:#3b281e;color:#f0
  #ancestor-grid .ancestor-remove-card{top:5px;right:5px;padding:.2rem .4rem;font-size:.64rem}
  .ancestor-add-card{padding:1.35rem}
 }
+
+ 
+/* ChronoSearch: clean horizontal, image-only record cards */
+.chrono-year-column{flex:0 0 clamp(300px,30vw,400px);padding:.85rem}
+.chrono-record-card{
+ position:relative;display:block;width:100%;aspect-ratio:16/10;box-sizing:border-box;
+ margin:.8rem 0;padding:.42rem;overflow:hidden;cursor:pointer;text-align:left;
+ border:1px solid #8d7054;border-radius:2px;background:#d8c4a2;
+ box-shadow:0 3px 9px rgba(54,32,21,.13),inset 0 0 0 1px rgba(255,247,226,.5);
+ transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.chrono-record-card:before{content:"";position:absolute;inset:5px;z-index:1;pointer-events:none;border:1px solid rgba(117,77,48,.27)}
+.chrono-record-card .chrono-record-image{
+ display:block;width:100%;height:100%;object-fit:contain;object-position:center;
+ background:#e9ddc5;border:0;
+}
+.chrono-record-card .chrono-record-image.is-placeholder{background:#d9c6a5}
+.chrono-record-card:hover{transform:translateY(-2px);border-color:#8d2730;box-shadow:0 7px 15px rgba(54,32,21,.2)}
+.chrono-record-card:focus-visible{outline:3px solid #b77b48;outline-offset:3px}
+.chrono-record-card:active{transform:translateY(0)}
+@media(max-width:560px){
+ .chrono-year-column{flex-basis:86vw}
+ .chrono-record-card{aspect-ratio:16/11;margin:.7rem 0;padding:.35rem}
+}
+@media(prefers-reduced-motion:reduce){.chrono-record-card{transition:none}}
