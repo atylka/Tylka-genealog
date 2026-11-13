@@ -8353,3 +8353,40 @@ body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-summary{color:#
 @media(prefers-reduced-motion:reduce){
   body.chronosearch-page #chrono-timeline .chrono-record-card{transition:none!important;animation:none!important}
 }
+
+
+/* Timeline connector alignment: carry the line through each year marker and down its dates. */
+body.chronosearch-page #chrono-timeline::before{
+  display:none!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:1!important;
+  top:2.2rem!important;
+  left:-1.05rem!important;
+  right:-1.05rem!important;
+  width:auto!important;
+  height:2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:linear-gradient(90deg,#b58a50 0%,#8a2834 50%,#b58a50 100%)!important;
+  box-shadow:0 1px 0 rgba(255,242,215,.4)!important;
+  pointer-events:none!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading::before{
+  top:50%!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column::after{
+  left:1.28rem!important;
+}
+@media(max-width:560px){
+  body.chronosearch-page #chrono-timeline>.chrono-year-column::before{
+    top:2.12rem!important;
+    left:-.7rem!important;
+    right:-.7rem!important;
+  }
+  body.chronosearch-page #chrono-timeline>.chrono-year-column::after{
+    left:1.16rem!important;
+  }
+}
