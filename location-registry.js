@@ -71,7 +71,7 @@
       const onUpdate=(url,settings)=>{
         personData.thumbnail_settings=settings;
         if(!avatar){avatar=document.createElement("img");avatar.className="person-picker-avatar";avatar.alt="";avatar.loading="lazy";button.prepend(avatar);button.classList.add("has-portrait");}
-        avatar.src=url;avatar.style.objectFit="cover";avatar.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";avatar.style.transform="scale("+(settings.zoom||1)+")";avatar.style.transformOrigin="center center";
+        avatar.src=url;avatar.dataset.tylkaPersonThumb=key;avatar.style.objectFit="cover";avatar.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";avatar.style.transform="scale("+(settings.zoom||1)+")";avatar.style.transformOrigin="center center";
       };
       window.TylkaThumbnailTools?.attachPerson(avatar,personData,allRecords,row,onUpdate,portraitUrl);
       personMenu.append(row);
