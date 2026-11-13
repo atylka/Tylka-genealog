@@ -6,7 +6,7 @@
  const config=window.TYLKA_SUPABASE_CONFIG||{};
  const client=window.supabase&&config.url&&config.anonKey?(window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true}}))):null;
  const esc=value=>String(value||"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
- let activePerson=null,activeIndex=0,modal=null,addModal=null,isOwner=false,ownerSession=null,portraitColumnAvailable=true,savedPeopleRows=[];
+ let activePerson=null,activeIndex=0,modal=null,addModal=null,isOwner=false,ownerSession=null,portraitColumnAvailable=true,savedPeopleRows=[],currentRecords=[];
  function faceList(person){
   let faces=Array.isArray(person.portraits)?person.portraits:[];
   if(!faces.length&&person.portrait_url)faces=[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id,created_at:person.updated_at}];
@@ -35,6 +35,7 @@
    if(!existing.portrait_url)existing.portrait_url=person.portrait_url||existing.portraits[0]?.url||null;
    if(!existing.source_title&&person.source_title)existing.source_title=person.source_title;
    if(!existing.source_record_id&&person.source_record_id)existing.source_record_id=person.source_record_id;
+   if(!existing.thumbnail_settings&&person.thumbnail_settings)existing.thumbnail_settings=person.thumbnail_settings;
    existing.record_mentioned_only=Boolean(existing.record_mentioned_only||person.record_mentioned_only);
   });
   return [...merged.values()];
@@ -112,23 +113,32 @@
  async function setCardThumbnail(url,button){
   if(!activePerson||!client)return;
   button.disabled=true;button.textContent="Saving…";
-  const {error}=await client.from("ancestor_portraits").update({portrait_url:url,updated_at:new Date().toISOString()}).eq("id",activePerson.id);
-  if(error){button.disabled=false;button.textContent="Could not save — try again";return;}
-  activePerson.portrait_url=url;renderThumbnailForActive();button.textContent="Current card thumbnail";showFace(activeIndex);
+  let result=await client.from("ancestor_portraits").update({portrait_url:url,thumbnail_settings:{},updated_at:new Date().toISOString()}).eq("id",activePerson.id);
+  if(result.error&&/thumbnail_settings/i.test(result.error.message||""))result=await client.from("ancestor_portraits").update({portrait_url:url,updated_at:new Date().toISOString()}).eq("id",activePerson.id);
+  if(result.error){button.disabled=false;button.textContent="Could not save — try again";return;}
+  activePerson.portrait_url=url;activePerson.thumbnail_settings={};renderThumbnailForActive();button.textContent="Current card thumbnail";showFace(activeIndex);
  }
  function renderCardThumbnail(person){
   if(!person)return;
   const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(person.id));
   const trigger=card?.querySelector(".ancestor-card-open");if(!trigger)return;
   const faces=faceList(person),face=faces.find(item=>item.url===person.portrait_url)||faces[0];
-  const url=face?.url||person.profile?.recordThumbnailUrl||"";
-  const current=trigger.querySelector(".ancestor-portrait,.ancestor-portrait-placeholder");
+  const selectedRecord=currentRecords.find(record=>String(record.id)===String(person.thumbnail_settings?.record_id||"")&&archiveRecordImageUrl(record));
+  const url=(selectedRecord&&archiveRecordImageUrl(selectedRecord))||face?.url||person.profile?.recordThumbnailUrl||"";
+  let current=trigger.querySelector(".ancestor-portrait,.ancestor-portrait-placeholder");
   if(url){
-   if(current?.tagName==="IMG"){current.src=url;current.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;}
-   else{const image=document.createElement("img");image.className="ancestor-portrait";image.src=url;image.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;if(current)current.replaceWith(image);else trigger.prepend(image);}
+   if(current?.tagName==="IMG"){current.src=url;current.alt=face&&!selectedRecord?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;}
+   else{const image=document.createElement("img");image.className="ancestor-portrait";image.src=url;image.alt=face&&!selectedRecord?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;if(current)current.replaceWith(image);else trigger.prepend(image);current=image;}
   }else if(current?.tagName!=="SPAN"){
-   const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.setAttribute("role","img");placeholder.setAttribute("aria-label","No thumbnail available");if(current)current.replaceWith(placeholder);else trigger.prepend(placeholder);
+   const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.setAttribute("role","img");placeholder.setAttribute("aria-label","No thumbnail available");if(current)current.replaceWith(placeholder);else trigger.prepend(placeholder);current=placeholder;
   }
+  const image=current?.tagName==="IMG"?current:null;
+  window.TylkaThumbnailTools?.attachPerson(image,person,currentRecords,card,(nextUrl,settings)=>{
+   person.thumbnail_settings=settings;
+   let target=trigger.querySelector(".ancestor-portrait");
+   if(!target){target=document.createElement("img");target.className="ancestor-portrait";target.alt="Archive record image mentioning "+person.name;const placeholder=trigger.querySelector(".ancestor-portrait-placeholder");if(placeholder)placeholder.replaceWith(target);else trigger.prepend(target);}
+   target.src=nextUrl;target.style.objectFit="cover";target.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";target.style.transform="scale("+(settings.zoom||1)+")";target.style.transformOrigin="center center";
+  },url);
  }
  function renderThumbnailForActive(){renderCardThumbnail(activePerson);}
  function openPerson(person){activePerson=person;const box=ensureModal();box.hidden=false;box.querySelector(".ancestor-viewer-name").textContent=person.name;renderProfileFacts();showFace(0);}
@@ -226,12 +236,13 @@
   if(!window.confirm("Delete this profile photo? This will not remove the face identification from its original record."))return;
   const button=modal?.querySelector(".ancestor-delete-current");if(button)button.disabled=true;
   try{
-   const next=faces.filter((_,i)=>i!==index),nextUrl=next[0]?.url||null;
+   const next=faces.filter((_,i)=>i!==index),nextUrl=next[0]?.url||"";
    const values={portraits:next,portrait_url:nextUrl,source_record_id:next[0]?.source_record_id||null,source_title:next[0]?.source_title||null,updated_at:new Date().toISOString()};
-   const result=!next.length?await client.from("ancestor_portraits").delete().eq("id",activePerson.id):await client.from("ancestor_portraits").update(values).eq("id",activePerson.id);
+   const keepRow=Boolean(activePerson.thumbnail_settings?.record_id);
+   const result=!next.length&&!keepRow?await client.from("ancestor_portraits").delete().eq("id",activePerson.id):await client.from("ancestor_portraits").update(values).eq("id",activePerson.id);
    if(result.error)throw result.error;
    try{const pathname=new URL(face.url).pathname,marker="/family-archive/",at=pathname.indexOf(marker);if(at>=0)await client.storage.from("family-archive").remove([decodeURIComponent(pathname.slice(at+marker.length))]);}catch(_){}
-   if(!next.length){activePerson={...activePerson,portraits:[],portrait_url:null,source_record_id:null,source_title:null};activeIndex=0;renderCardThumbnail(activePerson);showFace(0);return;}
+   if(!next.length){activePerson={...activePerson,portraits:[],portrait_url:"",source_record_id:null,source_title:null};activeIndex=0;renderCardThumbnail(activePerson);showFace(0);return;}
    activePerson={...activePerson,portraits:next,portrait_url:nextUrl,source_record_id:values.source_record_id,source_title:values.source_title};
    const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>item.dataset.personId===String(activePerson.id));if(card){const img=card.querySelector(".ancestor-portrait");if(img)img.src=nextUrl;const p=card.querySelector(".ancestor-source");if(p)p.textContent=next.length+" saved "+(next.length===1?"photo":"photos");}
    showFace(Math.min(index,next.length-1));
@@ -245,14 +256,23 @@
    const card=document.createElement("article");card.className="ancestor-card ancestor-multi-card";card.dataset.personId=person.id;
    const trigger=document.createElement("button");trigger.type="button";trigger.className="ancestor-card-open";
    trigger.setAttribute("aria-label","Open profile for "+person.name+". Birth: "+(profile.birth||"Not recorded")+". Death: "+(profile.death||"Not recorded"));
-   const face=faces.find(item=>item.url===person.portrait_url)||faces[0],thumbnailUrl=face?.url||profile.recordThumbnailUrl;
-   if(thumbnailUrl){const image=document.createElement("img");image.className="ancestor-portrait";image.src=thumbnailUrl;image.alt=face?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;image.loading="lazy";trigger.append(image);}
+   const face=faces.find(item=>item.url===person.portrait_url)||faces[0];
+   const selectedRecord=currentRecords.find(record=>String(record.id)===String(person.thumbnail_settings?.record_id||"")&&archiveRecordImageUrl(record));
+   const thumbnailUrl=(selectedRecord&&archiveRecordImageUrl(selectedRecord))||face?.url||profile.recordThumbnailUrl;
+   let image=null;
+   if(thumbnailUrl){image=document.createElement("img");image.className="ancestor-portrait";image.src=thumbnailUrl;image.alt=face&&!selectedRecord?"Profile photo of "+person.name:"Archive record image mentioning "+person.name;image.loading="lazy";trigger.append(image);}
    else{const placeholder=document.createElement("span");placeholder.className="ancestor-portrait-placeholder";placeholder.setAttribute("role","img");placeholder.setAttribute("aria-label","No thumbnail available");trigger.append(placeholder);}
    const body=document.createElement("div");body.className="ancestor-card-body";
    const title=document.createElement("h3");title.textContent=person.name;
    const birth=document.createElement("p");birth.className="ancestor-card-date";birth.textContent="Birth: "+(profile.birth||"Not recorded");
    const death=document.createElement("p");death.className="ancestor-card-date";death.textContent="Death: "+(profile.death||"Not recorded");
    body.append(title,birth,death);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));const viewButton=document.createElement("button");viewButton.type="button";viewButton.className="ancestor-view-button";viewButton.textContent="View ancestor";viewButton.addEventListener("click",()=>openPerson(person));card.append(trigger,viewButton);if(isOwner){const removeButton=document.createElement("button");removeButton.type="button";removeButton.className="ancestor-remove-card";removeButton.textContent="Remove";removeButton.title="Hide this ancestor card";removeButton.setAttribute("aria-label","Remove "+person.name+" from the Ancestors page");removeButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();removeAncestorCard(person,removeButton);});card.append(removeButton);}grid.append(card);
+   window.TylkaThumbnailTools?.attachPerson(image,person,currentRecords,card,(nextUrl,settings)=>{
+    person.thumbnail_settings=settings;
+    let target=trigger.querySelector(".ancestor-portrait");
+    if(!target){target=document.createElement("img");target.className="ancestor-portrait";target.alt="Archive record image mentioning "+person.name;const placeholder=trigger.querySelector(".ancestor-portrait-placeholder");if(placeholder)placeholder.replaceWith(target);else trigger.prepend(target);}
+    target.src=nextUrl;target.style.objectFit="cover";target.style.objectPosition=(settings.position_x??50)+"% "+(settings.position_y??50)+"%";target.style.transform="scale("+(settings.zoom||1)+")";target.style.transformOrigin="center center";
+   },thumbnailUrl||"");
   });
  }
  async function load(){
@@ -260,13 +280,16 @@
   try{const auth=await client.auth.getSession();ownerSession=auth.data?.session||null;isOwner=ownerSession?.user?.id===OWNER_ID;}catch(error){ownerSession=null;isOwner=false;console.warn("Could not check ancestor owner access:",error);}
   if(addButton)addButton.hidden=!isOwner;
   portraitColumnAvailable=true;
-  let {data,error}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").order("name");
-  // Backward compatibility: older Supabase tables may not yet have the
-  // multi-portrait JSON column. Load their original single-portrait rows
-  // rather than returning early and leaving the entire people grid blank.
+  let {data,error}=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,thumbnail_settings,source_title,source_record_id,updated_at").order("name");
+  if(error&&/thumbnail_settings/i.test(error.message||"")){
+   const legacySettings=await client.from("ancestor_portraits").select("id,name,portrait_url,portraits,source_title,source_record_id,updated_at").order("name");
+   data=legacySettings.data;error=legacySettings.error;
+  }
+  // Backward compatibility for older tables without the multiple-photo column.
   if(isMissingPortraitsColumn(error)){
    portraitColumnAvailable=false;
-   const legacy=await client.from("ancestor_portraits").select("id,name,portrait_url,source_title,source_record_id,updated_at").order("name");
+   let legacy=await client.from("ancestor_portraits").select("id,name,portrait_url,source_title,source_record_id,updated_at,thumbnail_settings").order("name");
+   if(legacy.error&&/thumbnail_settings/i.test(legacy.error.message||""))legacy=await client.from("ancestor_portraits").select("id,name,portrait_url,source_title,source_record_id,updated_at").order("name");
    data=legacy.data;error=legacy.error;
    if(!error)data=(data||[]).map(person=>({...person,portraits:person.portrait_url?[{url:person.portrait_url,source_title:person.source_title,source_record_id:person.source_record_id}]:[]}));
   }
@@ -278,9 +301,9 @@
   window.__tylkaAncestorRows=savedPeopleRows;
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
   if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
-  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description,file_path,mime_type");
+  const {data:lifeRecords,error:lifeError}=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description,file_path,file_name,mime_type");
   if(lifeError)console.warn("Could not load ancestor life dates:",lifeError.message);
-  const records=lifeError?[]:(lifeRecords||[]);
+  const records=lifeError?[]:(lifeRecords||[]);currentRecords=records;
   const known=new Set(people.map(person=>normalizeName(person.name)));
   namesFromRecords(records).forEach(name=>{const key=normalizeName(name);if(!hiddenKeys.has(key)&&!known.has(key)){known.add(key);people.push({id:"record-person-"+key.replace(/\s+/g,"-"),name,portrait_url:null,portraits:[],record_mentioned_only:true});}});
   const uniquePeople=deduplicatePeople(people);
