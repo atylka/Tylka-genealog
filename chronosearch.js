@@ -2,6 +2,8 @@
  const config=window.TYLKA_SUPABASE_CONFIG||{};
  const names={births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
  const $=id=>document.getElementById(id);let client=null;const publicUrl=path=>client.storage.from("family-archive").getPublicUrl(path).data.publicUrl;
+ const chronoPlaceholderImage=()=> "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500"><rect width="800" height="500" fill="#d9c6a5"/><rect x="268" y="32" width="264" height="436" fill="#efe3ca" stroke="#8c674b" stroke-width="5"/><rect x="282" y="46" width="236" height="408" fill="none" stroke="#b79a73" stroke-width="2"/><path d="M310 112h180M310 148h180M310 184h180M310 220h180M310 256h180M310 292h180M310 328h180M310 364h180" stroke="#b7a181" stroke-width="4" opacity=".78"/><path d="M310 90h110M310 400h150" stroke="#8f6b52" stroke-width="5" opacity=".7"/><circle cx="472" cy="397" r="23" fill="#8b2730" opacity=".9"/><circle cx="472" cy="397" r="14" fill="none" stroke="#d8ad77" stroke-width="2"/></svg>');
+ const isChronoImage=record=>Boolean(record.file_path&&(/^image\/(?!tiff)/i.test(record.mime_type||"")||/\.(?:avif|bmp|gif|jpe?g|png|webp|svg)(?:[?#].*)?$/i.test([record.file_name,record.file_path].filter(Boolean).join(" "))));
  const timeline=$("chrono-timeline"),count=$("chrono-count"),locationInput=$("chrono-location"),personInput=$("chrono-person"),folderInput=$("chrono-folder"),yearInput=$("chrono-year");
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
  const cleanChronoDescription=value=>{
@@ -75,35 +77,21 @@
    const column=node("section","","chrono-year-column");
    column.dataset.year=key;
    groups.get(key).sort((a,b)=>{const da=parseRecordDate(a),db=parseRecordDate(b);if(da&&db)return da-db;if(da)return -1;if(db)return 1;return (a.title||"").localeCompare(b.title||"");}).forEach(r=>{
-    const event=node("div","","chrono-event");
-    const dateLabel=formatRecordDate(r)||"Date not recorded";
-    const dateLocation=node("div","","chrono-event-meta");
-    dateLocation.append(node("span",dateLabel,"chrono-record-date"));
-    if(r.location)dateLocation.append(node("span",r.location,"chrono-event-location"));
-    event.append(dateLocation);
-    event.append(node("p",eventDescription(r),"chrono-event-description"));
-    const card=node("article","","record-card record-card-expanded chrono-record-card");card.dataset.recordId=r.id||"";
-    const details=node("div","","chrono-record-details");
-    const info=node("div","","chrono-card-info");
-    const family=familyValues(r);
-    const hasFamily=Object.values(family).some(Boolean);
-    if(hasFamily){
-     const familyPanel=node("section","","chrono-family-panel");
-     familyPanel.append(node("h4","Parents","chrono-panel-title"));
-     const parents=node("div","","chrono-family-grid");
-     appendInfoBox(parents,"Father",family.father);
-     appendInfoBox(parents,"Mother",family.mother);
-     if(parents.childElementCount)familyPanel.append(parents);
-     details.append(familyPanel);
-    }
-    if(r.category==="photos"){
-     const people=displayPeople(r.persons_mentioned);
-     if(people){const peopleBox=node("div","","chrono-info-box chrono-photo-people");peopleBox.append(node("span","People","chrono-info-label"),node("p",people,"chrono-info-value"));details.append(peopleBox);}
-    }
-    const excerpt=cleanChronoDescription(r.description||"").split(/\r?\n/).filter(line=>!/^\s*(?:Date on record|Parish|Research confidence|Bride|Groom):/i.test(line)).join("\n").trim()
-    if(excerpt)appendInfoBox(details,"Record notes",excerpt.length>420?excerpt.slice(0,417)+"…":excerpt,"chrono-notes-box");
-    info.append(details);card.append(info);
-    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||""));const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};card.addEventListener("click",openArchiveDetail);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});event.append(card);column.append(event);
+    const card=node("article","","chrono-record-card");card.dataset.recordId=r.id||"";
+    const image=document.createElement("img");
+    image.className="chrono-record-image";
+    image.alt="Scanned family record: "+(r.title||"Untitled record");
+    image.loading="lazy";image.decoding="async";
+    const placeholder=chronoPlaceholderImage();
+    image.src=isChronoImage(r)?publicUrl(r.file_path):placeholder;
+    if(!isChronoImage(r))image.classList.add("is-placeholder");
+    image.addEventListener("error",()=>{image.src=placeholder;image.classList.add("is-placeholder");},{once:true});
+    card.append(image);
+    card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record"));
+    const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
+    card.addEventListener("click",openArchiveDetail);
+    card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});
+    column.append(card);
    });
    timeline.append(column);
   });
