@@ -130,6 +130,7 @@
     modal.querySelector("#tylka-thumb-zoom-value").textContent=Math.round(settings.zoom*100)+"%";
     modal.querySelector("#tylka-thumb-x-value").textContent=settings.position_x+"%";
     modal.querySelector("#tylka-thumb-y-value").textContent=settings.position_y+"%";
+    const save=modal.querySelector("#tylka-thumb-save");if(save&&!save.disabled)save.textContent="Save thumbnail";
   }
   function openEditor(kind,target,records,image,host,onUpdate,fallbackUrl){
     if(!owner){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}
@@ -189,7 +190,7 @@
         if(active.onUpdate)active.onUpdate(url,settings,source);
       }
       status.textContent="Thumbnail saved.";
-      button.textContent="Saved";
+      button.disabled=false;button.textContent="Saved";
       document.dispatchEvent(new CustomEvent("tylka:thumbnail-updated",{detail:{kind:active.kind,id:active.target.id||null,name:active.target.name||null,settings}}));
     }catch(error){
       const message=String(error?.message||"Could not save thumbnail.");
@@ -232,6 +233,7 @@
   function attachRecord(image,record,records,host){
     if(!image||!record||!record.id||!isImageRecord(record))return;
     addControl("record",record,records,image,host||image.parentElement,null,"");
+    if(image.dataset.pendingSrc)delete image.dataset.pendingSrc;
   }
   function attachPerson(image,person,records,host,onUpdate,fallbackUrl){
     if(!person?.name||!host)return;
