@@ -88,13 +88,10 @@
   return modal;
  }
  function navigateToAncestorCard(person){
-  const card=[...grid.querySelectorAll(".ancestor-card")].find(item=>String(item.dataset.personId)===String(person.id));
-  if(!card){openPerson(person);return;}
-  if(modal)modal.hidden=true;activePerson=null;
-  card.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
-  card.classList.remove("ancestor-card-navigation-target");
-  requestAnimationFrame(()=>{card.classList.add("ancestor-card-navigation-target");const trigger=card.querySelector(".ancestor-card-open");if(trigger)trigger.focus({preventScroll:true});});
-  window.setTimeout(()=>card.classList.remove("ancestor-card-navigation-target"),2200);
+  // Relationship names navigate directly to that person's full ancestor profile.
+  // Do not scroll to or highlight the card behind the modal.
+  if(!person)return;
+  openPerson(person);
  }
  function renderProfileFacts(){
   if(!activePerson||!modal)return;
@@ -308,7 +305,7 @@
   window.__tylkaAncestorRows=savedPeopleRows;
   const ids=[...new Set(people.flatMap(person=>faceList(person).map(face=>face.source_record_id).filter(Boolean)))];
   if(ids.length){const {data:sourceRecords}=await client.from("archive_records").select("id,record_date,description").in("id",ids);const sourceDates=new Map((sourceRecords||[]).map(record=>[String(record.id),yearFrom(extractRecordDate(record))]));people.forEach(person=>faceList(person).forEach(face=>{if((!face.source_year||face.source_year==="Year not recorded")&&face.source_record_id&&sourceDates.has(String(face.source_record_id)))face.source_year=sourceDates.get(String(face.source_record_id));}));}
-  const records=[];let lifeError=null,offset=0;const pageSize=1000;while(true){const page=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description,file_path,file_name,mime_type,source_attachments").order("created_at",{ascending:true}).range(offset,offset+pageSize-1);if(page.error){lifeError=page.error;break;}const batch=page.data||[];records.push(...batch);if(batch.length<pageSize)break;offset+=pageSize;}
+  const records=[];let lifeError=null,offset=0;const pageSize=1000;while(true){const page=await client.from("archive_records").select("id,category,title,location,persons_mentioned,record_date,description,file_path,file_name,mime_type,source_attachments").order("id",{ascending:true}).range(offset,offset+pageSize-1);if(page.error){lifeError=page.error;break;}const batch=page.data||[];records.push(...batch);if(batch.length<pageSize)break;offset+=pageSize;}
   if(lifeError)console.warn("Could not load all ancestor archive records:",lifeError.message);
   currentRecords=records;
   const known=new Set(people.map(person=>normalizeName(person.name)));
