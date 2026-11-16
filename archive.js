@@ -195,15 +195,23 @@
     const clearImageOverlay=()=>{if(nameOverlay){const context=nameOverlay.getContext("2d");if(context)context.clearRect(0,0,nameOverlay.width,nameOverlay.height);nameOverlay.width=0;nameOverlay.height=0;}};
     const activateSource=(item,index)=>{
       activeSource=item;activeSourceIndex=index;resetViewer();clearImageOverlay();
+      const imageCaption=$("detail-image-caption");
       if(!isImage(item)){
         img.hidden=true;img.removeAttribute("src");
+        if(imageCaption){imageCaption.textContent="";imageCaption.hidden=true;}
         fallback.textContent="This source is a document file. Use its source link in the gallery to open it.";
         if(download)download.hidden=true;
         syncFaceButton();
         gallery.querySelectorAll(".detail-source-image-button").forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
         return;
       }
-      fallback.replaceChildren();img.crossOrigin="anonymous";img.onload=()=>{if(index===0){syncFaceButton();drawPageNameOverlay(record);}else{syncFaceButton();clearImageOverlay();}};img.onerror=()=>{setMessage($("face-crop-status"),"This image could not be loaded. Check that the uploaded file is still available.",true);syncFaceButton();};img.src=publicFileUrl(item.file_path);img.alt=(item.file_name||"Record source")+" · "+record.title;img.hidden=false;
+      fallback.replaceChildren();
+      if(imageCaption){
+        const role=item.role==="main"?"Main source":"Supporting source";
+        imageCaption.textContent=role+" · "+String(item.caption||item.file_name||"Record image");
+        imageCaption.hidden=false;
+      }
+      img.crossOrigin="anonymous";img.onload=()=>{if(index===0){syncFaceButton();drawPageNameOverlay(record);}else{syncFaceButton();clearImageOverlay();}};img.onerror=()=>{setMessage($("face-crop-status"),"This image could not be loaded. Check that the uploaded file is still available.",true);syncFaceButton();};img.src=publicFileUrl(item.file_path);img.alt=(item.file_name||"Record source")+" · "+record.title;img.hidden=false;
       if(download){download.hidden=false;download.onclick=async()=>{const url=publicFileUrl(item.file_path);try{const response=await fetch(url);if(!response.ok)throw new Error("Download unavailable");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");link.href=objectUrl;link.download=item.file_name||"record-image";document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);}catch{const link=document.createElement("a");link.href=url;link.download=item.file_name||"record-image";link.click();}};}
       gallery.querySelectorAll(".detail-source-image-button").forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
     };
@@ -216,7 +224,7 @@
         if(isImage(item)){
           const button=document.createElement("button");button.type="button";button.className="detail-source-image-button";button.setAttribute("aria-label","View source image "+(index+1)+": "+itemName);button.setAttribute("aria-pressed","false");button.addEventListener("click",()=>activateSource(item,index));
           const thumb=document.createElement("img");thumb.className="detail-source-image";thumb.src=url;thumb.alt=itemName;thumb.loading="lazy";thumb.onerror=()=>{thumb.alt=itemName+" could not be previewed";thumb.classList.add("is-unavailable");};
-          const caption=document.createElement("span");caption.className="source-gallery-caption";caption.textContent=(item.role==="main"?"MAIN SOURCE · ":"SUPPORTING SOURCE · ")+(item.caption||itemName);button.append(thumb,caption);if(item.role==="supporting"&&item.research_notes){const notes=document.createElement("small");notes.className="source-gallery-research-notes";notes.textContent="Research notes: "+item.research_notes;button.append(notes);}grid.append(button);
+          button.append(thumb);grid.append(button);
         }else{
           const link=document.createElement("a");link.className="detail-source-attachment";link.href=url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=(item.role==="main"?"MAIN SOURCE · ":"SUPPORTING SOURCE · ")+(item.caption||itemName)+(String(item.mime_type||"").toLowerCase()==="application/pdf"?" · PDF":" · Open source");grid.append(link);if(item.role==="supporting"&&item.research_notes){const notes=document.createElement("small");notes.className="source-gallery-research-notes";notes.textContent="Research notes: "+item.research_notes;grid.append(notes);}
         }
