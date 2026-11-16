@@ -18,7 +18,7 @@
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
   const addRecordButton=$("open-add-record");
-  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}setMessage($("upload-message"),"");showModal("add-record-modal");});
+  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}editingRecordId=null;uploadForm?.reset();$("record-person-rows")?.replaceChildren();$("record-witness-rows")?.replaceChildren();$("record-source-entries")?.replaceChildren();$("add-record-title").textContent="Add a record";const saveButton=uploadForm?.querySelector("button[type=submit]");if(saveButton)saveButton.textContent="Save record";updateMarriageFields();setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
     recordsList.classList.toggle("all-records-view",activeFolder==="all");
     recordsList.replaceChildren();
@@ -402,7 +402,7 @@
     role.value=entry.role==="supporting"?"supporting":"main";
     const caption=document.createElement("input");caption.type="text";caption.maxLength=180;caption.className="source-entry-caption";caption.placeholder="Caption (original scan, translation, supporting record…)";caption.value=entry.caption||"";
     const notes=document.createElement("textarea");notes.rows=2;notes.maxLength=2000;notes.className="source-entry-notes";notes.placeholder="Research notes: explain what this supporting source contributes";notes.value=entry.research_notes||"";notes.hidden=role.value!=="supporting";
-    role.addEventListener("change",()=>{if(role.value==="main"){document.querySelectorAll("#record-source-entries .source-entry-role").forEach(other=>{if(other!==role)other.value="supporting";});document.querySelectorAll("#record-source-entries .source-entry-notes").forEach(other=>other.hidden=other.previousElementSibling?.value==="main");}notes.hidden=role.value!=="supporting";});
+    role.addEventListener("change",()=>{if(role.value==="main"){document.querySelectorAll("#record-source-entries .source-entry-role").forEach(other=>{if(other!==role)other.value="supporting";});document.querySelectorAll("#record-source-entries .record-source-entry-row").forEach(other=>{const otherRole=other.querySelector(".source-entry-role"),otherNotes=other.querySelector(".source-entry-notes");otherNotes.hidden=otherRole.value==="main";});}notes.hidden=role.value!=="supporting";});
     const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button source-entry-remove";remove.textContent="Remove";remove.addEventListener("click",()=>row.remove());
     row.append(heading,role,caption,notes,remove);host.append(row);
   }
@@ -451,7 +451,7 @@
       if(editingRecordId)result=await client.from("archive_records").update(values).eq("id",editingRecordId);
       else result=await client.from("archive_records").insert({owner_id:currentUser.id,created_by:(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Archive owner"),...values,file_path:values.file_path||null,file_name:values.file_name||null,mime_type:values.mime_type||null,file_size:values.file_size||null});
       if(result.error)throw result.error;
-      editingRecordId=null;uploadForm.reset();updateMarriageFields();$("add-record-title").textContent="Add a record";button.textContent="✓ Saved";button.classList.add("upload-form-success");setMessage($("upload-message"),"Record saved.");await loadRecords();
+      editingRecordId=null;uploadForm.reset();$("record-person-rows")?.replaceChildren();$("record-witness-rows")?.replaceChildren();$("record-source-entries")?.replaceChildren();updateMarriageFields();$("add-record-title").textContent="Add a record";button.textContent="✓ Saved";button.classList.add("upload-form-success");setMessage($("upload-message"),"Record saved.");await loadRecords();
       setTimeout(()=>{closeModals();setMessage($("upload-message"),"");button.textContent="Save record";button.classList.remove("upload-form-success");},900);
     }catch(error){if(uploadedPaths.length)await client.storage.from("family-archive").remove(uploadedPaths);setMessage($("upload-message"),error.message||"Save failed.",true);}finally{button.disabled=false;}
   });
