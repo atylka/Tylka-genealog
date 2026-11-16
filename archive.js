@@ -322,8 +322,8 @@
     const name=document.createElement("input");name.type="text";name.maxLength=180;name.placeholder="Full name";name.className="record-witness-name";name.value=person.name||"";name.setAttribute("aria-label","Participant full name");
     const role=document.createElement("select");role.className="record-witness-role";role.setAttribute("aria-label","Participant role");
     [["Witness","Witness"],["Godparent","Godparent"],["Informant","Informant"],["Priest / officiant","Priest / officiant"],["Registrar","Registrar"],["Other","Other"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;role.append(o);});
-    role.value=person.relation||"Witness";
-    const custom=document.createElement("input");custom.type="text";custom.maxLength=120;custom.placeholder="Describe role";custom.className="record-witness-custom";custom.value=person.custom||"";custom.hidden=role.value!=="Other";
+    role.value=["Witness","Godparent","Informant","Priest / officiant","Registrar","Other"].includes(person.relation)?(person.relation||"Witness"):"Other";
+    const custom=document.createElement("input");custom.type="text";custom.maxLength=120;custom.placeholder="Describe role";custom.className="record-witness-custom";custom.value=person.custom||(role.value==="Other"?person.relation||"":"");custom.hidden=role.value!=="Other";
     role.addEventListener("change",()=>{custom.hidden=role.value!=="Other";if(role.value==="Other")custom.focus();});
     const remove=document.createElement("button");remove.type="button";remove.className="remove-person-button";remove.textContent="−";remove.setAttribute("aria-label","Remove participant");remove.addEventListener("click",()=>row.remove());
     row.append(name,role,custom,remove);host.append(row);if(focusName)name.focus();
