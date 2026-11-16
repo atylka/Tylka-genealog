@@ -20,10 +20,11 @@ For a new project, run `supabase/schema.sql` in the Supabase SQL Editor first. T
 5. `supabase/migrations/20261105_archive_catalog_metadata.sql`
 6. `supabase/public-record-attachments-migration.sql`
 7. `supabase/migrations/20261113_editable_thumbnails.sql`
+8. `supabase/migrations/20261116_multiple_record_sources.sql`
 
 The catalog migration adds archival metadata columns and assigns stable accession numbers to existing records. It does not overwrite existing titles, descriptions, dates, locations, people, or attachments.
 
-The editable-thumbnail migration adds owner-managed source selection, zoom, and focal-position settings for record and person thumbnails. It does not replace or alter original scans.
+The editable-thumbnail migration adds owner-managed source selection, zoom, and focal-position settings for record and person thumbnails. It does not replace or alter original scans.\n\nThe multiple-record-sources migration adds a list of additional scans, photographs, and PDFs to each event. Existing primary attachments are preserved.
 
 The attachment migration sets `family-archive` to **public** so visitors can view record scans and photographs through the public URLs used by the site. Public bucket access means anyone with an asset URL can retrieve that file. Uploading, replacing, and deleting files remain restricted by Storage policies to the designated owner. Do not upload private or sensitive documents to this public collection.
 
