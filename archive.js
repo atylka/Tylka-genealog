@@ -150,7 +150,9 @@
     window.tylkaActiveDetailRecord=record;
     $("detail-edit-record").hidden=!currentUser;
     $("detail-title").textContent=record.title;
-    const meta=[categoryNames[canonical(record.category)]||record.category];
+    const folderType=categoryNames[canonical(record.category)]||record.category||"Unclassified";
+    const folderBadge=$("detail-folder-type");if(folderBadge)folderBadge.textContent=folderType;
+    const meta=[];
     if(record.accession_number)meta.push("Accession: "+record.accession_number);
     const detailRaw=String(record.description||""),pageNumberMatch=detailRaw.match(/^Page number:\s*([^\r\n]+)$/im),pageEntryMatch=detailRaw.match(/^Page entry:\s*([^\r\n]+)$/im),sourceLineMatch=detailRaw.match(/^Source:\s*([^\r\n]+)$/im);
     if(pageNumberMatch)meta.push("Page number: "+pageNumberMatch[1].trim());if(pageEntryMatch)meta.push("Page entry: "+pageEntryMatch[1].trim());
