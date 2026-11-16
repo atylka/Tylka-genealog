@@ -8702,3 +8702,25 @@ html[data-theme="dark"] .ancestor-record-viewer-stage,body[data-theme="dark"] .a
 .ancestor-card-navigation-target{outline:3px solid #9a3540!important;outline-offset:5px;box-shadow:0 0 0 8px rgba(154,53,64,.16)!important;transition:outline-color .2s,box-shadow .2s}
 html[data-theme="dark"] .ancestor-relationship-link,body[data-theme="dark"] .ancestor-relationship-link{background:#302116;color:#f0dfbd;border-color:#765936}
 html[data-theme="dark"] .ancestor-relationship-link:hover,body[data-theme="dark"] .ancestor-relationship-link:hover{background:#49301f;border-color:#b65b60}
+
+
+/* Ancestor profile: restore the portrait gallery above the full record viewer. */
+.ancestor-profile-layout{display:flex!important;flex-direction:column!important;gap:1.1rem!important;align-items:stretch!important}
+.ancestor-profile-info,.ancestor-portrait-section,.ancestor-profile-gallery{width:100%;min-width:0;box-sizing:border-box}
+.ancestor-profile-info{padding:0!important}
+.ancestor-profile-gallery{border:0!important;border-top:1px solid var(--line)!important;padding:1rem 0 0!important}
+.ancestor-profile-gallery>h3{font-size:1.25rem!important}
+.ancestor-portrait-section{border-top:1px solid var(--line);padding-top:1rem}
+.ancestor-portrait-section>h3{margin:0 0 .7rem;font:1.25rem Georgia,serif;color:var(--accent-dark)}
+.ancestor-portrait-viewer{display:flex;flex-direction:column;align-items:center;gap:.45rem;min-height:150px;padding:.75rem;border:1px solid var(--line);background:rgba(223,208,179,.2)}
+.ancestor-portrait-main{display:block;width:auto;max-width:100%;height:clamp(180px,38vh,360px);object-fit:contain}
+.ancestor-portrait-main[hidden],.ancestor-portrait-empty[hidden],.ancestor-portrait-caption[hidden]{display:none!important}
+.ancestor-portrait-caption{margin:0;text-align:center;font:.82rem/1.4 Georgia,serif;color:var(--muted)}
+.ancestor-portrait-picker{display:flex;flex-wrap:wrap;gap:.5rem;margin:.7rem 0}
+.ancestor-portrait-thumb{width:76px;height:76px;padding:.2rem;border:1px solid var(--line);background:rgba(223,208,179,.35);cursor:pointer}
+.ancestor-portrait-thumb.is-active{border:2px solid #8a2834}
+.ancestor-portrait-thumb img{width:100%;height:100%;object-fit:cover}
+.ancestor-portrait-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.ancestor-portrait-empty{padding:.8rem;border:1px dashed var(--line);color:var(--muted)}
+html[data-theme="dark"] .ancestor-portrait-viewer,html[data-theme="dark"] .ancestor-portrait-thumb,body[data-theme="dark"] .ancestor-portrait-viewer,body[data-theme="dark"] .ancestor-portrait-thumb{background:#302116;border-color:#765936}
+@media(max-width:700px){.ancestor-portrait-main{height:clamp(160px,34vh,280px)}}
