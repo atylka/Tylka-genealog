@@ -153,7 +153,9 @@
     const meta=[categoryNames[canonical(record.category)]||record.category];
     if(record.accession_number)meta.push("Accession: "+record.accession_number);
     if(record.record_date)meta.push("Record date: "+record.record_date);
-    const causeOfDeathMatch=String(record.description||"").match(/^Cause of death:\s*([^\r\n]+)$/im);if(causeOfDeathMatch)meta.push("Cause of death: "+causeOfDeathMatch[1].trim());
+    const detailRaw=String(record.description||""),pageNumberMatch=detailRaw.match(/^Page number:\s*([^\r\n]+)$/im),pageEntryMatch=detailRaw.match(/^Page entry:\s*([^\r\n]+)$/im),sourceLineMatch=detailRaw.match(/^Source:\s*([^\r\n]+)$/im);
+    if(pageNumberMatch)meta.push("Page number: "+pageNumberMatch[1].trim());if(pageEntryMatch)meta.push("Page entry: "+pageEntryMatch[1].trim());
+    const causeOfDeathMatch=detailRaw.match(/^Cause of death:\s*([^\r\n]+)$/im);if(causeOfDeathMatch)meta.push("Cause of death: "+causeOfDeathMatch[1].trim());
     if(record.location)meta.push("Location: "+record.location);
     if(record.collection_name)meta.push("Collection: "+record.collection_name);
     if(record.record_type)meta.push("Record type: "+record.record_type);
@@ -164,8 +166,9 @@
     if(record.translation_status)meta.push("Translation: "+record.translation_status.replace(/_/g," "));
     if(record.provenance)meta.push("Provenance: "+record.provenance);
     if(record.preservation_notes)meta.push("Preservation: "+record.preservation_notes);
-    $("detail-meta").textContent=meta.join(" · ");
-    const transcriptionNotes=readTranscriptionNotes(record);$("detail-description").textContent=transcriptionNotes;$("detail-transcription-panel").hidden=!transcriptionNotes;const sourceMatch=String(record.description||"").match(/^Source:\s*([^\r\n]+)$/im);if(sourceMatch)meta.push("Source: "+sourceMatch[1].trim());$("detail-meta").textContent=meta.join(" · ");
+    const detailMeta=$("detail-meta");detailMeta.textContent=meta.join(" · ");
+    const transcriptionNotes=readTranscriptionNotes(record);$("detail-description").textContent=transcriptionNotes;$("detail-transcription-panel").hidden=!transcriptionNotes;
+    const sourceValue=String(record.source_reference||sourceLineMatch?.[1]||"").trim();if(sourceValue){let sourceUrl=null;try{const candidate=new URL(sourceValue);if(candidate.protocol==="http:"||candidate.protocol==="https:")sourceUrl=candidate.href;}catch(_){}if(sourceUrl){const sourceButton=document.createElement("a");sourceButton.className="small-button detail-image-source-button";sourceButton.href=sourceUrl;sourceButton.target="_blank";sourceButton.rel="noopener noreferrer";sourceButton.textContent="Image Source";detailMeta.append(document.createTextNode(" "),sourceButton);}else{meta.push("Source: "+sourceValue);detailMeta.textContent=meta.join(" · ");}}
     renderPageNameList(record);
     const confidence=readConfidence(record.description);
     $("detail-confidence").textContent="Research confidence: "+confidenceLabel(confidence);
