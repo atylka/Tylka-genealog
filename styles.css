@@ -8640,3 +8640,15 @@ html[data-theme="dark"] .record-source-entry-row,body[data-theme="dark"] .record
 .record-detail-grid .detail-transcription pre{max-height:34vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:760px){.record-detail-grid{grid-template-columns:minmax(0,1fr)}.record-detail-grid>.detail-right-column{max-height:none;overflow:visible;padding-right:0}.record-detail-grid .detail-key-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.record-detail-grid .detail-key-facts{grid-template-columns:minmax(0,1fr)}}
+
+
+/* 2026-11-16: folder label beside record title; image descriptions beneath the viewer. */
+.detail-title-row{display:flex;align-items:center;flex-wrap:wrap;gap:.55rem .8rem;margin:.1rem 0 1rem}
+.detail-title-row #detail-title{margin:0}
+.detail-folder-type{display:inline-flex;align-items:center;max-width:100%;padding:.28rem .62rem;border:1px solid #9b754b;border-left:3px solid #8a2834;background:rgba(223,208,179,.58);color:#702630;font:600 .72rem/1.25 Georgia,serif;letter-spacing:.045em;text-transform:uppercase;overflow-wrap:anywhere}
+.detail-image-caption{margin:.55rem 0 .25rem;padding:.55rem .7rem;border-left:3px solid #8a2834;background:rgba(223,208,179,.42);color:var(--accent-dark);font:italic .9rem/1.45 Georgia,serif;overflow-wrap:anywhere}
+.detail-image-caption[hidden]{display:none!important}
+.detail-source-image-button{padding:.25rem!important}
+.detail-source-image-button img{height:132px}
+html[data-theme="dark"] .detail-folder-type,body[data-theme="dark"] .detail-folder-type{background:#302116;color:#f0dfbd;border-color:#a8844b}
+html[data-theme="dark"] .detail-image-caption,body[data-theme="dark"] .detail-image-caption{background:#302116;color:#f0dfbd}
