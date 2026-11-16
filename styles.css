@@ -8724,3 +8724,27 @@ html[data-theme="dark"] .ancestor-relationship-link:hover,body[data-theme="dark"
 .ancestor-portrait-empty{padding:.8rem;border:1px dashed var(--line);color:var(--muted)}
 html[data-theme="dark"] .ancestor-portrait-viewer,html[data-theme="dark"] .ancestor-portrait-thumb,body[data-theme="dark"] .ancestor-portrait-viewer,body[data-theme="dark"] .ancestor-portrait-thumb{background:#302116;border-color:#765936}
 @media(max-width:700px){.ancestor-portrait-main{height:clamp(160px,34vh,280px)}}
+
+
+/* Ancestor profile popup: person details on the left, all image tools on the right. */
+.ancestor-profile-layout{
+ display:grid!important;
+ grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr)!important;
+ align-items:start!important;
+ gap:clamp(1rem,2.2vw,1.8rem)!important;
+}
+.ancestor-profile-info{grid-column:1;grid-row:1;min-width:0;padding:0!important}
+.ancestor-profile-media-column{grid-column:2;grid-row:1;display:grid;gap:1rem;min-width:0;align-content:start}
+.ancestor-profile-media-column .ancestor-portrait-section,
+.ancestor-profile-media-column .ancestor-profile-gallery{width:100%;min-width:0;box-sizing:border-box;border:0!important;border-top:1px solid var(--line)!important;padding:1rem 0 0!important}
+.ancestor-profile-media-column .ancestor-portrait-section{padding-top:0!important;border-top:0!important}
+.ancestor-profile-media-column .ancestor-profile-gallery .ancestor-record-viewer-stage{height:clamp(210px,38vh,390px)}
+.ancestor-profile-media-column .ancestor-record-gallery-picker{grid-template-columns:repeat(auto-fill,minmax(76px,1fr));max-height:190px}
+.ancestor-profile-media-column .ancestor-record-gallery-thumb img{height:68px}
+.ancestor-profile-info .ancestor-profile-sources{margin-top:1rem}
+@media(max-width:760px){
+ .ancestor-profile-layout{grid-template-columns:minmax(0,1fr)!important;gap:1rem!important}
+ .ancestor-profile-info,.ancestor-profile-media-column{grid-column:1;grid-row:auto}
+ .ancestor-profile-media-column{gap:.8rem}
+ .ancestor-profile-media-column .ancestor-profile-gallery .ancestor-record-viewer-stage{height:clamp(190px,40vh,340px)}
+}
