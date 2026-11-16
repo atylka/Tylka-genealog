@@ -8602,3 +8602,17 @@ html[data-theme="dark"] .detail-source-image-button,body[data-theme="dark"] .det
 html[data-theme="dark"] .detail-source-image-button[aria-pressed="true"],body[data-theme="dark"] .detail-source-image-button[aria-pressed="true"]{border-color:#d0a66a;background:#49301f}
 html[data-theme="dark"] .detail-source-image-button img,body[data-theme="dark"] .detail-source-image-button img{background:#19110c;border-color:#765936}
 @media(max-width:560px){.detail-source-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem}.detail-source-image-button img{height:112px}}
+
+
+/* Structured people mentioned in a record */
+.other-persons-heading{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:.25rem 0 .55rem}
+.other-persons-heading>label{font-weight:600}
+.add-person-button,.remove-person-button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:2rem;height:2rem;border-radius:50%;border:1px solid var(--accent);background:transparent;color:var(--accent-dark);font-size:1.35rem;line-height:1;cursor:pointer}
+.add-person-button:hover,.remove-person-button:hover{background:var(--accent);color:#fff}
+.record-person-rows{display:grid;gap:.55rem}
+.record-person-row{display:grid;grid-template-columns:minmax(130px,1.5fr) minmax(120px,1fr) minmax(120px,1fr) 2rem;align-items:center;gap:.45rem}
+.record-person-row input,.record-person-row select{width:100%;min-width:0;box-sizing:border-box}
+.record-person-row [hidden]{display:none!important}
+.remove-person-button{border-color:var(--line);color:var(--muted)}
+@media(max-width:600px){.record-person-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 2rem}.record-person-row .record-person-name{grid-column:1/3}.record-person-row .record-person-relation{grid-column:1}.record-person-row .record-person-custom-relation{grid-column:2}.record-person-row .remove-person-button{grid-column:3;grid-row:1}}
+html[data-theme="dark"] .add-person-button,html[data-theme="dark"] .remove-person-button{color:#f0dfbd;border-color:#a8844b}
