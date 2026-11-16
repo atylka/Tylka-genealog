@@ -8579,3 +8579,9 @@ body[data-theme="dark"] .tylka-thumb-preview{background:#1d130e;border-color:#80
  .tylka-thumb-host img[data-tylka-record-thumb],
  .tylka-thumb-host img[data-tylka-person-thumb]{transition:none!important}
 }
+
+/* Multiple supporting sources for a single archive event */
+.detail-source-attachments{display:grid;gap:.55rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.detail-source-attachments h4{margin:0;color:var(--accent-dark);font:1.15rem var(--serif)}
+.detail-source-attachment{display:block;padding:.55rem .7rem;border:1px solid var(--line);background:rgba(223,208,179,.7);color:var(--accent-dark);font-size:.82rem;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+.detail-source-attachments img{display:block;width:100%;max-height:420px;object-fit:contain;padding:.35rem;border:1px solid var(--line);background:#bba987}
