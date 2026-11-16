@@ -8748,3 +8748,8 @@ html[data-theme="dark"] .ancestor-portrait-viewer,html[data-theme="dark"] .ances
  .ancestor-profile-media-column{gap:.8rem}
  .ancestor-profile-media-column .ancestor-profile-gallery .ancestor-record-viewer-stage{height:clamp(190px,40vh,340px)}
 }
+
+/* Persistent identified-name and identified-face boxes in every record viewer. */
+.ancestor-record-viewer-stage{position:relative}
+.ancestor-record-identification-overlay{position:absolute;z-index:2;pointer-events:none;transform-origin:center center}
+.ancestor-record-identification-overlay[hidden]{display:none!important}
