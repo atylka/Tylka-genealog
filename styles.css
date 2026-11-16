@@ -8692,3 +8692,13 @@ html[data-theme="dark"] .detail-key-fact span,body[data-theme="dark"] .detail-ke
 html[data-theme="dark"] .ancestor-record-gallery-heading,html[data-theme="dark"] .ancestor-record-viewer-caption,html[data-theme="dark"] .ancestor-record-gallery-thumb,html[data-theme="dark"] .ancestor-profile-source-list .ancestor-source-reference,body[data-theme="dark"] .ancestor-record-gallery-heading,body[data-theme="dark"] .ancestor-record-viewer-caption,body[data-theme="dark"] .ancestor-record-gallery-thumb,body[data-theme="dark"] .ancestor-profile-source-list .ancestor-source-reference{background:#302116;color:#f0dfbd;border-color:#765936}
 html[data-theme="dark"] .ancestor-record-viewer-stage,body[data-theme="dark"] .ancestor-record-viewer-stage,html[data-theme="dark"] .ancestor-record-gallery-thumb img,body[data-theme="dark"] .ancestor-record-gallery-thumb img{background:#19110c;border-color:#765936}
 @media(max-width:700px){.ancestor-record-viewer-stage{height:clamp(190px,40vh,340px)}.ancestor-record-gallery-picker{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+/* Family relationship links and smooth card navigation on the Ancestors page. */
+.ancestor-relationship-links{display:flex;flex-wrap:wrap;gap:.4rem}
+.ancestor-relationship-link{display:inline-flex;align-items:center;max-width:100%;padding:.38rem .65rem;border:1px solid var(--line);border-left:3px solid #8a2834;border-radius:3px;background:rgba(223,208,179,.3);color:var(--accent-dark);font:600 .82rem Georgia,serif;text-align:left;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.ancestor-relationship-link:hover,.ancestor-relationship-link:focus-visible{border-color:#8a2834;background:rgba(181,138,80,.25);text-decoration:underline;transform:translateY(-1px);outline-offset:2px}
+.ancestor-relationship-unlinked{display:inline-flex;padding:.38rem .65rem;border:1px dashed var(--line);border-radius:3px;font:.8rem Georgia,serif;opacity:.8}
+.ancestor-card-navigation-target{outline:3px solid #9a3540!important;outline-offset:5px;box-shadow:0 0 0 8px rgba(154,53,64,.16)!important;transition:outline-color .2s,box-shadow .2s}
+html[data-theme="dark"] .ancestor-relationship-link,body[data-theme="dark"] .ancestor-relationship-link{background:#302116;color:#f0dfbd;border-color:#765936}
+html[data-theme="dark"] .ancestor-relationship-link:hover,body[data-theme="dark"] .ancestor-relationship-link:hover{background:#49301f;border-color:#b65b60}
