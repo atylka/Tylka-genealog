@@ -187,9 +187,10 @@
     let attached=record.source_attachments;
     if(typeof attached==="string"){try{attached=JSON.parse(attached);}catch(_){attached=[];}}
     if(!Array.isArray(attached))attached=[];
-    const sourceItems=[];
-    if(record.file_path)sourceItems.push({file_path:record.file_path,file_name:record.file_name||"Primary source",mime_type:record.mime_type||""});
-    attached.forEach(item=>{if(item&&item.file_path&&!sourceItems.some(source=>source.file_path===item.file_path))sourceItems.push(item);});
+    const sourceItems=attached.filter(item=>item&&item.file_path).map(item=>({...item}));
+    if(record.file_path&&!sourceItems.some(source=>source.file_path===record.file_path))sourceItems.unshift({file_path:record.file_path,file_name:record.file_name||"Main source",mime_type:record.mime_type||"",role:"main"});
+    sourceItems.forEach(item=>{if(!item.role)item.role=item.file_path===record.file_path?"main":"supporting";});
+    sourceItems.sort((a,b)=>(a.role==="main"?-1:0)-(b.role==="main"?-1:0));
     const imageItems=sourceItems.filter(item=>isImage(item));
     let activeSource=null,activeSourceIndex=-1;
     const clearImageOverlay=()=>{if(nameOverlay){const context=nameOverlay.getContext("2d");if(context)context.clearRect(0,0,nameOverlay.width,nameOverlay.height);nameOverlay.width=0;nameOverlay.height=0;}};
@@ -208,7 +209,7 @@
       gallery.querySelectorAll(".detail-source-image-button").forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
     };
     let gallery=$("detail-source-attachments");if(!gallery){gallery=document.createElement("div");gallery.id="detail-source-attachments";gallery.className="detail-source-attachments";const source=$("detail-file-fallback");source.parentNode.insertBefore(gallery,source.nextSibling);}gallery.replaceChildren();
-    if(sourceItems.length>1){
+    if(sourceItems.length){
       const heading=document.createElement("h4");heading.textContent="Source gallery · "+imageItems.length+" image"+(imageItems.length===1?"":"s")+(sourceItems.length>imageItems.length?" and "+(sourceItems.length-imageItems.length)+" document source"+(sourceItems.length-imageItems.length===1?"":"s"):"");gallery.append(heading);
       const grid=document.createElement("div");grid.className="detail-source-gallery";
       sourceItems.forEach((item,index)=>{
