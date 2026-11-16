@@ -8667,3 +8667,28 @@ html[data-theme="dark"] .detail-key-fact span,body[data-theme="dark"] .detail-ke
 
 /* Per-attachment source link input */
 .record-source-entry-row .source-entry-url{width:100%;min-width:0;}
+
+
+/* 2026-11-16: Ancestor profiles use the archive-style record scan viewer on the right. */
+.ancestor-record-gallery-heading{margin:.1rem 0 .65rem;padding:.6rem .7rem;border-left:3px solid #8a2834;background:rgba(223,208,179,.35);font:600 .9rem/1.4 Georgia,serif;color:var(--accent-dark);overflow-wrap:anywhere}
+.ancestor-record-viewer-toolbar{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin:.4rem 0 .6rem}
+.ancestor-record-viewer-toolbar .small-button{min-height:32px;padding:.35rem .55rem;font-size:.72rem}
+.ancestor-record-zoom-level{min-width:3.3rem;text-align:center;font:600 .75rem Georgia,serif}
+.ancestor-record-viewer-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:clamp(230px,48vh,470px);overflow:hidden;border:1px solid var(--line);background:#bba987;touch-action:none;cursor:grab}
+.ancestor-record-viewer-stage:active{cursor:grabbing}
+.ancestor-record-viewer-image{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;transform-origin:center center;user-select:none;-webkit-user-drag:none}
+.ancestor-record-viewer-image[hidden]{display:none}
+.ancestor-record-viewer-caption{margin:.5rem 0 .7rem;padding:.5rem .65rem;border-left:3px solid #8a2834;background:rgba(223,208,179,.35);font:.82rem/1.4 Georgia,serif;overflow-wrap:anywhere}
+.ancestor-record-gallery-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.45rem;max-height:230px;overflow:auto;padding:.2rem}
+.ancestor-record-gallery-thumb{display:flex;flex-direction:column;gap:.3rem;min-width:0;padding:.3rem;border:1px solid var(--line);background:rgba(223,208,179,.35);color:var(--accent-dark);text-align:left;cursor:pointer}
+.ancestor-record-gallery-thumb.is-active{border:2px solid #8a2834;background:rgba(181,138,80,.2)}
+.ancestor-record-gallery-thumb img{width:100%;height:86px;object-fit:contain;background:#bba987}
+.ancestor-record-gallery-thumb>span:last-child{font-size:.64rem;line-height:1.3;overflow-wrap:anywhere}
+.ancestor-record-gallery-document{display:flex;align-items:center;justify-content:center;height:86px;background:rgba(90,60,35,.15);font:600 .7rem Georgia,serif}
+.ancestor-profile-source-list .ancestor-source-reference{display:flex;width:100%;flex-direction:column;gap:.2rem;padding:.6rem .7rem;border:1px solid var(--line);background:rgba(223,208,179,.28);color:var(--accent-dark);text-align:left;cursor:pointer}
+.ancestor-profile-source-list .ancestor-source-reference:hover{border-color:var(--accent);background:rgba(181,138,80,.18)}
+.ancestor-profile-source-list .ancestor-source-reference strong{font:600 .88rem Georgia,serif}
+.ancestor-profile-source-list .ancestor-source-reference span{font-size:.72rem;line-height:1.35}
+html[data-theme="dark"] .ancestor-record-gallery-heading,html[data-theme="dark"] .ancestor-record-viewer-caption,html[data-theme="dark"] .ancestor-record-gallery-thumb,html[data-theme="dark"] .ancestor-profile-source-list .ancestor-source-reference,body[data-theme="dark"] .ancestor-record-gallery-heading,body[data-theme="dark"] .ancestor-record-viewer-caption,body[data-theme="dark"] .ancestor-record-gallery-thumb,body[data-theme="dark"] .ancestor-profile-source-list .ancestor-source-reference{background:#302116;color:#f0dfbd;border-color:#765936}
+html[data-theme="dark"] .ancestor-record-viewer-stage,body[data-theme="dark"] .ancestor-record-viewer-stage,html[data-theme="dark"] .ancestor-record-gallery-thumb img,body[data-theme="dark"] .ancestor-record-gallery-thumb img{background:#19110c;border-color:#765936}
+@media(max-width:700px){.ancestor-record-viewer-stage{height:clamp(190px,40vh,340px)}.ancestor-record-gallery-picker{grid-template-columns:repeat(3,minmax(0,1fr))}}
