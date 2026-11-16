@@ -8664,3 +8664,6 @@ html[data-theme="dark"] .detail-image-caption,body[data-theme="dark"] .detail-im
 .detail-download-actions .detail-image-source-button:hover{background:#4e1d25;color:#fff}
 html[data-theme="dark"] .detail-key-fact,body[data-theme="dark"] .detail-key-fact{background:#302116;border-color:#8a5d42}
 html[data-theme="dark"] .detail-key-fact span,body[data-theme="dark"] .detail-key-fact span{color:#f3e4c9}
+
+/* Per-attachment source link input */
+.record-source-entry-row .source-entry-url{width:100%;min-width:0;}
