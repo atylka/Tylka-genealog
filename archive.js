@@ -152,7 +152,6 @@
     $("detail-title").textContent=record.title;
     const meta=[categoryNames[canonical(record.category)]||record.category];
     if(record.accession_number)meta.push("Accession: "+record.accession_number);
-    if(record.record_date)meta.push("Event date: "+record.record_date);
     const detailRaw=String(record.description||""),pageNumberMatch=detailRaw.match(/^Page number:\s*([^\r\n]+)$/im),pageEntryMatch=detailRaw.match(/^Page entry:\s*([^\r\n]+)$/im),sourceLineMatch=detailRaw.match(/^Source:\s*([^\r\n]+)$/im);
     if(pageNumberMatch)meta.push("Page number: "+pageNumberMatch[1].trim());if(pageEntryMatch)meta.push("Page entry: "+pageEntryMatch[1].trim());
     const causeOfDeathMatch=detailRaw.match(/^Cause of death:\s*([^\r\n]+)$/im);if(causeOfDeathMatch)meta.push("Cause of death: "+causeOfDeathMatch[1].trim());
