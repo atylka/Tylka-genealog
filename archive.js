@@ -10,7 +10,7 @@
   const publicFileUrl = path => path ? client.storage.from("family-archive").getPublicUrl(path).data.publicUrl : null;
   const filePrefixes={births:"log_bapt",deaths:"log_death",marriages:"log_marriage",immigration:"log_immig",photos:"log_photo",notes:"log_note"};
   function nextSiteFileName(category,keep){const prefix=filePrefixes[canonical(category)]||"log_record";if(keep&&/^log_[a-z]+_\d+\.[a-z0-9]+$/i.test(keep))return keep;let max=0;records.forEach(r=>{const m=String(r.file_name||"").match(new RegExp("^"+prefix+"_(\\d+)(?:\\.[a-z0-9]+)?$","i"));if(m)max=Math.max(max,Number(m[1]));});return prefix+"_"+(max+1);}
-  const isImage = record => (record.mime_type||"").startsWith("image/");
+  const isImage = record => (String(record?.mime_type||"").toLowerCase().startsWith("image/")||/\.(?:jpe?g|png|webp|tiff?|gif|bmp|avif)$/i.test(String(record?.file_name||record?.file_path||"")));
   function makeThumbnail(record) { const wrap=document.createElement("div");wrap.className="record-thumbnail";if(record.file_path&&isImage(record)){const img=document.createElement("img");img.src=publicFileUrl(record.file_path);img.alt="Thumbnail of "+record.title;img.loading="lazy";wrap.append(img);window.TylkaThumbnailTools?.attachRecord(img,record,records,wrap);}else{const label=document.createElement("span");label.className="record-thumbnail-placeholder";label.textContent=record.file_path?(record.mime_type==="application/pdf"?"PDF":"FILE"):"No scan";wrap.append(label);}return wrap; }
 
   const showModal = id => { const node=$(id); if(node) node.hidden=false; };
@@ -178,26 +178,75 @@
     if($("save-confidence"))$("save-confidence").hidden=!currentUser;
     if($("confidence-save-status"))$("confidence-save-status").textContent="";
     const img=$("detail-image"),fallback=$("detail-file-fallback"),download=$("download-record-image");
-    if(download){download.hidden=!(record.file_path&&isImage(record));download.onclick=async()=>{if(!record.file_path)return;const url=publicFileUrl(record.file_path);try{const response=await fetch(url);if(!response.ok)throw new Error("Download unavailable");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");link.href=objectUrl;link.download=record.file_name||nextSiteFileName(record.category);document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);}catch{const link=document.createElement("a");link.href=url;link.download=record.file_name||"record-image";link.click();}};}
-    img.hidden=true;img.removeAttribute("src");
-    const nameOverlay=$("page-name-overlay");if(nameOverlay){nameOverlay.width=0;nameOverlay.height=0;}
-    fallback.replaceChildren();resetViewer();setupViewer();
-    if(record.file_path){const url=publicFileUrl(record.file_path);if(isImage(record)){img.crossOrigin="anonymous";img.onload=()=>{syncFaceButton();drawPageNameOverlay(record);};img.onerror=()=>{setMessage($("face-crop-status"),"The image could not be loaded for portrait editing. Try reopening the record.",true);syncFaceButton();};img.src=url;img.alt=record.title+" original scan";img.hidden=false;}else{fallback.textContent="This attachment is a document file and cannot be previewed as an image.";}}
-    else{fallback.textContent="No attachment is saved for this record.";}
-    let gallery=$("detail-source-attachments");if(!gallery){gallery=document.createElement("div");gallery.id="detail-source-attachments";gallery.className="detail-source-attachments";const source=$("detail-file-fallback");source.parentNode.insertBefore(gallery,source.nextSibling);}gallery.replaceChildren();const attached=Array.isArray(record.source_attachments)?record.source_attachments:[];const sourceItems=[...(record.file_path?[{file_path:record.file_path,file_name:record.file_name||"Primary source",mime_type:record.mime_type||""}]:[]),...attached.filter(item=>item.file_path&&item.file_path!==record.file_path)];if(sourceItems.length>1){const heading=document.createElement("h4");heading.textContent="Additional sources & images ("+sourceItems.length+")";gallery.append(heading);sourceItems.forEach((item,index)=>{const entry=document.createElement("a");entry.className="detail-source-attachment";entry.href=publicFileUrl(item.file_path);entry.target="_blank";entry.rel="noopener";entry.textContent=(index+1)+". "+(item.file_name||"Attached source")+(item.mime_type==="application/pdf"?" · PDF":"");gallery.append(entry);const itemName=String(item.file_name||"");const imageAttachment=(String(item.mime_type||"").toLowerCase().startsWith("image/")||/\.(?:jpe?g|png|webp|tiff?|gif|bmp|avif)$/i.test(itemName));if(imageAttachment){const thumb=document.createElement("img");thumb.className="detail-source-image";thumb.src=publicFileUrl(item.file_path);thumb.alt=itemName||"Additional record image";thumb.loading="lazy";thumb.onerror=()=>{thumb.alt=(itemName||"Additional image")+" could not be previewed";thumb.classList.add("is-unavailable");};gallery.append(thumb);}});}    showModal("record-detail-modal");
+    const nameOverlay=$("page-name-overlay");
+    if(nameOverlay){nameOverlay.width=0;nameOverlay.height=0;}
+    fallback.replaceChildren();img.hidden=true;img.removeAttribute("src");resetViewer();setupViewer();
+    let attached=record.source_attachments;
+    if(typeof attached==="string"){try{attached=JSON.parse(attached);}catch(_){attached=[];}}
+    if(!Array.isArray(attached))attached=[];
+    const sourceItems=[];
+    if(record.file_path)sourceItems.push({file_path:record.file_path,file_name:record.file_name||"Primary source",mime_type:record.mime_type||""});
+    attached.forEach(item=>{if(item&&item.file_path&&!sourceItems.some(source=>source.file_path===item.file_path))sourceItems.push(item);});
+    const imageItems=sourceItems.filter(item=>isImage(item));
+    let activeSource=null,activeSourceIndex=-1;
+    const clearImageOverlay=()=>{if(nameOverlay){const context=nameOverlay.getContext("2d");if(context)context.clearRect(0,0,nameOverlay.width,nameOverlay.height);nameOverlay.width=0;nameOverlay.height=0;}};
+    const activateSource=(item,index)=>{
+      activeSource=item;activeSourceIndex=index;resetViewer();clearImageOverlay();
+      if(!isImage(item)){
+        img.hidden=true;img.removeAttribute("src");
+        fallback.textContent="This source is a document file. Use its source link in the gallery to open it.";
+        if(download)download.hidden=true;
+        syncFaceButton();
+        gallery.querySelectorAll(".detail-source-image-button").forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
+        return;
+      }
+      fallback.replaceChildren();img.crossOrigin="anonymous";img.onload=()=>{if(index===0){syncFaceButton();drawPageNameOverlay(record);}else{syncFaceButton();clearImageOverlay();}};img.onerror=()=>{setMessage($("face-crop-status"),"This image could not be loaded. Check that the uploaded file is still available.",true);syncFaceButton();};img.src=publicFileUrl(item.file_path);img.alt=(item.file_name||"Record source")+" · "+record.title;img.hidden=false;
+      if(download){download.hidden=false;download.onclick=async()=>{const url=publicFileUrl(item.file_path);try{const response=await fetch(url);if(!response.ok)throw new Error("Download unavailable");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");link.href=objectUrl;link.download=item.file_name||"record-image";document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);}catch{const link=document.createElement("a");link.href=url;link.download=item.file_name||"record-image";link.click();}};}
+      gallery.querySelectorAll(".detail-source-image-button").forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
+    };
+    let gallery=$("detail-source-attachments");if(!gallery){gallery=document.createElement("div");gallery.id="detail-source-attachments";gallery.className="detail-source-attachments";const source=$("detail-file-fallback");source.parentNode.insertBefore(gallery,source.nextSibling);}gallery.replaceChildren();
+    if(sourceItems.length>1){
+      const heading=document.createElement("h4");heading.textContent="Source gallery · "+imageItems.length+" image"+(imageItems.length===1?"":"s")+(sourceItems.length>imageItems.length?" and "+(sourceItems.length-imageItems.length)+" document source"+(sourceItems.length-imageItems.length===1?"":"s"):"");gallery.append(heading);
+      const grid=document.createElement("div");grid.className="detail-source-gallery";
+      sourceItems.forEach((item,index)=>{
+        const itemName=String(item.file_name||"Source "+(index+1)),url=publicFileUrl(item.file_path);
+        if(isImage(item)){
+          const button=document.createElement("button");button.type="button";button.className="detail-source-image-button";button.setAttribute("aria-label","View source image "+(index+1)+": "+itemName);button.setAttribute("aria-pressed","false");button.addEventListener("click",()=>activateSource(item,index));
+          const thumb=document.createElement("img");thumb.className="detail-source-image";thumb.src=url;thumb.alt=itemName;thumb.loading="lazy";thumb.onerror=()=>{thumb.alt=itemName+" could not be previewed";thumb.classList.add("is-unavailable");};
+          const caption=document.createElement("span");caption.textContent=(index+1)+". "+itemName;button.append(thumb,caption);grid.append(button);
+        }else{
+          const link=document.createElement("a");link.className="detail-source-attachment";link.href=url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=(index+1)+". "+itemName+(String(item.mime_type||"").toLowerCase()==="application/pdf"?" · PDF":" · Open source");grid.append(link);
+        }
+      });
+      gallery.append(grid);
+    }
+    const initialImage=imageItems[0];
+    if(initialImage){const initialIndex=sourceItems.indexOf(initialImage);activateSource(initialImage,initialIndex);}
+    else if(sourceItems.length){fallback.textContent="No image is attached to this record. Open a document source from the gallery above.";if(download)download.hidden=true;}
+    else{fallback.textContent="No attachment is saved for this record.";if(download)download.hidden=true;}
+    showModal("record-detail-modal");
   }
 
   $("detail-edit-record")?.addEventListener("click",()=>{const record=window.tylkaActiveDetailRecord;if(record&&currentUser)beginEditRecord(record);});
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
   async function loadRecords(){
     recordsList.textContent="Loading records…";
-    let result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at,thumbnail_settings,source_attachments").order("created_at",{ascending:false});
-    if(result.error&&/thumbnail_settings|source_attachments/i.test(result.error.message||""))result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+    const full="id,title,category,description,location,persons_mentioned,record_date,accession_number,collection_name,record_type,record_language,repository,source_reference,provenance,transcription_status,translation_status,preservation_notes,file_path,file_name,mime_type,created_at,thumbnail_settings,source_attachments";
+    const fullNoThumb=full.replace(",thumbnail_settings","");
+    const fullCore=fullNoThumb.replace(",source_attachments","");
+    const minimal="id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at,thumbnail_settings,source_attachments";
+    const minimalNoThumb=minimal.replace(",thumbnail_settings","");
+    const minimalCore=minimalNoThumb.replace(",source_attachments","");
+    const select=fields=>client.from("archive_records").select(fields).order("created_at",{ascending:false});
+    let result=await select(full);
+    if(result.error&&/thumbnail_settings/i.test(result.error.message||""))result=await select(fullNoThumb);
+    if(result.error&&/source_attachments/i.test(result.error.message||""))result=await select(fullCore);
     if(result.error&&/(?:column .* does not exist|schema cache)/i.test(result.error.message||"")){
       catalogFieldsAvailable=false;
       document.querySelectorAll(".archive-catalog-field").forEach(field=>field.hidden=true);
-      result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at,thumbnail_settings,source_attachments").order("created_at",{ascending:false});
-      if(result.error&&/thumbnail_settings|source_attachments/i.test(result.error.message||""))result=await client.from("archive_records").select("id,title,category,description,location,persons_mentioned,record_date,file_path,file_name,mime_type,created_at").order("created_at",{ascending:false});
+      result=await select(minimal);
+      if(result.error&&/thumbnail_settings/i.test(result.error.message||""))result=await select(minimalNoThumb);
+      if(result.error&&/source_attachments/i.test(result.error.message||""))result=await select(minimalCore);
     }
     if(result.error){recordsList.textContent="Could not load records. "+result.error.message;return;}
     records=result.data||[];renderRecords();
