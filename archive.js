@@ -15,8 +15,8 @@
 
   const showModal = id => { const node=$(id); if(node) node.hidden=false; };
   function recordUrlKey(record){
-    const base=String(record?.file_name||record?.title||"record").replace(/\\.[a-z0-9]{1,8}$/i,"");
-    const slug=base.normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90)||"record";
+    const base=String(record?.file_name||record?.title||"record").replace(/\.[a-z0-9]{1,8}$/i,"");
+    const slug=base.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90)||"record";
     return slug+"--"+encodeURIComponent(String(record.id));
   }
   function updateRecordUrl(record){
