@@ -14,7 +14,22 @@
   function makeThumbnail(record) { const wrap=document.createElement("div");wrap.className="record-thumbnail";if(record.file_path&&isImage(record)){const img=document.createElement("img");img.src=publicFileUrl(record.file_path);img.alt="Thumbnail of "+record.title;img.loading="lazy";wrap.append(img);window.TylkaThumbnailTools?.attachRecord(img,record,records,wrap);}else{const label=document.createElement("span");label.className="record-thumbnail-placeholder";label.textContent=record.file_path?(record.mime_type==="application/pdf"?"PDF":"FILE"):"No scan";wrap.append(label);}return wrap; }
 
   const showModal = id => { const node=$(id); if(node) node.hidden=false; };
-  const closeModals = () => document.querySelectorAll(".site-modal").forEach(node=>node.hidden=true);
+  function recordUrlKey(record){
+    const base=String(record?.file_name||record?.title||"record").replace(/\\.[a-z0-9]{1,8}$/i,"");
+    const slug=base.normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90)||"record";
+    return slug+"--"+encodeURIComponent(String(record.id));
+  }
+  function updateRecordUrl(record){
+    const url=new URL(window.location.href);
+    if(record)url.searchParams.set("record",recordUrlKey(record));
+    else url.searchParams.delete("record");
+    window.history.replaceState({recordId:record?String(record.id):null},"",url.pathname+url.search+url.hash);
+  }
+  const closeModals = () => {
+    const wasRecordOpen=!$("record-detail-modal")?.hidden;
+    document.querySelectorAll(".site-modal").forEach(node=>node.hidden=true);
+    if(wasRecordOpen)updateRecordUrl(null);
+  };
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
   const addRecordButton=$("open-add-record");
@@ -147,6 +162,7 @@
   }
   function renderFaceIdentificationList(record){const section=$("detail-face-identifications"),list=$("face-identification-list");if(!section||!list)return;list.replaceChildren();const faces=readFaceIdentifications(record);faces.forEach((entry,index)=>{const item=document.createElement("li"),name=document.createElement("span"),actions=document.createElement("div");item.className="identified-name-row";name.textContent=entry.name;actions.className="identified-name-actions";item.addEventListener("mouseenter",()=>highlightFace(index));item.addEventListener("mouseleave",()=>highlightFace(null));item.addEventListener("focus",()=>highlightFace(index));item.addEventListener("blur",()=>highlightFace(null));item.tabIndex=0;item.append(name);if(currentUser){const remove=document.createElement("button");remove.type="button";remove.className="small-button danger-button";remove.textContent="Remove";remove.addEventListener("click",async()=>{const next=readFaceIdentifications(record).filter((_,i)=>i!==index);const description=writeRecordMetadata(record,"Face identifications",next);const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)return alert(error.message);record.description=description;renderFaceIdentificationList(record);drawPageNameOverlay(record);});actions.append(remove);}if(currentUser)item.append(actions);list.append(item);});section.hidden=!faces.length;}
   async function openRecordDetail(record){
+    updateRecordUrl(record);
     window.tylkaActiveDetailRecord=record;
     $("detail-edit-record").hidden=!currentUser;
     $("detail-title").textContent=record.title;
@@ -269,8 +285,14 @@
     client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}));
     await loadRecords();
     const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);
-    const requestedRecordId=new URLSearchParams(window.location.search).get("record");
-    if(requestedRecordId){const requestedRecord=records.find(record=>String(record.id)===requestedRecordId);if(requestedRecord)await openRecordDetail(requestedRecord);else setMessage(recordsList,"That record could not be found in the public archive.",true);}
+    const requestedRecordKey=new URLSearchParams(window.location.search).get("record");
+    if(requestedRecordKey){
+      const separator=requestedRecordKey.lastIndexOf("--");
+      const requestedRecordId=separator>=0?requestedRecordKey.slice(separator+2):requestedRecordKey;
+      const requestedRecord=records.find(record=>String(record.id)===requestedRecordId);
+      if(requestedRecord)await openRecordDetail(requestedRecord);
+      else setMessage(recordsList,"That record could not be found in the public archive.",true);
+    }
     client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);loadRecords();});
     // The Supabase auth listener above already handles sign-in changes.
     // Avoid a second fetch from the shared site-ui auth event.
