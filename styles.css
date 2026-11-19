@@ -9182,3 +9182,53 @@ body{background-color:#e6dac2;background-image:repeating-linear-gradient(0deg,rg
 @media(max-width:1000px){.site-header{width:100%;padding:1rem 1.25rem}.wordmark{min-width:0}.brand-seal{width:64px;height:64px;flex-basis:64px}.archive-page{width:100%;border-left:0;border-right:0}.site-footer{width:100%}}
 @media(max-width:800px){.site-header{align-items:center}.primary-nav{width:100%;padding:.35rem .25rem .65rem}.primary-nav a{padding:.6rem 0;border-top:1px solid rgba(138,101,69,.28)}.site-header .wordmark{flex-shrink:0}.archive-page{padding-top:2.5rem}}
 @media(max-width:560px){.brand-seal{width:56px;height:56px;flex-basis:56px}.wordmark{gap:.6rem}.wordmark-title strong{font-size:1.5rem}.wordmark-title small{font-size:.58rem;letter-spacing:.14em}.archive-page{padding-left:1rem;padding-right:1rem}.site-footer{padding:1.4rem 1rem}}
+
+
+/* 2026-11-19: subtle framed-site proportions inspired by traditional archive portals */
+html{background:#d8c6a6}
+body{
+  width:min(calc(100% - 28px),1600px);
+  min-height:calc(100vh - 14px);
+  margin:14px auto 0!important;
+  border:1px solid rgba(108,75,45,.42);
+  border-bottom:0;
+  box-shadow:0 3px 18px rgba(55,35,20,.13);
+  background:#e9dfca;
+}
+.site-header{
+  width:auto!important;
+  margin:0 14px!important;
+  border-top:3px double rgba(138,101,69,.62)!important;
+  border-left:1px solid rgba(138,101,69,.22);
+  border-right:1px solid rgba(138,101,69,.22);
+}
+.archive-page{
+  width:auto!important;
+  max-width:none!important;
+  margin:0 14px!important;
+  border-left:1px solid rgba(138,101,69,.2);
+  border-right:1px solid rgba(138,101,69,.2);
+}
+.site-footer{
+  width:auto!important;
+  margin:0 14px!important;
+  border-left:1px solid rgba(138,101,69,.2);
+  border-right:1px solid rgba(138,101,69,.2);
+  border-bottom:3px double rgba(138,101,69,.5);
+}
+.home-search-page{
+  padding-top:clamp(2.2rem,4vw,3.8rem)!important;
+  padding-bottom:clamp(2.2rem,4vw,3.8rem)!important;
+}
+.home-search-layout{
+  border:1px solid rgba(138,101,69,.34);
+  box-shadow:0 2px 9px rgba(54,32,21,.07);
+}
+@media(max-width:800px){
+  body{width:100%;margin:0!important;border-left:0;border-right:0;box-shadow:none}
+  .site-header,.archive-page,.site-footer{margin-left:0!important;margin-right:0!important}
+}
+@media(max-width:560px){
+  .site-header{border-left:0;border-right:0}
+  .home-search-page{padding-top:1.8rem!important;padding-bottom:2rem!important}
+}
