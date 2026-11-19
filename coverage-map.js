@@ -50,7 +50,7 @@ function projectFeatures(){
  function ringPath(f,r){return r.map((p,i)=>{const q=xy(f,p);return(i?"L":"M")+q[0].toFixed(2)+","+q[1].toFixed(2);}).join(" ")+" Z";}
  function area(r){let v=0;for(let i=0,j=r.length-1;i<r.length;j=i++)v+=r[j][0]*r[i][1]-r[i][0]*r[j][1];return Math.abs(v/2);}
  function centroid(r){let a=0,cx=0,cy=0;for(let i=0,j=r.length-1;i<r.length;j=i++){const c=r[j][0]*r[i][1]-r[i][0]*r[j][1];a+=c;cx+=(r[j][0]+r[i][0])*c;cy+=(r[j][1]+r[i][1])*c;}if(Math.abs(a)<1e-10)return r.reduce((v,p)=>[v[0]+p[0]/r.length,v[1]+p[1]/r.length],[0,0]);return[cx/(3*a),cy/(3*a)];}
- return{w:1000,h:720,path(f){return geometryRings(f.geometry).map(poly=>poly.map(r=>ringPath(f,r)).join(" ")).join(" ");},labelPoint(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];return outer?xy(f,centroid(outer)):null;},labelSize(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];if(!outer)return 10;const px=outer.map(p=>xy(f,p)[0]),py=outer.map(p=>xy(f,p)[1]);return Math.max(8,Math.min(isUS?15:12,Math.min(Math.max(...px)-Math.min(...px),Math.max(...py)-Math.min(...py))*.24));}};
+ return{w:1000,h:720,path(f){return geometryRings(f.geometry).map(r=>ringPath(f,r)).join(" ");},labelPoint(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];return outer?xy(f,centroid(outer)):null;},labelSize(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];if(!outer)return 10;const px=outer.map(p=>xy(f,p)[0]),py=outer.map(p=>xy(f,p)[1]);return Math.max(8,Math.min(isUS?15:12,Math.min(Math.max(...px)-Math.min(...px),Math.max(...py)-Math.min(...py))*.24));}};
 }
 function mapLabel(f){
  const p=f.properties||{};
@@ -72,6 +72,7 @@ function drawMap(){
   const n=matching(f).length,enabled=n>0;
   const path=document.createElementNS("http://www.w3.org/2000/svg","path");
   path.setAttribute("d",projection.path(f));
+  path.setAttribute("fill-rule","evenodd");
   path.setAttribute("class","coverage-map-area"+(enabled?"":" is-empty"));
   path.setAttribute("fill",color(n,max));
   path.setAttribute("tabindex",enabled?"0":"-1");
