@@ -9,7 +9,7 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLo
 const text=(tag,value,cls)=>{const e=document.createElement(tag);e.textContent=value||"";if(cls)e.className=cls;return e;};
 function propValues(p){return Object.entries(p||{}).map(([k,v])=>[norm(k),String(v??"").trim()]).filter(x=>x[1]);}
 function featureName(f){const p=f.properties||{};for(const key of ["JPT_NAZWA_","name","NAME_2","NAME_1","powiat","nazwa","name_2","county","state_name"]){if(p[key])return String(p[key]);}const vals=propValues(p).map(x=>x[1]);return vals.find(v=>/powiat/i.test(v))||vals[0]||"Unnamed area";}
-function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_JE||p.TERYT||p.terc||"");if(/^12\\d{3,5}$/.test(code))return true;const vals=propValues(p).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v.includes("wojewodztwo malopolskie"));}
+function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_JE||p.TERYT||p.terc||"");if(/^12\d{3,5}$/.test(code))return true;const vals=propValues(p).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v.includes("wojewodztwo malopolskie"));}
 function isUsFeature(f){const p=f.properties||{};return norm(p.country||"").includes("united states")||p["ISO3166-1-Alpha-3"]==="USA";}
 function recordMatchesArea(r,f){const loc=norm(r.location);if(!loc)return false;const name=norm(featureName(f));const raw=String(featureName(f)||"").replace(/^powiat\s+/i,"");const bare=norm(raw);return (name.length>2&&loc.includes(name))||(bare.length>2&&loc.split(" ").includes(bare));}
 function matching(f){return records.filter(r=>recordMatchesArea(r,f));}
@@ -35,26 +35,48 @@ function projectFeatures(){
 function drawMap(){
  const projection=projectFeatures();areaPaths.clear();
  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
- svg.setAttribute("viewBox",`0 0 ${projection.w} ${projection.h}`);svg.setAttribute("role","group");svg.setAttribute("aria-label",country.value==="US"?"Clickable map of United States states":"Clickable map of Małopolskie counties");
+ svg.setAttribute("viewBox",`0 0 ${projection.w} ${projection.h}`);
+ svg.setAttribute("role","group");
+ svg.setAttribute("aria-label",country.value==="US"?"Clickable map of United States states":"Clickable map of Małopolskie counties");
  svg.classList.add("coverage-vector-map");
+ const max=Math.max(1,...features.map(f=>matching(f).length));
  features.forEach(f=>{
+  const n=matching(f).length,enabled=n>0;
   const path=document.createElementNS("http://www.w3.org/2000/svg","path");
-  path.setAttribute("d",projection.path(f));path.setAttribute("class","coverage-map-area");path.setAttribute("fill",color(matching(f).length,Math.max(1,...features.map(x=>matching(x).length))));
-  path.setAttribute("tabindex","0");path.setAttribute("role","button");path.setAttribute("aria-label",featureName(f)+", "+matching(f).length+" indexed records");
-  const tip=document.createElementNS("http://www.w3.org/2000/svg","title");tip.textContent=featureName(f)+" · "+matching(f).length+" records";path.append(tip);
-  path.addEventListener("click",()=>selectArea(f));
-  path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectArea(f);}});
-  path.addEventListener("pointerenter",()=>path.classList.add("is-hovered"));
-  path.addEventListener("pointerleave",()=>path.classList.remove("is-hovered"));
+  path.setAttribute("d",projection.path(f));
+  path.setAttribute("class","coverage-map-area"+(enabled?"":" is-empty"));
+  path.setAttribute("fill",color(n,max));
+  path.setAttribute("tabindex",enabled?"0":"-1");
+  path.setAttribute("role",enabled?"button":"img");
+  path.setAttribute("aria-disabled",enabled?"false":"true");
+  path.setAttribute("aria-label",featureName(f)+", "+n+" indexed records"+(enabled?"":"; unavailable until records are added"));
+  const tip=document.createElementNS("http://www.w3.org/2000/svg","title");
+  tip.textContent=featureName(f)+" · "+n+" records";
+  path.append(tip);
+  if(enabled){
+   path.addEventListener("click",()=>selectArea(f));
+   path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectArea(f);}});
+   path.addEventListener("pointerenter",()=>path.classList.add("is-hovered"));
+   path.addEventListener("pointerleave",()=>path.classList.remove("is-hovered"));
+  }
   areaPaths.set(f,path);svg.append(path);
  });
  mapSvg=svg;canvas.replaceChildren(svg);
 }
 function refreshMapStyles(){
  const max=Math.max(1,...features.map(f=>matching(f).length));
- features.forEach(f=>{const p=areaPaths.get(f);if(!p)return;p.setAttribute("fill",color(matching(f).length,max));p.classList.toggle("is-selected",selectedFeature===f);p.setAttribute("aria-pressed",selectedFeature===f?"true":"false");});
+ features.forEach(f=>{
+  const p=areaPaths.get(f);if(!p)return;
+  const n=matching(f).length,enabled=n>0;
+  p.setAttribute("fill",color(n,max));
+  p.classList.toggle("is-selected",selectedFeature===f);
+  p.classList.toggle("is-empty",!enabled);
+  p.setAttribute("tabindex",enabled?"0":"-1");
+  p.setAttribute("role",enabled?"button":"img");
+  p.setAttribute("aria-disabled",enabled?"false":"true");
+  p.setAttribute("aria-pressed",selectedFeature===f?"true":"false");
+ });
 }
-
 function selectArea(f){if(!matching(f).length)return;selectedFeature=f;refreshMapStyles();renderStats();const found=matching(f);title.textContent=featureName(f);count.textContent=found.length+" matching indexed record"+(found.length===1?"":"s");recordBox.replaceChildren();if(!found.length){recordBox.append(text("p","No records could be matched to this administrative-area name. Town-level locations may need a town-to-county match to be counted here."));return;}found.sort((a,b)=>String(a.record_date||"").localeCompare(String(b.record_date||"")));found.slice(0,12).forEach(r=>{const a=text("a",r.title||"Untitled record","coverage-record-link");a.href="archive.html?record="+encodeURIComponent(r.id);const meta=text("small",[r.record_date,r.location].filter(Boolean).join(" · "));const item=document.createElement("div");item.className="coverage-record-item";item.append(a,meta);recordBox.append(item);});if(found.length>12)recordBox.append(text("p","Showing 12 of "+found.length+" matching records."));}
 function renderStats(){
  if(!statsBody)return;
@@ -64,13 +86,12 @@ function renderStats(){
  rows.forEach(row=>{
   total+=row.count;
   const tr=document.createElement("tr");
-  tr.className="coverage-stats-row"+(selectedFeature===row.feature?" is-selected":"");
-  tr.tabIndex=0;tr.setAttribute("role","button");
-  tr.setAttribute("aria-label",row.name+": "+row.count.toLocaleString()+" matching records");
+  tr.className="coverage-stats-row"+(selectedFeature===row.feature?" is-selected":"")+(row.count?"":" is-empty");
+  tr.tabIndex=row.count?0:-1;tr.setAttribute("role",row.count?"button":"row");
+  tr.setAttribute("aria-label",row.name+": "+row.count.toLocaleString()+" matching records"+(row.count?"":"; unavailable until records are added"));
   tr.append(text("td",row.name),text("td",row.count.toLocaleString()));
-  const choose=()=>{selectArea(row.feature);const target=areaPaths.get(row.feature);if(target){target.focus();}};
-  tr.addEventListener("click",choose);
-  tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();choose();}});
+  const choose=()=>{if(!row.count)return;selectArea(row.feature);const target=areaPaths.get(row.feature);if(target)target.focus();};
+  if(row.count){tr.addEventListener("click",choose);tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();choose();}});}
   statsBody.append(tr);
  });
  if(statsTotal)statsTotal.textContent=total.toLocaleString();
