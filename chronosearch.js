@@ -133,11 +133,9 @@
    image.src=isChronoImage(r)?publicUrl(r.file_path):placeholder;
    if(!isChronoImage(r))image.classList.add("is-placeholder");
    image.addEventListener("error",()=>{image.src=placeholder;image.classList.add("is-placeholder");},{once:true});
-   const summary=chronoCardSummary(r);
-   const summaryText=node("p",summary,"chrono-record-summary");
-   card.append(image,summaryText);
+   card.append(image);
    if(isChronoImage(r))window.TylkaThumbnailTools?.attachRecord(image,r,allRecords,card);
-   card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record")+": "+summary);
+   card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open record "+(r.title||"Untitled record"));
    const openArchiveDetail=()=>{window.location.href="archive.html?record="+encodeURIComponent(r.id)+"#record-detail-modal";};
    card.addEventListener("click",openArchiveDetail);
    card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArchiveDetail();}});
