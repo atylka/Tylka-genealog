@@ -9590,3 +9590,11 @@ body:not(.no-site-frame)>.site-header{margin:0 8px!important;padding:6px 9px!imp
 .coverage-map-inset-title{font:600 12px Georgia,serif;fill:#514638;pointer-events:none}
 .coverage-map-label{font-size:clamp(8px,1vw,13px)!important;stroke-width:2.5px!important}
 @media(max-width:760px){.coverage-map-frame{grid-template-columns:1fr!important}}
+
+
+/* SVG district/state shapes: explicit visible fill and boundaries */
+.coverage-vector-map path.coverage-map-area{fill-opacity:1!important;stroke:#756e5b!important;stroke-width:1.7px!important;stroke-linejoin:round!important;vector-effect:non-scaling-stroke!important}
+.coverage-vector-map path.coverage-map-area.is-empty{fill:#d3d0c3!important;stroke:#8f8979!important;opacity:1!important;pointer-events:none!important;cursor:not-allowed!important}
+.coverage-vector-map path.coverage-map-area:not(.is-empty){cursor:pointer!important;stroke:#fff9e9!important;stroke-width:1.8px!important}
+.coverage-vector-map path.coverage-map-area:not(.is-empty):hover,.coverage-vector-map path.coverage-map-area:not(.is-empty).is-hovered{stroke:#42222a!important;stroke-width:3px!important;filter:brightness(.9)}
+.coverage-vector-map path.coverage-map-area.is-selected{stroke:#35131a!important;stroke-width:3.5px!important}
