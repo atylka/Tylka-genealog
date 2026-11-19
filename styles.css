@@ -9572,3 +9572,21 @@ input,select,textarea{
 .coverage-map-label{pointer-events:none!important;font-size:clamp(8px,1.05vw,14px)!important;paint-order:stroke!important;stroke:#fbf8ed!important;stroke-width:2.8px!important;stroke-linejoin:round!important;fill:#342c25!important;font-weight:600!important}
 .coverage-map-column{min-width:0!important}
 @media(max-width:760px){#coverage-map-canvas{padding:4px!important}.coverage-vector-map{width:100%!important;height:auto!important}}
+
+
+/* 2026-11-19: tighter archival footprint and more legible vector-map controls */
+body:not(.no-site-frame){width:min(calc(100% - 20px),860px)!important;margin:10px auto 0!important}
+body:not(.no-site-frame)>main.archive-page,body:not(.no-site-frame)>main.coverage-home-main{margin:0 8px!important;padding:10px 8px 16px!important}
+body:not(.no-site-frame)>.site-header{margin:0 8px!important;padding:6px 9px!important;min-height:66px!important}
+.coverage-panel{padding:8px!important}
+.coverage-map-frame{grid-template-columns:minmax(0,2fr) minmax(205px,.78fr)!important}
+#coverage-map-canvas{padding:5px!important;background:#eeecdc!important}
+.coverage-vector-map{width:100%!important;max-width:100%!important}
+.coverage-map-area{stroke:#756e5b!important;stroke-width:1.7px!important;fill-opacity:1!important}
+.coverage-map-area.is-empty{fill:#d3d0c3!important;stroke:#8f8979!important;stroke-width:1.6px!important;opacity:1!important}
+.coverage-map-area:not(.is-empty){stroke:#fff9e9!important;stroke-width:1.8px!important;cursor:pointer!important}
+.coverage-map-area:not(.is-empty):hover,.coverage-map-area:not(.is-empty).is-hovered{stroke:#42222a!important;stroke-width:3px!important;filter:brightness(.9)}
+.coverage-map-inset-frame{fill:none;stroke:#a9a28d;stroke-width:1.5;stroke-dasharray:4 3;pointer-events:none}
+.coverage-map-inset-title{font:600 12px Georgia,serif;fill:#514638;pointer-events:none}
+.coverage-map-label{font-size:clamp(8px,1vw,13px)!important;stroke-width:2.5px!important}
+@media(max-width:760px){.coverage-map-frame{grid-template-columns:1fr!important}}
