@@ -9561,3 +9561,14 @@ input,select,textarea{
 .coverage-map-label{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;fill:#342c25!important;paint-order:stroke!important;stroke:#f8f3e5!important;stroke-width:2.8px!important;stroke-linejoin:round!important;pointer-events:none!important;user-select:none!important;letter-spacing:.01em!important}
 .coverage-map-area{vector-effect:non-scaling-stroke!important}
 @media(max-width:760px){#coverage-map-canvas{height:auto!important;padding:6px!important}.coverage-vector-map{max-height:none!important}}
+
+/* Coverage map: preserve geographic aspect ratio and keep active shapes interactive */
+#coverage-map-canvas{display:block!important;height:auto!important;min-height:0!important;padding:8px!important;overflow:hidden!important}
+.coverage-vector-map{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;aspect-ratio:1000/720!important;overflow:visible!important}
+.coverage-map-area{pointer-events:all!important;cursor:pointer!important;stroke:#fbf8ed!important;stroke-width:1.5px!important;vector-effect:non-scaling-stroke!important}
+.coverage-map-area.is-empty{fill:#d0c8b8!important;cursor:not-allowed!important;pointer-events:none!important;opacity:.9!important}
+.coverage-map-area:not(.is-empty):hover,.coverage-map-area:not(.is-empty).is-hovered{stroke:#44232a!important;stroke-width:3px!important;filter:brightness(.9)}
+.coverage-map-area:not(.is-empty):focus,.coverage-map-area.is-selected{stroke:#35131a!important;stroke-width:3.5px!important;outline:none!important}
+.coverage-map-label{pointer-events:none!important;font-size:clamp(8px,1.05vw,14px)!important;paint-order:stroke!important;stroke:#fbf8ed!important;stroke-width:2.8px!important;stroke-linejoin:round!important;fill:#342c25!important;font-weight:600!important}
+.coverage-map-column{min-width:0!important}
+@media(max-width:760px){#coverage-map-canvas{padding:4px!important}.coverage-vector-map{width:100%!important;height:auto!important}}
