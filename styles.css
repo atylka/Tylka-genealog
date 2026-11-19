@@ -9302,3 +9302,93 @@ body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.8rem}
   body:not(.no-site-frame)>.site-header .brand-seal{width:56px;height:56px;flex-basis:56px}
   body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.5rem}
 }
+
+
+/* 2026-11-19: one compact shared masthead and plain page titles; remove hero banners */
+body:not(.no-site-frame)>.site-header{
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:1.1rem!important;
+  height:94px!important;
+  min-height:94px!important;
+  padding:10px 20px!important;
+  margin:0 12px!important;
+  overflow:visible!important;
+  border-top:3px double rgba(138,101,69,.62)!important;
+  border-left:1px solid rgba(138,101,69,.22)!important;
+  border-right:1px solid rgba(138,101,69,.22)!important;
+}
+body:not(.no-site-frame)>.site-header .wordmark{
+  display:flex!important;align-items:center!important;gap:.75rem!important;
+  flex:0 1 auto!important;min-width:0!important;
+}
+body:not(.no-site-frame)>.site-header .brand-seal{
+  display:block!important;width:62px!important;height:62px!important;flex:0 0 62px!important;
+  object-fit:contain!important;
+}
+body:not(.no-site-frame)>.site-header .wordmark-title{white-space:nowrap!important}
+body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.72rem!important;line-height:1!important}
+body:not(.no-site-frame)>.site-header .wordmark-title small{font-size:.58rem!important;letter-spacing:.13em!important}
+body:not(.no-site-frame)>.site-header .primary-nav{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex:1 1 auto!important;min-width:0!important;gap:.45rem!important;flex-wrap:nowrap!important;
+}
+body:not(.no-site-frame)>.site-header .primary-nav a,
+body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{
+  box-sizing:border-box!important;white-space:nowrap!important;
+  min-height:40px!important;padding:.55rem .72rem!important;font-size:.9rem!important;
+}
+body:not(.no-site-frame)>.site-header .menu-toggle{flex:0 0 auto!important}
+body:not(.no-site-frame)>main.archive-page,
+body:not(.no-site-frame)>main.coverage-home-main{padding-top:1.15rem!important}
+.archive-page-header,.ancestor-page-header,.chrono-page-header,.location-page-header{
+  position:static!important;left:auto!important;transform:none!important;
+  display:block!important;width:auto!important;max-width:none!important;min-height:0!important;
+  margin:0 0 1.2rem!important;padding:.25rem 0 .7rem!important;
+  text-align:left!important;align-items:initial!important;justify-content:initial!important;
+  isolation:auto!important;overflow:visible!important;
+  color:inherit!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid rgba(138,101,69,.42)!important;
+  box-shadow:none!important;
+}
+.archive-page-header::before,.archive-page-header::after,
+.ancestor-page-header::before,.ancestor-page-header::after,
+.chrono-page-header::before,.chrono-page-header::after,
+.location-page-header::before,.location-page-header::after{display:none!important;content:none!important}
+.archive-page-header .eyebrow,.ancestor-page-header .eyebrow,
+.chrono-page-header .eyebrow,.location-page-header .eyebrow{display:none!important}
+.archive-page-header .section-intro,
+.ancestor-page-header .section-intro{width:auto!important;max-width:none!important;margin:0!important;text-align:left!important}
+.archive-page-header>p:not(.eyebrow),
+.ancestor-page-header .section-intro>p:not(.eyebrow),
+.chrono-page-header>p:not(.eyebrow){display:none!important}
+.archive-page-header h1,.ancestor-page-header h1,
+.chrono-page-header h1,.location-page-header h1{
+  margin:0!important;padding:0!important;
+  color:#54202a!important;text-align:left!important;
+  font:normal 2rem/1.15 "IM Fell English",Georgia,serif!important;
+  text-shadow:none!important;
+}
+.chrono-page-header .chrono-ornament{display:none!important}
+.chrono-search-layout .chrono-search-intro{display:block!important;max-width:none!important;text-align:left!important;margin:0 0 1rem!important;padding:0 0 .7rem!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.chrono-search-layout .chrono-search-intro .eyebrow,
+.chrono-search-layout .chrono-search-intro>p:not(.eyebrow),
+.chrono-search-layout .chrono-search-intro .chrono-ornament{display:none!important}
+.coverage-heading{align-items:center!important;margin:0 0 .8rem!important;padding:0 0 .65rem!important;background:transparent!important;border:0!important;border-bottom:1px solid rgba(138,101,69,.42)!important}
+.coverage-heading .eyebrow,.coverage-heading p:not(.eyebrow){display:none!important}
+.coverage-heading h1{margin:0!important;font-size:1.9rem!important}
+@media(max-width:980px) and (min-width:801px){
+ body:not(.no-site-frame)>.site-header{gap:.55rem!important;padding-inline:12px!important}
+ body:not(.no-site-frame)>.site-header .brand-seal{width:54px!important;height:54px!important;flex-basis:54px!important}
+ body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.5rem!important}
+ body:not(.no-site-frame)>.site-header .primary-nav{gap:.25rem!important}
+ body:not(.no-site-frame)>.site-header .primary-nav a,
+ body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{padding:.48rem .5rem!important;font-size:.82rem!important}
+}
+@media(max-width:800px){
+ body:not(.no-site-frame)>.site-header{height:auto!important;min-height:82px!important;flex-wrap:wrap!important}
+ body:not(.no-site-frame)>.site-header .primary-nav{flex-wrap:wrap!important}
+ .archive-page-header h1,.ancestor-page-header h1,.chrono-page-header h1,.location-page-header h1{font-size:1.7rem!important}
+}
