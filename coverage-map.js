@@ -9,7 +9,7 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLo
 const text=(tag,value,cls)=>{const e=document.createElement(tag);e.textContent=value||"";if(cls)e.className=cls;return e;};
 function propValues(p){return Object.entries(p||{}).map(([k,v])=>[norm(k),String(v??"").trim()]).filter(x=>x[1]);}
 function featureName(f){const p=f.properties||{};for(const key of ["JPT_NAZWA_","name","NAME_2","NAME_1","powiat","nazwa","name_2","county","state_name"]){if(p[key])return String(p[key]);}const vals=propValues(p).map(x=>x[1]);return vals.find(v=>/powiat/i.test(v))||vals[0]||"Unnamed area";}
-function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_JE||p.TERYT||p.terc||"");if(/^12\d{3,5}$/.test(code))return true;const vals=propValues(p).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v.includes("wojewodztwo malopolskie"));}
+function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_JE||p.TERYT||p.terc||"");if(/^12\d{2}$/.test(code))return true;const vals=propValues(p).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v.includes("wojewodztwo malopolskie"));}
 function isUsFeature(f){const p=f.properties||{};return norm(p.country||"").includes("united states")||p["ISO3166-1-Alpha-3"]==="USA";}
 function recordMatchesArea(r,f){const loc=norm(r.location);if(!loc)return false;const name=norm(featureName(f));const raw=String(featureName(f)||"").replace(/^powiat\s+/i,"");const bare=norm(raw);return (name.length>2&&loc.includes(name))||(bare.length>2&&loc.split(" ").includes(bare));}
 function matching(f){return records.filter(r=>recordMatchesArea(r,f));}
