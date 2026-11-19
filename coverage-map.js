@@ -24,46 +24,16 @@ function geometryRings(g){
  return [];
 }
 function projectFeatures(){
- const points=[];
- features.forEach(f=>geometryRings(f.geometry).forEach(r=>r.forEach(pt=>points.push(pt))));
+ const points=[];features.forEach(f=>geometryRings(f.geometry).forEach(r=>r.forEach(pt=>points.push(pt))));
  if(!points.length)throw new Error("No drawable map boundaries were found.");
- const meanLat=points.reduce((sum,p)=>sum+p[1],0)/points.length;
- const xFactor=Math.cos(meanLat*Math.PI/180);
- const project=pt=>[pt[0]*xFactor,pt[1]];
- const projected=points.map(project);
- const xs=projected.map(p=>p[0]),ys=projected.map(p=>p[1]);
- const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
- const extentX=maxX-minX||1,extentY=maxY-minY||1;
- const w=1000,pad=30,scale=(w-pad*2)/extentX;
- const h=Math.max(300,extentY*scale+pad*2);
- const xy=pt=>{const q=project(pt);return [pad+(q[0]-minX)*scale,h-pad-(q[1]-minY)*scale];};
- function pathForRing(r){return r.map((pt,i)=>{const q=xy(pt);return (i?"L":"M")+q[0].toFixed(2)+","+q[1].toFixed(2);}).join(" ")+" Z";}
- function areaOfRing(r){let area=0;for(let i=0,j=r.length-1;i<r.length;j=i++){area+=r[j][0]*r[i][1]-r[i][0]*r[j][1];}return Math.abs(area/2);}
- function centroid(r){
-  let a=0,cx=0,cy=0;
-  for(let i=0,j=r.length-1;i<r.length;j=i++){
-   const cross=r[j][0]*r[i][1]-r[i][0]*r[j][1];a+=cross;
-   cx+=(r[j][0]+r[i][0])*cross;cy+=(r[j][1]+r[i][1])*cross;
-  }
-  if(Math.abs(a)<1e-10){const avg=r.reduce((v,p)=>[v[0]+p[0]/r.length,v[1]+p[1]/r.length],[0,0]);return avg;}
-  return [cx/(3*a),cy/(3*a)];
- }
- return {
-  w,h,
-  path(f){return geometryRings(f.geometry).map(poly=>poly.map(pathForRing).join(" ")).join(" ");},
-  labelPoint(f){
-   const rings=geometryRings(f.geometry);
-   const outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];
-   return outer?xy(centroid(outer)):null;
-  },
-  labelSize(f){
-   const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];
-   if(!outer)return 10;
-   const xs=outer.map(p=>xy(p)[0]),ys=outer.map(p=>xy(p)[1]);
-   const width=Math.max(...xs)-Math.min(...xs),height=Math.max(...ys)-Math.min(...ys);
-   return Math.max(8,Math.min(country.value==="US"?15:12,Math.min(width,height)*.24));
-  }
- };
+ const meanLat=points.reduce((sum,p)=>sum+p[1],0)/points.length,xFactor=Math.cos(meanLat*Math.PI/180),project=pt=>[pt[0]*xFactor,pt[1]];
+ const projected=points.map(project),xs=projected.map(p=>p[0]),ys=projected.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),extentX=maxX-minX||1,extentY=maxY-minY||1;
+ const w=1000,h=720,pad=34,scale=Math.min((w-pad*2)/extentX,(h-pad*2)/extentY),drawnW=extentX*scale,drawnH=extentY*scale,offsetX=(w-drawnW)/2,offsetY=(h-drawnH)/2;
+ const xy=pt=>{const q=project(pt);return[offsetX+(q[0]-minX)*scale,h-offsetY-(q[1]-minY)*scale];};
+ function pathForRing(r){return r.map((pt,i)=>{const q=xy(pt);return(i?"L":"M")+q[0].toFixed(2)+","+q[1].toFixed(2);}).join(" ")+" Z";}
+ function areaOfRing(r){let area=0;for(let i=0,j=r.length-1;i<r.length;j=i++)area+=r[j][0]*r[i][1]-r[i][0]*r[j][1];return Math.abs(area/2);}
+ function centroid(r){let a=0,cx=0,cy=0;for(let i=0,j=r.length-1;i<r.length;j=i++){const cross=r[j][0]*r[i][1]-r[i][0]*r[j][1];a+=cross;cx+=(r[j][0]+r[i][0])*cross;cy+=(r[j][1]+r[i][1])*cross;}if(Math.abs(a)<1e-10)return r.reduce((v,p)=>[v[0]+p[0]/r.length,v[1]+p[1]/r.length],[0,0]);return[cx/(3*a),cy/(3*a)];}
+ return{w,h,path(f){return geometryRings(f.geometry).map(poly=>poly.map(pathForRing).join(" ")).join(" ");},labelPoint(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];return outer?xy(centroid(outer)):null;},labelSize(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];if(!outer)return 10;const px=outer.map(p=>xy(p)[0]),py=outer.map(p=>xy(p)[1]);return Math.max(8,Math.min(country.value==="US"?15:12,Math.min(Math.max(...px)-Math.min(...px),Math.max(...py)-Math.min(...py))*.24));}};
 }
 function mapLabel(f){
  const p=f.properties||{};
@@ -105,7 +75,7 @@ function drawMap(){
   const pt=projection.labelPoint(f);if(!pt)return;
   const label=document.createElementNS("http://www.w3.org/2000/svg","text");
   label.setAttribute("x",pt[0].toFixed(2));label.setAttribute("y",pt[1].toFixed(2));
-  label.setAttribute("class","coverage-map-label");
+  label.setAttribute("class","coverage-map-label");label.setAttribute("pointer-events","none");
   label.setAttribute("font-size",projection.labelSize(f).toFixed(1));
   label.setAttribute("text-anchor","middle");label.setAttribute("dominant-baseline","central");
   label.textContent=mapLabel(f);label.setAttribute("aria-hidden","true");
