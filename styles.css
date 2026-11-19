@@ -8963,3 +8963,205 @@ body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-summary{color:#
   body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{animation:none!important;transition:none!important}
 }
 @keyframes chrono-folio-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+
+/* 2026-11-19 ChronoSearch archival timeline refinement. Each folio remains one record. */
+body.chronosearch-page{
+  background-color:#e9dfc9!important;
+  background-image:repeating-linear-gradient(0deg,rgba(105,75,43,.018) 0,rgba(105,75,43,.018) 1px,transparent 1px,transparent 5px)!important;
+}
+body.chronosearch-page .chrono-search-intro h1{
+  color:#57212a!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  letter-spacing:.015em!important;
+  text-shadow:0 1px rgba(255,250,235,.65)!important;
+}
+body.chronosearch-page .chrono-search-intro .section-intro{
+  max-width:48rem!important;
+  color:#6c5844!important;
+  font:italic .92rem/1.55 Georgia,serif!important;
+}
+body.chronosearch-page .chrono-filter-panel{
+  border:1px solid rgba(112,76,43,.42)!important;
+  border-top:2px solid #8a2834!important;
+  border-radius:3px!important;
+  background:rgba(248,240,222,.88)!important;
+  box-shadow:0 3px 12px rgba(54,32,21,.07),inset 0 0 0 3px rgba(255,255,255,.22)!important;
+}
+body.chronosearch-page .chrono-filter-grid label{
+  color:#702630!important;
+  font:600 .7rem/1.3 Georgia,serif!important;
+  letter-spacing:.045em!important;
+  text-transform:uppercase!important;
+}
+body.chronosearch-page .chrono-filter-grid input,
+body.chronosearch-page .chrono-filter-grid select{
+  border:1px solid rgba(119,79,49,.42)!important;
+  border-radius:2px!important;
+  background:#fffaf0!important;
+  color:#39271d!important;
+  box-shadow:inset 0 1px 2px rgba(54,32,21,.06)!important;
+}
+body.chronosearch-page .chrono-filter-grid input:focus,
+body.chronosearch-page .chrono-filter-grid select:focus{
+  border-color:#8a2834!important;
+  outline:2px solid rgba(138,40,52,.16)!important;
+  outline-offset:1px!important;
+}
+body.chronosearch-page #chrono-timeline{
+  position:relative!important;
+  isolation:isolate!important;
+  padding-top:1.65rem!important;
+  background:transparent!important;
+}
+body.chronosearch-page #chrono-timeline::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:-1!important;
+  top:.91rem!important;
+  left:.8rem!important;
+  right:.8rem!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,#9b7854 5%,#9b7854 95%,transparent)!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column{
+  margin-top:.15rem!important;
+  background-color:#eee2c9!important;
+  background-image:repeating-linear-gradient(0deg,rgba(105,75,43,.018) 0,rgba(105,75,43,.018) 1px,transparent 1px,transparent 6px)!important;
+  box-shadow:0 4px 13px rgba(54,32,21,.09),inset 0 0 0 3px rgba(255,255,255,.2)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+body.chronosearch-page #chrono-timeline>.chrono-year-column::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:3!important;
+  top:-1.03rem!important;
+  left:50%!important;
+  width:.62rem!important;
+  height:.62rem!important;
+  border:2px solid #e9dfc9!important;
+  border-radius:50%!important;
+  background:#8a2834!important;
+  box-shadow:0 0 0 1px #8a2834,0 1px 3px rgba(54,32,21,.18)!important;
+  transform:translateX(-50%)!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading h2{
+  font-size:1.82rem!important;
+  letter-spacing:.025em!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-year-heading span{
+  font-style:italic!important;
+  letter-spacing:.015em!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading{
+  padding:.1rem .05rem .16rem!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date{
+  padding:.12rem .36rem!important;
+  border-left:2px solid #8a2834!important;
+  background:rgba(138,40,52,.065)!important;
+  letter-spacing:.075em!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+  padding:.48rem!important;
+  border-color:rgba(119,79,49,.48)!important;
+  background:rgba(255,250,238,.82)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.36),0 2px 7px rgba(54,32,21,.07)!important;
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image{
+  background-color:#e2d4b9!important;
+  border-color:rgba(119,79,49,.3)!important;
+}
+body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-summary{
+  min-height:2.7em!important;
+  max-height:2.7em!important;
+  padding:.2rem .18rem .05rem!important;
+  line-height:1.32!important;
+}
+body.chronosearch-page .chrono-scroll-hint{
+  color:#79634b!important;
+  font:italic .7rem/1.4 Georgia,serif!important;
+  letter-spacing:.045em!important;
+}
+body.chronosearch-page main.chrono-main>.notice{
+  border-left:2px solid #8a2834!important;
+  background:rgba(232,219,194,.55)!important;
+  color:#6c5844!important;
+}
+html[data-theme="dark"] body.chronosearch-page,
+body[data-theme="dark"].chronosearch-page,
+body.dark-mode.chronosearch-page{
+  background-color:#1d1510!important;
+  background-image:repeating-linear-gradient(0deg,rgba(221,190,143,.018) 0,rgba(221,190,143,.018) 1px,transparent 1px,transparent 5px)!important;
+}
+html[data-theme="dark"] body.chronosearch-page .chrono-search-intro h1,
+body[data-theme="dark"].chronosearch-page .chrono-search-intro h1,
+body.dark-mode.chronosearch-page .chrono-search-intro h1{color:#e5c995!important}
+html[data-theme="dark"] body.chronosearch-page .chrono-search-intro .section-intro,
+body[data-theme="dark"].chronosearch-page .chrono-search-intro .section-intro,
+body.dark-mode.chronosearch-page .chrono-search-intro .section-intro{color:#c4ad8c!important}
+html[data-theme="dark"] body.chronosearch-page .chrono-filter-panel,
+body[data-theme="dark"].chronosearch-page .chrono-filter-panel,
+body.dark-mode.chronosearch-page .chrono-filter-panel{
+  border-color:rgba(190,145,83,.42)!important;
+  background:#2b1e16!important;
+  box-shadow:inset 0 0 0 3px rgba(255,231,190,.025),0 3px 12px rgba(0,0,0,.2)!important;
+}
+html[data-theme="dark"] body.chronosearch-page .chrono-filter-grid label,
+body[data-theme="dark"].chronosearch-page .chrono-filter-grid label,
+body.dark-mode.chronosearch-page .chrono-filter-grid label{color:#dfbd88!important}
+html[data-theme="dark"] body.chronosearch-page .chrono-filter-grid input,
+html[data-theme="dark"] body.chronosearch-page .chrono-filter-grid select,
+body[data-theme="dark"].chronosearch-page .chrono-filter-grid input,
+body[data-theme="dark"].chronosearch-page .chrono-filter-grid select,
+body.dark-mode.chronosearch-page .chrono-filter-grid input,
+body.dark-mode.chronosearch-page .chrono-filter-grid select{
+  border-color:#765936!important;background:#211710!important;color:#f0dfc4!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline::before,
+body[data-theme="dark"].chronosearch-page #chrono-timeline::before,
+body.dark-mode.chronosearch-page #chrono-timeline::before{
+  background:linear-gradient(90deg,transparent,#92734e 5%,#92734e 95%,transparent)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column,
+body[data-theme="dark"].chronosearch-page #chrono-timeline>.chrono-year-column,
+body.dark-mode.chronosearch-page #chrono-timeline>.chrono-year-column{
+  background-color:#302116!important;
+  background-image:repeating-linear-gradient(0deg,rgba(221,190,143,.018) 0,rgba(221,190,143,.018) 1px,transparent 1px,transparent 6px)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline>.chrono-year-column::before,
+body[data-theme="dark"].chronosearch-page #chrono-timeline>.chrono-year-column::before,
+body.dark-mode.chronosearch-page #chrono-timeline>.chrono-year-column::before{
+  border-color:#1d1510!important;background:#b04b55!important;box-shadow:0 0 0 1px #b04b55,0 1px 3px rgba(0,0,0,.3)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date,
+body[data-theme="dark"].chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-record-heading .chrono-record-date{
+  background:rgba(176,75,85,.12)!important;color:#e0b078!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card,
+body[data-theme="dark"].chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card,
+body.dark-mode.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{
+  background:rgba(25,17,12,.72)!important;
+}
+html[data-theme="dark"] body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image,
+body[data-theme="dark"].chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card .chrono-record-image{background:#211710!important}
+html[data-theme="dark"] body.chronosearch-page .chrono-scroll-hint,
+body[data-theme="dark"].chronosearch-page .chrono-scroll-hint,
+body.dark-mode.chronosearch-page .chrono-scroll-hint{color:#c0a98b!important}
+html[data-theme="dark"] body.chronosearch-page main.chrono-main>.notice,
+body[data-theme="dark"].chronosearch-page main.chrono-main>.notice,
+body.dark-mode.chronosearch-page main.chrono-main>.notice{background:rgba(48,33,22,.72)!important;color:#cdbb9e!important}
+@media(max-width:560px){
+ body.chronosearch-page #chrono-timeline{padding-top:1.45rem!important}
+ body.chronosearch-page #chrono-timeline::before{top:.78rem!important}
+ body.chronosearch-page #chrono-timeline>.chrono-year-column::before{top:-.91rem!important}
+ body.chronosearch-page #chrono-timeline .chrono-year-heading h2{font-size:1.62rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.chronosearch-page #chrono-timeline>.chrono-year-column,
+ body.chronosearch-page #chrono-timeline .chrono-event>article.chrono-record-card{transition:none!important}
+}
