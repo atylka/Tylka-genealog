@@ -9437,3 +9437,113 @@ body.coverage-home{width:min(calc(100% - 24px),980px)!important}
 .coverage-map-area:focus{outline:none;stroke:#35131a;stroke-width:4}
 .coverage-map-area.is-selected{stroke:#35131a;stroke-width:4;filter:brightness(.88)}
 @media(max-width:760px){#coverage-map-canvas{height:auto!important;min-height:0!important}}
+
+
+/* 2026-11-19: restrained, compact archival interface inspired by Geneteka */
+:root{
+ --paper:#f5f3e8;--paper-deep:#e9e8d4;--ink:#343b31;--muted:#68705e;
+ --line:#c5c9ad;--accent:#6d3034;--accent-soft:#eadfda;
+}
+body:not(.no-site-frame){
+ width:min(calc(100% - 24px),980px)!important;
+ margin:14px auto 0!important;
+ background:#f2f2df!important;
+ color:var(--ink)!important;
+ border:1px solid #9da58c!important;
+ box-shadow:none!important;
+}
+body:not(.no-site-frame)>.site-header{
+ height:auto!important;min-height:76px!important;
+ margin:0 10px!important;padding:8px 12px!important;
+ display:flex!important;align-items:center!important;gap:14px!important;
+ background:#e7ead3!important;border:0!important;
+ border-bottom:1px solid var(--line)!important;
+ box-shadow:none!important;
+}
+body:not(.no-site-frame)>.site-header .brand-seal{
+ width:52px!important;height:52px!important;flex:0 0 52px!important;
+}
+body:not(.no-site-frame)>.site-header .wordmark{gap:9px!important}
+body:not(.no-site-frame)>.site-header .wordmark-title strong{
+ font:600 1.42rem/1.05 Georgia,serif!important;letter-spacing:.025em!important;color:#394337!important
+}
+body:not(.no-site-frame)>.site-header .wordmark-title small{
+ font:italic .72rem Georgia,serif!important;letter-spacing:.035em!important;color:#69725c!important
+}
+body:not(.no-site-frame)>.site-header .primary-nav{gap:2px!important}
+body:not(.no-site-frame)>.site-header .primary-nav a,
+body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{
+ min-height:32px!important;padding:6px 9px!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important;color:#5b392e!important;font: .82rem Georgia,serif!important;
+}
+body:not(.no-site-frame)>.site-header .primary-nav a:hover,
+body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button:hover,
+body:not(.no-site-frame)>.site-header .primary-nav a[aria-current=page]{
+ background:#dce2c6!important;color:#49272a!important;text-decoration:underline!important;
+}
+body:not(.no-site-frame)>main.archive-page,
+body:not(.no-site-frame)>main.coverage-home-main{margin:0 10px!important;padding:14px 10px 20px!important}
+body:not(.no-site-frame)>.site-footer{
+ margin:0 10px!important;padding:10px 12px!important;
+ background:#e7ead3!important;border-top:1px solid var(--line)!important;
+ box-shadow:none!important;
+}
+body:not(.no-site-frame)>.site-footer p{font-size:.78rem!important;color:#68705e!important}
+.archive-page-header,.ancestor-page-header,.chrono-page-header,.location-page-header,
+.coverage-heading{
+ margin:0 0 12px!important;padding:0 0 8px!important;
+ border:0!important;border-bottom:1px solid var(--line)!important;
+ background:transparent!important;box-shadow:none!important;
+}
+.archive-page-header h1,.ancestor-page-header h1,.chrono-page-header h1,
+.location-page-header h1,.coverage-heading h1{
+ color:#394337!important;font:normal 1.55rem/1.2 Georgia,serif!important;
+ letter-spacing:0!important;text-shadow:none!important;
+}
+.archive-page-header .section-intro,.ancestor-page-header .section-intro,
+.chrono-page-header .section-intro{color:var(--muted)!important;font-size:.88rem!important}
+.coverage-panel,.chrono-filter-panel,.archive-folders,.archive-folder-content,
+.ancestor-index-heading,.coverage-detail,.coverage-stats{
+ border:1px solid var(--line)!important;border-radius:2px!important;
+ background:#f8f7ee!important;box-shadow:none!important;
+}
+.coverage-panel{padding:10px!important}
+.coverage-map-frame{background:#f0f0df!important;border:1px solid var(--line)!important}
+.coverage-map-column{border-color:var(--line)!important}
+#coverage-map-canvas{background:#f0f0df!important}
+.coverage-stats{background:#f8f7ee!important}
+.coverage-stats h2{font:1rem Georgia,serif!important;color:#394337!important}
+.coverage-stats-table{font:.78rem Georgia,serif!important}
+.coverage-stats-table thead th{background:#e8ead8!important;color:#394337!important}
+.coverage-stats-table tfoot th{background:#e8ead8!important;color:#394337!important}
+.coverage-map-area{stroke:#f8f7ee!important;stroke-width:1.5!important}
+.coverage-map-area:hover,.coverage-map-area.is-hovered{stroke:#513137!important;stroke-width:2.4!important}
+.coverage-map-area.is-selected{stroke:#513137!important;stroke-width:3!important}
+button,.small-button,.archive-folder,.text-link{
+ box-shadow:none!important;border-radius:2px!important;
+}
+input,select,textarea{
+ border:1px solid #bfc4ad!important;border-radius:2px!important;
+ background:#fffef7!important;box-shadow:none!important;
+}
+.records-list,.ancestor-grid,.chrono-timeline{gap:10px!important}
+.record-card,.ancestor-card,.chrono-card,.activity-log-item,
+.archive-folder,.record-form-section{
+ border-radius:2px!important;box-shadow:none!important;
+}
+.record-card,.ancestor-card,.chrono-card,.activity-log-item{
+ border:1px solid #d0d2bd!important;background:#faf9f1!important;
+}
+.archive-folder{background:#eeefdf!important;border:1px solid #c5c9ad!important}
+.archive-folder.is-active{background:#e1e6ce!important;border-color:#879276!important}
+.site-modal .modal-card{border-radius:2px!important;box-shadow:0 5px 20px rgba(35,40,28,.16)!important}
+@media(max-width:800px){
+ body:not(.no-site-frame){width:100%!important;margin:0!important;border-left:0!important;border-right:0!important}
+ body:not(.no-site-frame)>.site-header{flex-wrap:wrap!important}
+ body:not(.no-site-frame)>.site-header .primary-nav{flex-wrap:wrap!important}
+}
+@media(max-width:560px){
+ body:not(.no-site-frame)>.site-header .brand-seal{width:46px!important;height:46px!important;flex-basis:46px!important}
+ body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.25rem!important}
+}
