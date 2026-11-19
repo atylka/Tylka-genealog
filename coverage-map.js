@@ -9,7 +9,7 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLo
 const text=(tag,value,cls)=>{const e=document.createElement(tag);e.textContent=value||"";if(cls)e.className=cls;return e;};
 function propValues(p){return Object.entries(p||{}).map(([k,v])=>[norm(k),String(v??"").trim()]).filter(x=>x[1]);}
 function rawFeatureName(f){const p=f.properties||{};for(const key of ["JPT_NAZWA_","name","NAME_2","NAME_1","powiat","nazwa","name_2","county","state_name"]){if(p[key])return String(p[key]);}const vals=propValues(p).map(x=>x[1]);return vals.find(v=>/powiat/i.test(v))||vals[0]||"Unnamed area";}
-const POLISH_DISTRICT_NAMES={"1201":"Bochnia County","1202":"Brzesko County","1203":"Chrzanów County","1204":"Dąbrowa County","1205":"Gorlice County","1206":"Kraków County","1207":"Limanowa County","1208":"Miechów County","1209":"Myślenice County","1210":"Nowy Sącz County","1211":"Nowy Targ County","1212":"Olkusz County","1213":"Oświęcim County","1214":"Proszowice County","1215":"Sucha Beskidzka County","1216":"Tarnów County","1217":"Tatra County","1218":"Wadowice County","1219":"Wieliczka County","1261":"Kraków","1262":"Nowy Sącz","1263":"Tarnów"};
+const POLISH_DISTRICT_NAMES={"1201":"Bochnia","1202":"Brzesko","1203":"Chrzanów","1204":"Dąbrowa","1205":"Gorlice","1206":"Kraków","1207":"Limanowa","1208":"Miechów","1209":"Myślenice","1210":"Nowy Sącz","1211":"Nowy Targ","1212":"Olkusz","1213":"Oświęcim","1214":"Proszowice","1215":"Sucha Beskidzka","1216":"Tarnów","1217":"Tatra","1218":"Wadowice","1219":"Wieliczka","1261":"Kraków","1262":"Nowy Sącz","1263":"Tarnów"};
 function featureName(f){if(country.value!=="US"){const code=String(f.properties?.JPT_KOD_JE||"");if(POLISH_DISTRICT_NAMES[code])return POLISH_DISTRICT_NAMES[code];}return rawFeatureName(f).replace(/^powiat\\s+/i,"").replace(/^miasto na prawach powiatu\\s*/i,"");}
 function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_JE||p.TERYT||p.terc||"");if(/^12\d{2}$/.test(code))return true;const vals=propValues(p).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v.includes("wojewodztwo malopolskie"));}
 function isUsFeature(f){const p=f.properties||{};return norm(p.country||"").includes("united states")||p["ISO3166-1-Alpha-3"]==="USA";}
@@ -23,17 +23,34 @@ function geometryRings(g){
  if(g.type==="MultiPolygon")return (g.coordinates||[]).flat();
  return [];
 }
+function stateCode(f){
+ const p=f.properties||{},raw=String(p.state_code||p.postal||p.abbr||p["postal-code"]||p.STUSPS||p.usps||"").toUpperCase();
+ if(/^[A-Z]{2}$/.test(raw))return raw;
+ const name=norm(p.name||p.NAME_1||p.state_name||rawFeatureName(f));
+ const codes={alabama:"AL",alaska:"AK",arizona:"AZ",arkansas:"AR",california:"CA",colorado:"CO",connecticut:"CT",delaware:"DE",florida:"FL",georgia:"GA",hawaii:"HI",idaho:"ID",illinois:"IL",indiana:"IN",iowa:"IA",kansas:"KS",kentucky:"KY",louisiana:"LA",maine:"ME",maryland:"MD",massachusetts:"MA",michigan:"MI",minnesota:"MN",mississippi:"MS",missouri:"MO",montana:"MT",nebraska:"NE",nevada:"NV","new hampshire":"NH","new jersey":"NJ","new mexico":"NM","new york":"NY","north carolina":"NC","north dakota":"ND",ohio:"OH",oklahoma:"OK",oregon:"OR",pennsylvania:"PA","rhode island":"RI","south carolina":"SC","south dakota":"SD",tennessee:"TN",texas:"TX",utah:"UT",vermont:"VT",virginia:"VA",washington:"WA","west virginia":"WV",wisconsin:"WI",wyoming:"WY","district of columbia":"DC"};
+ return codes[name]||"";
+}
 function projectFeatures(){
- const points=[];features.forEach(f=>geometryRings(f.geometry).forEach(r=>r.forEach(pt=>points.push(pt))));
- if(!points.length)throw new Error("No drawable map boundaries were found.");
- const meanLat=points.reduce((sum,p)=>sum+p[1],0)/points.length,xFactor=Math.cos(meanLat*Math.PI/180),project=pt=>[pt[0]*xFactor,pt[1]];
- const projected=points.map(project),xs=projected.map(p=>p[0]),ys=projected.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),extentX=maxX-minX||1,extentY=maxY-minY||1;
- const w=1000,h=720,pad=34,scale=Math.min((w-pad*2)/extentX,(h-pad*2)/extentY),drawnW=extentX*scale,drawnH=extentY*scale,offsetX=(w-drawnW)/2,offsetY=(h-drawnH)/2;
- const xy=pt=>{const q=project(pt);return[offsetX+(q[0]-minX)*scale,h-offsetY-(q[1]-minY)*scale];};
- function pathForRing(r){return r.map((pt,i)=>{const q=xy(pt);return(i?"L":"M")+q[0].toFixed(2)+","+q[1].toFixed(2);}).join(" ")+" Z";}
- function areaOfRing(r){let area=0;for(let i=0,j=r.length-1;i<r.length;j=i++)area+=r[j][0]*r[i][1]-r[i][0]*r[j][1];return Math.abs(area/2);}
- function centroid(r){let a=0,cx=0,cy=0;for(let i=0,j=r.length-1;i<r.length;j=i++){const cross=r[j][0]*r[i][1]-r[i][0]*r[j][1];a+=cross;cx+=(r[j][0]+r[i][0])*cross;cy+=(r[j][1]+r[i][1])*cross;}if(Math.abs(a)<1e-10)return r.reduce((v,p)=>[v[0]+p[0]/r.length,v[1]+p[1]/r.length],[0,0]);return[cx/(3*a),cy/(3*a)];}
- return{w,h,path(f){return geometryRings(f.geometry).map(poly=>poly.map(pathForRing).join(" ")).join(" ");},labelPoint(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];return outer?xy(centroid(outer)):null;},labelSize(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>areaOfRing(b)-areaOfRing(a))[0];if(!outer)return 10;const px=outer.map(p=>xy(p)[0]),py=outer.map(p=>xy(p)[1]);return Math.max(8,Math.min(country.value==="US"?15:12,Math.min(Math.max(...px)-Math.min(...px),Math.max(...py)-Math.min(...py))*.24));}};
+ const pointsFor=list=>{const pts=[];list.forEach(f=>geometryRings(f.geometry).forEach(r=>r.forEach(pt=>pts.push(pt))));return pts;};
+ const all=pointsFor(features);if(!all.length)throw new Error("No drawable map boundaries were found.");
+ const isUS=country.value==="US",code=f=>stateCode(f),ak=features.filter(f=>code(f)==="AK"),hi=features.filter(f=>code(f)==="HI"),main=isUS?features.filter(f=>!["AK","HI"].includes(code(f))):features;
+ const meanLat=all.reduce((s,p)=>s+p[1],0)/all.length,projectRaw=pt=>[pt[0]*Math.cos(meanLat*Math.PI/180),pt[1]];
+ function transform(list,x,y,w,h){
+  const pts=pointsFor(list).map(projectRaw);if(!pts.length)return pt=>[x+w/2,y+h/2];
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),ex=maxX-minX||1,ey=maxY-minY||1,pad=9,scale=Math.min((w-pad*2)/ex,(h-pad*2)/ey),dw=ex*scale,dh=ey*scale,ox=x+(w-dw)/2,oy=y+(h-dh)/2;
+  return pt=>{const q=projectRaw(pt);return[ox+(q[0]-minX)*scale,y+oy-y+dh-(q[1]-minY)*scale];};
+ }
+ const transforms=new Map();
+ if(isUS){
+  const continental=transform(main,0,0,1000,550);main.forEach(f=>transforms.set(f,continental));
+  const alaska=transform(ak,29,579,205,116),hawaii=transform(hi,269,579,155,116);
+  ak.forEach(f=>transforms.set(f,alaska));hi.forEach(f=>transforms.set(f,hawaii));
+ }else{const whole=transform(features,0,0,1000,720);features.forEach(f=>transforms.set(f,whole));}
+ const xy=(f,p)=>transforms.get(f)(p);
+ function ringPath(f,r){return r.map((p,i)=>{const q=xy(f,p);return(i?"L":"M")+q[0].toFixed(2)+","+q[1].toFixed(2);}).join(" ")+" Z";}
+ function area(r){let v=0;for(let i=0,j=r.length-1;i<r.length;j=i++)v+=r[j][0]*r[i][1]-r[i][0]*r[j][1];return Math.abs(v/2);}
+ function centroid(r){let a=0,cx=0,cy=0;for(let i=0,j=r.length-1;i<r.length;j=i++){const c=r[j][0]*r[i][1]-r[i][0]*r[j][1];a+=c;cx+=(r[j][0]+r[i][0])*c;cy+=(r[j][1]+r[i][1])*c;}if(Math.abs(a)<1e-10)return r.reduce((v,p)=>[v[0]+p[0]/r.length,v[1]+p[1]/r.length],[0,0]);return[cx/(3*a),cy/(3*a)];}
+ return{w:1000,h:720,path(f){return geometryRings(f.geometry).map(poly=>poly.map(r=>ringPath(f,r)).join(" ")).join(" ");},labelPoint(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];return outer?xy(f,centroid(outer)):null;},labelSize(f){const rings=geometryRings(f.geometry),outer=rings.slice().sort((a,b)=>area(b)-area(a))[0];if(!outer)return 10;const px=outer.map(p=>xy(f,p)[0]),py=outer.map(p=>xy(f,p)[1]);return Math.max(8,Math.min(isUS?15:12,Math.min(Math.max(...px)-Math.min(...px),Math.max(...py)-Math.min(...py))*.24));}};
 }
 function mapLabel(f){
  const p=f.properties||{};
@@ -81,6 +98,13 @@ function drawMap(){
   label.textContent=mapLabel(f);label.setAttribute("aria-hidden","true");
   svg.append(label);
  });
+ if(country.value==="US"){
+  [["Alaska",20,565,225,145],["Hawaii",255,565,185,145]].forEach(([name,x,y,w,h])=>{
+   const frame=document.createElementNS("http://www.w3.org/2000/svg","rect");
+   frame.setAttribute("x",x);frame.setAttribute("y",y);frame.setAttribute("width",w);frame.setAttribute("height",h);frame.setAttribute("rx","3");frame.setAttribute("class","coverage-map-inset-frame");svg.append(frame);
+   const caption=document.createElementNS("http://www.w3.org/2000/svg","text");caption.setAttribute("x",x+w/2);caption.setAttribute("y",y+14);caption.setAttribute("class","coverage-map-inset-title");caption.setAttribute("text-anchor","middle");caption.textContent=name;svg.append(caption);
+  });
+ }
  mapSvg=svg;canvas.replaceChildren(svg);
 }
 function refreshMapStyles(){
