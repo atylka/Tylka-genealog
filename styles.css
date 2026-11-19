@@ -9547,3 +9547,10 @@ input,select,textarea{
  body:not(.no-site-frame)>.site-header .brand-seal{width:46px!important;height:46px!important;flex-basis:46px!important}
  body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.25rem!important}
 }
+
+
+/* Empty map areas are intentionally unavailable until associated records exist */
+.coverage-map-area.is-empty{fill:#d0c8b8!important;stroke:#f8f7ee!important;cursor:not-allowed!important;pointer-events:none!important;opacity:.82}
+.coverage-stats-row.is-empty{color:#8a877d!important;background:#eeece4!important;cursor:default!important}
+.coverage-stats-row.is-empty td:first-child{color:#858174!important}
+.coverage-stats-row.is-empty:hover{background:#eeece4!important;color:#8a877d!important}
