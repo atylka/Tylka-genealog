@@ -9258,3 +9258,47 @@ body.coverage-home{width:min(calc(100% - 30px),1120px);margin:14px auto 0!import
 .coverage-activity{margin:1.2rem 0 0;padding:.8rem 1rem;border-top:1px solid rgba(138,101,69,.42)}.coverage-activity .activity-log-heading h2{font:1.25rem Georgia,serif;color:#54202a}.coverage-activity .activity-log-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}.coverage-activity .activity-log-item{padding:.5rem .65rem;border:1px solid rgba(138,101,69,.3);background:rgba(245,237,220,.55)}
 .coverage-home .site-footer{width:auto!important;margin:0 12px!important}
 @media(max-width:720px){body.coverage-home{width:100%;margin:0!important;border:0;box-shadow:none}.coverage-home .site-header,.coverage-home .site-footer{margin:0!important}.coverage-home-main{padding:1rem .7rem 2rem}.coverage-panel{padding:.85rem}.coverage-heading{display:block}.coverage-selectors{margin-top:.8rem;min-width:0;grid-template-columns:80px 1fr}.coverage-map-frame{padding:4px}#coverage-map-canvas{height:360px}.coverage-detail{grid-template-columns:1fr}.coverage-area-records{grid-template-columns:1fr}.coverage-activity .activity-log-list{grid-template-columns:1fr}}
+
+
+/* 2026-11-19: shared site frame for every full page */
+body:not(.no-site-frame){
+  width:min(calc(100% - 30px),1120px)!important;
+  min-height:calc(100vh - 14px);
+  margin:14px auto 0!important;
+  border:1px solid rgba(108,75,45,.42);
+  border-bottom:0;
+  box-shadow:0 3px 18px rgba(55,35,20,.13);
+  background:#e9dfca;
+}
+body:not(.no-site-frame)>.site-header{
+  width:auto!important;
+  max-width:none!important;
+  min-height:88px;
+  margin:0 12px!important;
+  padding:.75rem 1.2rem;
+}
+body:not(.no-site-frame)>main.archive-page,
+body:not(.no-site-frame)>main.coverage-home-main{
+  width:auto!important;
+  max-width:none!important;
+  margin:0 12px!important;
+}
+body:not(.no-site-frame)>.site-footer{
+  width:auto!important;
+  max-width:none!important;
+  margin:0 12px!important;
+}
+body:not(.no-site-frame)>.site-header .brand-seal{width:64px;height:64px;flex-basis:64px}
+body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.8rem}
+@media(max-width:800px){
+  body:not(.no-site-frame){width:100%!important;margin:0!important;border-left:0;border-right:0;box-shadow:none}
+  body:not(.no-site-frame)>.site-header,
+  body:not(.no-site-frame)>main.archive-page,
+  body:not(.no-site-frame)>main.coverage-home-main,
+  body:not(.no-site-frame)>.site-footer{margin-left:0!important;margin-right:0!important}
+}
+@media(max-width:560px){
+  body:not(.no-site-frame)>.site-header{padding:.65rem .8rem}
+  body:not(.no-site-frame)>.site-header .brand-seal{width:56px;height:56px;flex-basis:56px}
+  body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.5rem}
+}
