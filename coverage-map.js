@@ -10,7 +10,7 @@ const text=(tag,value,cls)=>{const e=document.createElement(tag);e.textContent=v
 function initMap(){if(map||!window.L)return;map=L.map(canvas,{scrollWheelZoom:false,zoomControl:true,preferCanvas:true}).setView([49.8,20.1],7);layer=L.geoJSON(null,{style:styleFeature,onEachFeature}).addTo(map);}
 function propValues(p){return Object.entries(p||{}).map(([k,v])=>[norm(k),String(v??"").trim()]).filter(x=>x[1]);}
 function featureName(f){const p=f.properties||{};for(const key of ["name","NAME_2","NAME_1","powiat","nazwa","JPT_NAZWA_","name_2","county","state_name"]){if(p[key])return String(p[key]);}const vals=propValues(p).map(x=>x[1]);return vals.find(v=>/powiat/i.test(v))||vals[0]||"Unnamed area";}
-function isMalopolskie(f){const vals=propValues(f.properties).map(x=>norm(x[1]));return vals.some(v=>v==="malopolskie"||v==="wojewodztwo malopolskie"||v.includes("malopolskie voiv"));}
+function isMalopolskie(f){const vals=propValues(f.properties).map(x=>norm(x[1]));return vals.some(v=>v.includes("malopolskie"));}
 function isUsFeature(f){const p=f.properties||{};return norm(p.country||"").includes("united states")||p["ISO3166-1-Alpha-3"]==="USA";}
 function recordMatchesArea(r,f){const loc=norm(r.location);if(!loc)return false;const name=norm(featureName(f));const raw=String(featureName(f)||"").replace(/^powiat\s+/i,"");const bare=norm(raw);return (name.length>2&&loc.includes(name))||(bare.length>2&&loc.split(" ").includes(bare));}
 function matching(f){return records.filter(r=>recordMatchesArea(r,f));}
