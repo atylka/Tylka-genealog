@@ -9392,3 +9392,38 @@ body:not(.no-site-frame)>main.coverage-home-main{padding-top:1.15rem!important}
  body:not(.no-site-frame)>.site-header .primary-nav{flex-wrap:wrap!important}
  .archive-page-header h1,.ancestor-page-header h1,.chrono-page-header h1,.location-page-header h1{font-size:1.7rem!important}
 }
+
+
+/* 2026-11-19: compact Geneteka-inspired homepage map and adjacent area index */
+body:not(.no-site-frame){width:min(calc(100% - 24px),980px)!important}
+body:not(.no-site-frame)>.site-header{margin:0 10px!important;min-height:82px!important;height:82px!important;padding:8px 14px!important}
+body:not(.no-site-frame)>.site-header .brand-seal{width:54px!important;height:54px!important;flex-basis:54px!important}
+body:not(.no-site-frame)>.site-header .wordmark-title strong{font-size:1.58rem!important}
+body:not(.no-site-frame)>.site-header .primary-nav{gap:.25rem!important}
+body:not(.no-site-frame)>.site-header .primary-nav a,body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{padding:.42rem .55rem!important;font-size:.86rem!important}
+body:not(.no-site-frame)>main.archive-page,body:not(.no-site-frame)>main.coverage-home-main{margin:0 10px!important}
+body.coverage-home{width:min(calc(100% - 24px),980px)!important}
+.coverage-home-main{max-width:940px!important;padding:1rem .8rem 1.5rem!important}
+.coverage-panel{padding:.8rem .9rem .9rem!important}
+.coverage-heading{margin-bottom:.65rem!important;padding-bottom:.55rem!important}
+.coverage-heading h1{font-size:1.65rem!important}
+.coverage-selectors{min-width:260px!important;grid-template-columns:auto minmax(130px,170px)!important}
+.coverage-map-frame{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(235px,.9fr);gap:0;padding:0;align-items:stretch;background:#eee5d2}
+.coverage-map-column{min-width:0;padding:6px;border-right:1px solid rgba(138,101,69,.42)}
+#coverage-map-canvas{height:440px;min-width:0}
+.coverage-legend{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .7rem;padding:.5rem .35rem 0;border:0;background:transparent;box-shadow:none;font-size:.7rem}
+.coverage-legend strong{width:100%;font-size:.75rem}
+.coverage-stats{min-width:0;padding:.7rem .65rem;background:rgba(249,243,230,.68)}
+.coverage-stats h2{margin:0 0 .35rem;padding:0 0 .35rem;border-bottom:1px solid rgba(138,101,69,.42);font:1.15rem "IM Fell English",Georgia,serif;color:#54202a}
+.coverage-stats-scroll{max-height:440px;overflow:auto}
+.coverage-stats-table{width:100%;border-collapse:collapse;font:.78rem/1.25 "EB Garamond",Georgia,serif;color:#493628}
+.coverage-stats-table th,.coverage-stats-table td{padding:.28rem .2rem;border-bottom:1px solid rgba(138,101,69,.18);text-align:left}
+.coverage-stats-table thead th{position:sticky;top:0;background:#eee4d0;color:#54202a;font-weight:700}
+.coverage-stats-table th:last-child,.coverage-stats-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.coverage-stats-table tfoot th{position:sticky;bottom:0;background:#e5d6bb;border-top:1px solid #9c8060;color:#54202a;font-weight:700}
+.coverage-stats-row{cursor:pointer;transition:background .15s}
+.coverage-stats-row:hover,.coverage-stats-row.is-selected{background:rgba(124,41,53,.13);color:#6c202d}
+.coverage-stats-row td:first-child{color:#6a342d}
+.coverage-detail{margin-top:.65rem;padding:.65rem .8rem}
+@media(max-width:760px){.coverage-map-frame{grid-template-columns:1fr}.coverage-map-column{border-right:0;border-bottom:1px solid rgba(138,101,69,.42)}#coverage-map-canvas{height:360px}.coverage-stats-scroll{max-height:250px}.coverage-selectors{min-width:0!important}}
+@media(max-width:560px){body:not(.no-site-frame)>.site-header{height:auto!important;min-height:78px!important}body:not(.no-site-frame)>.site-header .primary-nav{gap:.15rem!important}body:not(.no-site-frame)>.site-header .primary-nav a,body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{font-size:.8rem!important;padding:.38rem .42rem!important}.coverage-heading h1{font-size:1.5rem!important}.coverage-legend{font-size:.65rem}}
