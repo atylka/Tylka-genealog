@@ -9427,3 +9427,13 @@ body.coverage-home{width:min(calc(100% - 24px),980px)!important}
 .coverage-detail{margin-top:.65rem;padding:.65rem .8rem}
 @media(max-width:760px){.coverage-map-frame{grid-template-columns:1fr}.coverage-map-column{border-right:0;border-bottom:1px solid rgba(138,101,69,.42)}#coverage-map-canvas{height:360px}.coverage-stats-scroll{max-height:250px}.coverage-selectors{min-width:0!important}}
 @media(max-width:560px){body:not(.no-site-frame)>.site-header{height:auto!important;min-height:78px!important}body:not(.no-site-frame)>.site-header .primary-nav{gap:.15rem!important}body:not(.no-site-frame)>.site-header .primary-nav a,body:not(.no-site-frame)>.site-header .primary-nav .owner-sign-in-button{font-size:.8rem!important;padding:.38rem .42rem!important}.coverage-heading h1{font-size:1.5rem!important}.coverage-legend{font-size:.65rem}}
+
+
+/* Native clickable SVG map areas, styled as independent geographic buttons */
+#coverage-map-canvas{height:auto!important;min-height:0!important;display:flex;align-items:center;justify-content:center;padding:8px;background:#f4edda}
+.coverage-vector-map{display:block;width:100%;height:auto;max-height:570px;overflow:visible}
+.coverage-map-area{stroke:#fff8e8;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;cursor:pointer;transition:filter .12s,stroke-width .12s}
+.coverage-map-area:hover,.coverage-map-area.is-hovered{filter:brightness(.91);stroke:#54202a;stroke-width:3.2}
+.coverage-map-area:focus{outline:none;stroke:#35131a;stroke-width:4}
+.coverage-map-area.is-selected{stroke:#35131a;stroke-width:4;filter:brightness(.88)}
+@media(max-width:760px){#coverage-map-canvas{height:auto!important;min-height:0!important}}
