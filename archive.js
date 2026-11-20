@@ -252,6 +252,13 @@
     catch(error){status.textContent="Could not send this suggestion. The correction-report database migration may not have been installed yet. "+(error.message||"");}
     finally{button.disabled=false;}
   });
+  async function loadRecordSubmissions(){
+    const section=$("record-submission-inbox"),host=$("record-submission-inbox-list");if(!section||!host||!currentUser)return;section.hidden=false;host.textContent="Loading submissions…";
+    const {data,error}=await client.from("record_submissions").select("id,title,category,record_date,location,persons_mentioned,submitter_name,notes,created_at").eq("status","pending").order("created_at",{ascending:true});host.replaceChildren();
+    if(error){const p=document.createElement("p");p.className="empty-state";p.textContent="Contributor inbox unavailable: "+error.message;host.append(p);return;}
+    if(!data?.length){const p=document.createElement("p");p.className="empty-state";p.textContent="There are no pending contributor submissions.";host.append(p);return;}
+    data.forEach(item=>{const card=document.createElement("article");card.className="correction-report-card";const heading=document.createElement("strong");heading.textContent=item.title+" · "+(categoryNames[item.category]||item.category);const details=document.createElement("p");details.textContent=[item.record_date,item.location,item.persons_mentioned,item.notes].filter(Boolean).join(" · ")||"No additional details";const byline=document.createElement("small");byline.textContent=(item.submitter_name||"Contributor")+" · "+new Date(item.created_at).toLocaleString();const actions=document.createElement("div");actions.className="correction-report-actions";const approve=document.createElement("button");approve.type="button";approve.className="small-button";approve.textContent="Approve & add record";approve.addEventListener("click",async()=>{approve.disabled=true;const description=String(item.notes||"");const {error:insertError}=await client.from("archive_records").insert({owner_id:currentUser.id,title:item.title,category:item.category,description,location:item.location,persons_mentioned:item.persons_mentioned||"",record_date:item.record_date||null});if(insertError){approve.disabled=false;return alert("Could not add this record: "+insertError.message);}const {error:updateError}=await client.from("record_submissions").update({status:"approved",reviewed_at:new Date().toISOString()}).eq("id",item.id);if(updateError)return alert("Record was added, but the submission status could not be updated: "+updateError.message);card.remove();await loadRecords();if(!host.children.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="There are no pending contributor submissions.";host.append(empty);}});const decline=document.createElement("button");decline.type="button";decline.className="small-button";decline.textContent="Decline";decline.addEventListener("click",async()=>{decline.disabled=true;const {error:updateError}=await client.from("record_submissions").update({status:"declined",reviewed_at:new Date().toISOString()}).eq("id",item.id);if(updateError){decline.disabled=false;return alert(updateError.message);}card.remove();if(!host.children.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="There are no pending contributor submissions.";host.append(empty);}});actions.append(approve,decline);card.append(heading,details,byline,actions);host.append(card);});
+  }
   async function loadCorrectionInbox(){
     const section=$("correction-inbox"),host=$("correction-inbox-list");if(!section||!host||!currentUser)return;
     section.hidden=false;host.textContent="Loading suggestions…";
@@ -309,7 +316,7 @@
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if($("confidence-editor"))$("confidence-editor").hidden=!user;
     if(recordsList)renderRecords();
-    if($("correction-inbox")){if(currentUser)loadCorrectionInbox();else $("correction-inbox").hidden=true;}
+    if($("correction-inbox")){if(currentUser){loadCorrectionInbox();loadRecordSubmissions();}else{$("correction-inbox").hidden=true;$("record-submission-inbox").hidden=true;}}
     // Refresh the portrait action after the asynchronous owner session check completes.
     syncFaceButton();
   }
