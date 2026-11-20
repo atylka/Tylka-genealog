@@ -9698,3 +9698,8 @@ body[data-page="upload"] #add-record-modal.upload-page-form{position:static!impo
 body[data-page="upload"] #add-record-modal.upload-page-form .modal-card{width:100%!important;max-width:100%!important;max-height:none!important;overflow:visible!important;margin:1rem auto!important;box-shadow:none!important}
 body[data-page="upload"] #add-record-modal.upload-page-form .modal-close{display:none!important}
 body[data-page="upload"] #add-record-modal.upload-page-form[hidden]{display:none!important}
+
+/* Shared owner-only Add Record action in the site header. */
+.primary-nav .header-add-record-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:.72rem 1.05rem;border:1px solid var(--accent-dark);background:var(--accent-dark);color:#f4ead7;font-family:inherit;font-size:.88rem;font-weight:700;letter-spacing:.025em;text-decoration:none;box-shadow:0 4px 12px rgba(70,20,25,.14)}
+.primary-nav .header-add-record-button:hover,.primary-nav .header-add-record-button[aria-current=page]{background:#63323a;color:#fff8f2;border-color:#63323a}
+@media(max-width:800px){.primary-nav .header-add-record-button{width:100%;justify-content:flex-start;min-height:48px;margin:.25rem 0;padding:.7rem .9rem}}
