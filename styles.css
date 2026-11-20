@@ -9598,3 +9598,10 @@ body:not(.no-site-frame)>.site-header{margin:0 8px!important;padding:6px 9px!imp
 .coverage-vector-map path.coverage-map-area:not(.is-empty){cursor:pointer!important;stroke:#fff9e9!important;stroke-width:1.8px!important}
 .coverage-vector-map path.coverage-map-area:not(.is-empty):hover,.coverage-vector-map path.coverage-map-area:not(.is-empty).is-hovered{stroke:#42222a!important;stroke-width:3px!important;filter:brightness(.9)}
 .coverage-vector-map path.coverage-map-area.is-selected{stroke:#35131a!important;stroke-width:3.5px!important}
+
+/* Map label clarity: no outline or halo */
+.coverage-map-label{stroke:none!important;paint-order:normal!important;fill:#241e18!important;font-weight:700!important;text-shadow:none!important;filter:none!important}
+/* Keep page contents inside site frame and avoid horizontal overflow */
+body:not(.no-site-frame){overflow-x:hidden!important}
+body:not(.no-site-frame)>main.archive-page,body:not(.no-site-frame)>main.coverage-home-main,body:not(.no-site-frame)>main.ancestor-page,body:not(.no-site-frame)>main.chrono-page{box-sizing:border-box!important;max-width:100%!important;overflow-x:hidden!important}
+.coverage-map-frame,.coverage-panel,.coverage-map-column,#coverage-map-canvas,.coverage-detail{box-sizing:border-box!important;max-width:100%!important}
