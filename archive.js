@@ -38,7 +38,7 @@
     recordsList.classList.toggle("all-records-view",activeFolder==="all");
     recordsList.replaceChildren();
     const term=(recordSearch?.value||"").trim().toLowerCase();
-    const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned,r.accession_number,r.collection_name,r.record_type,r.source_reference].join(" ").toLowerCase().includes(term));
+    const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned,r.accession_number,r.collection_name,r.record_type,r.source_reference].join(" ").toLowerCase().includes(term));\n    filtered.sort((a,b)=>{const da=Date.parse(a.record_date||a.registration_date||"");const db=Date.parse(b.record_date||b.registration_date||"");const va=Number.isFinite(da)?da:null,vb=Number.isFinite(db)?db:null;if(va===null&&vb===null)return 0;if(va===null)return 1;if(vb===null)return -1;return va-vb;});
     if(!filtered.length){const p=document.createElement("p");p.className="empty-state";p.textContent=records.length?"No records match this search.":"No records have been added yet.";recordsList.append(p);return;}
     const wrap=document.createElement("div");wrap.className="geneteka-results-wrap";
     const table=document.createElement("table");table.className="geneteka-results-table";
