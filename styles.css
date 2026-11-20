@@ -9654,3 +9654,11 @@ body:not(.no-site-frame)>.site-footer{
 .archive-folder{display:inline-flex!important;flex:0 0 auto!important;width:auto!important;min-width:120px!important;text-align:center!important;margin:0!important}
 .archive-folder-content{width:100%!important;min-width:0!important;box-sizing:border-box!important}
 @media(max-width:720px){.archive-folder{flex:1 1 calc(50% - 8px)!important;min-width:0!important}}
+
+/* 2026-11-20: taller archive index rows and roomy record results */
+.geneteka-results-table{line-height:1.65!important;font-size:.93rem!important}
+.geneteka-results-table td{padding:13px 14px!important;vertical-align:middle!important;min-height:76px}
+.geneteka-record-row{height:auto!important}
+.archive-result-title small{line-height:1.65!important}
+.archive-result-scan .record-thumbnail{width:72px!important;height:72px!important;min-width:72px!important}
+.geneteka-results-wrap{min-height:120px!important}
