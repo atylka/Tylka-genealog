@@ -15,7 +15,7 @@ function isMalopolskie(f){const p=f.properties||{};const code=String(p.JPT_KOD_J
 function isUsFeature(f){const p=f.properties||{};return norm(p.country||"").includes("united states")||p["ISO3166-1-Alpha-3"]==="USA";}
 function recordMatchesArea(r,f){const loc=norm(r.location);if(!loc)return false;const display=norm(featureName(f));const source=norm(rawFeatureName(f).replace(/^powiat\\s+/i,"").replace(/^miasto na prawach powiatu\\s*/i,""));const code=String(f.properties?.JPT_KOD_JE||"");const english=norm(POLISH_DISTRICT_NAMES[code]||"");return [display,source,english].some(name=>name.length>2&&(loc.includes(name)||loc.split(" ").includes(name)));}
 function matching(f){return records.filter(r=>recordMatchesArea(r,f));}
-function color(n,max){if(!n)return "#d0c8b8";const step=Math.floor((n-1)/3);const shades=["#d9a29a","#c9827b","#bd6a62","#ad5552","#963541","#842a37","#70202b","#5e1725"];return shades[Math.min(step,shades.length-1)];}
+function color(n,max){if(!n)return "#d0c8b8";const step=Math.floor((n-1)/5);const shades=["#d9a29a","#c9827b","#bd6a62","#ad5552","#963541","#842a37","#70202b","#5e1725"];return shades[Math.min(step,shades.length-1)];}
 function styleFeature(f){const n=matching(f).length,max=Math.max(1,...features.map(x=>matching(x).length));return{color:"#f5ead4",weight:1.25,opacity:1,fillColor:color(n,max),fillOpacity:n?0.9:0.72};}
 function geometryRings(g){
  if(!g)return [];
