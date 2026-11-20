@@ -43,7 +43,7 @@
     const wrap=document.createElement("div");wrap.className="geneteka-results-wrap";
     const table=document.createElement("table");table.className="geneteka-results-table";
     const thead=document.createElement("thead"),trh=document.createElement("tr");
-    ["Date","Record / name","People mentioned","Location","Scan"].forEach(label=>{const th=document.createElement("th");th.scope="col";th.textContent=label;trh.append(th);});
+    ["Date","Record / name","People mentioned","Location","Scan",...(currentUser?["Actions"]:[])].forEach(label=>{const th=document.createElement("th");th.scope="col";th.textContent=label;trh.append(th);});
     thead.append(trh);table.append(thead);const tbody=document.createElement("tbody");
     filtered.forEach(record=>{
       const tr=document.createElement("tr");tr.className="geneteka-record-row";tr.tabIndex=0;tr.setAttribute("role","button");tr.setAttribute("aria-label","Open record: "+(record.title||"Untitled record"));
