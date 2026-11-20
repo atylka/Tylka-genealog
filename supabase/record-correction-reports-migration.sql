@@ -30,3 +30,38 @@ drop policy if exists "Only archive owner can delete correction suggestions" on 
 create policy "Only archive owner can delete correction suggestions"
 on public.record_correction_reports for delete to authenticated
 using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid);
+
+-- Contributor record submissions. Public submissions remain private until owner approval.
+create table if not exists public.record_submissions (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 1 and 180),
+  category text not null check (category in ('births','deaths','marriages','immigration','photos','notes')),
+  record_date text,
+  location text,
+  persons_mentioned text not null default '',
+  submitter_name text not null default '' check (char_length(submitter_name) <= 100),
+  notes text not null default '' check (char_length(notes) <= 4000),
+  status text not null default 'pending' check (status in ('pending','approved','declined')),
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+alter table public.record_submissions enable row level security;
+grant insert on public.record_submissions to anon, authenticated;
+grant select, update, delete on public.record_submissions to authenticated;
+drop policy if exists "Visitors can submit family records for review" on public.record_submissions;
+create policy "Visitors can submit family records for review"
+on public.record_submissions for insert to anon, authenticated
+with check (status = 'pending');
+drop policy if exists "Only archive owner can review contributor submissions" on public.record_submissions;
+create policy "Only archive owner can review contributor submissions"
+on public.record_submissions for select to authenticated
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid);
+drop policy if exists "Only archive owner can update contributor submissions" on public.record_submissions;
+create policy "Only archive owner can update contributor submissions"
+on public.record_submissions for update to authenticated
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid)
+with check (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid);
+drop policy if exists "Only archive owner can delete contributor submissions" on public.record_submissions;
+create policy "Only archive owner can delete contributor submissions"
+on public.record_submissions for delete to authenticated
+using (auth.uid() = '7a8cd586-c68f-4078-b61d-a87f3842b07e'::uuid);
