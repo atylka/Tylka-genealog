@@ -6,7 +6,7 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLo
 const canon=value=>{const key=String(value||"").toLowerCase().trim().replace(/[ &-]+/g,"_");const aliases={research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"};return aliases[key]||key;};
 let records=[],activeFolder="all";
 const AREA_ALIAS_GROUPS=[
-["bochnia"],["brzesko"],["chrzanow","dabrowa","dabrowa tarnowska"],["gorlice"],["krakowski","krakow county","powiat krakowski"],["limanowa"],["miechow"],["myslenice"],["nowy sadecki","nowy sacz county"],["nowy targ"],["olkusz"],["oswiecim"],["proszowice"],["sucha beskidzka"],["tarnowski","tarnow county"],["tatrzanski","tatra county"],["wadowice"],["wieliczka"],["krakow city","krakow"],["nowy sacz city"],["tarnow city"]
+["bochnia"],["brzesko"],["chrzanow"],["dabrowa","dabrowa tarnowska"],["gorlice"],["krakowski","krakow county","powiat krakowski"],["limanowa"],["miechow"],["myslenice"],["nowy sadecki","nowy sacz county"],["nowy targ"],["olkusz"],["oswiecim"],["proszowice"],["sucha beskidzka"],["tarnowski","tarnow county"],["tatrzanski","tatra county"],["wadowice"],["wieliczka"],["krakow city","krakow (city)","city of krakow"],["nowy sacz city","nowy sacz (city)","city of nowy sacz"],["tarnow city","tarnow (city)","city of tarnow"]
 ];
 function areaTerms(){const key=norm(area);const group=AREA_ALIAS_GROUPS.find(items=>items.some(item=>norm(item)===key));return group||[key];}
 function locationMatches(r){const loc=norm([r.location,r.description].filter(Boolean).join(" "));return areaTerms().some(item=>item.length>2&&(" "+loc+" ").includes(" "+norm(item)+" "));}
