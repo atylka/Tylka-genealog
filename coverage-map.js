@@ -75,9 +75,9 @@ function drawMap(){
   path.setAttribute("fill-rule","evenodd");
   path.setAttribute("class","coverage-map-area"+(enabled?"":" is-empty"));
   path.setAttribute("fill",color(n,max));
-  path.setAttribute("tabindex",enabled?"0":"-1");
-  path.setAttribute("role",enabled?"button":"img");
-  path.setAttribute("aria-disabled",enabled?"false":"true");
+  path.setAttribute("tabindex","0");
+  path.setAttribute("role","button");
+  path.setAttribute("aria-disabled","false");
   path.setAttribute("aria-label",featureName(f)+", "+n+" indexed records"+(enabled?"":"; unavailable until records are added"));
   const tip=document.createElementNS("http://www.w3.org/2000/svg","title");
   tip.textContent=featureName(f)+" · "+n+" records";path.append(tip);
@@ -116,13 +116,13 @@ function refreshMapStyles(){
   p.setAttribute("fill",color(n,max));
   p.classList.toggle("is-selected",selectedFeature===f);
   p.classList.toggle("is-empty",!enabled);
-  p.setAttribute("tabindex",enabled?"0":"-1");
-  p.setAttribute("role",enabled?"button":"img");
-  p.setAttribute("aria-disabled",enabled?"false":"true");
+  p.setAttribute("tabindex","0");
+  p.setAttribute("role","button");
+  p.setAttribute("aria-disabled","false");
   p.setAttribute("aria-pressed",selectedFeature===f?"true":"false");
  });
 }
-function selectArea(f){if(!matching(f).length)return;selectedFeature=f;refreshMapStyles();renderStats();const found=matching(f);title.textContent=featureName(f);count.textContent=found.length+" matching indexed record"+(found.length===1?"":"s");recordBox.replaceChildren();if(!found.length){recordBox.append(text("p","No records could be matched to this administrative-area name. Town-level locations may need a town-to-county match to be counted here."));return;}found.sort((a,b)=>String(a.record_date||"").localeCompare(String(b.record_date||"")));found.slice(0,12).forEach(r=>{const a=text("a",r.title||"Untitled record","coverage-record-link");a.href="archive.html?record="+encodeURIComponent(r.id);const meta=text("small",[r.record_date,r.location].filter(Boolean).join(" · "));const item=document.createElement("div");item.className="coverage-record-item";item.append(a,meta);recordBox.append(item);});if(found.length>12)recordBox.append(text("p","Showing 12 of "+found.length+" matching records."));}
+function openArea(f){window.location.href="area-records.html?country="+encodeURIComponent(country.value)+"&area="+encodeURIComponent(featureName(f));}\nfunction selectArea(f){if(!matching(f).length)return;selectedFeature=f;refreshMapStyles();renderStats();const found=matching(f);title.textContent=featureName(f);count.textContent=found.length+" matching indexed record"+(found.length===1?"":"s");recordBox.replaceChildren();if(!found.length){recordBox.append(text("p","No records could be matched to this administrative-area name. Town-level locations may need a town-to-county match to be counted here."));return;}found.sort((a,b)=>String(a.record_date||"").localeCompare(String(b.record_date||"")));found.slice(0,12).forEach(r=>{const a=text("a",r.title||"Untitled record","coverage-record-link");a.href="archive.html?record="+encodeURIComponent(r.id);const meta=text("small",[r.record_date,r.location].filter(Boolean).join(" · "));const item=document.createElement("div");item.className="coverage-record-item";item.append(a,meta);recordBox.append(item);});if(found.length>12)recordBox.append(text("p","Showing 12 of "+found.length+" matching records."));}
 function renderStats(){
  if(!statsBody)return;
  statsBody.replaceChildren();
@@ -136,7 +136,7 @@ function renderStats(){
   tr.setAttribute("aria-label",row.name+": "+row.count.toLocaleString()+" matching records"+(row.count?"":"; unavailable until records are added"));
   tr.append(text("td",row.name),text("td",row.count.toLocaleString()));
   const choose=()=>{if(!row.count)return;selectArea(row.feature);const target=areaPaths.get(row.feature);if(target)target.focus();};
-  if(row.count){tr.addEventListener("click",choose);tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();choose();}});}
+  tr.addEventListener("click",()=>openArea(row.feature));tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArea(row.feature);}});
   statsBody.append(tr);
  });
  if(statsTotal)statsTotal.textContent=total.toLocaleString();
