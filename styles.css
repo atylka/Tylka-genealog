@@ -9616,3 +9616,23 @@ body:not(.no-site-frame)>main.location-page,
 body:not(.no-site-frame)>.site-footer{
  border-left:0!important;
 }
+
+/* Archive search results styled as a compact genealogical index */
+.geneteka-results-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);background:rgba(248,245,232,.62)}
+.geneteka-results-table{width:100%;border-collapse:collapse;min-width:680px;font-family:Georgia,"Times New Roman",serif;font-size:.88rem;line-height:1.45}
+.geneteka-results-table thead{background:rgba(105,75,45,.13)}
+.geneteka-results-table th{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);color:var(--accent-dark);font-weight:700;white-space:nowrap}
+.geneteka-results-table td{padding:8px 10px;border-bottom:1px solid rgba(120,95,65,.28);vertical-align:middle}
+.geneteka-record-row{cursor:pointer;transition:background .12s}
+.geneteka-record-row:hover,.geneteka-record-row:focus-visible{background:rgba(135,80,50,.12);outline:1px solid var(--accent);outline-offset:-1px}
+.archive-result-date{white-space:nowrap;color:var(--accent);font-weight:600}
+.archive-result-title strong,.archive-result-title small{display:block}
+.archive-result-title strong{font-weight:600;color:var(--ink)}
+.archive-result-title small{font: .72rem/1.5 Arial,sans-serif;color:var(--muted);margin-top:2px}
+.archive-result-scan .record-thumbnail{width:58px;height:58px;min-width:58px;overflow:hidden}
+.archive-result-scan .record-thumbnail img{width:100%;height:100%;object-fit:cover}
+.archive-result-scan{text-align:center}
+.archive-result-actions{white-space:nowrap}
+.archive-result-actions .small-button{margin:2px}
+.archive-scan-label{font-size:.72rem;color:var(--muted)}
+@media(max-width:720px){.geneteka-results-table{font-size:.8rem}.geneteka-results-table td,.geneteka-results-table th{padding:7px}}
