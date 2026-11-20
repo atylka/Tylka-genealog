@@ -9703,3 +9703,57 @@ body[data-page="upload"] #add-record-modal.upload-page-form[hidden]{display:none
 .primary-nav .header-add-record-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:.72rem 1.05rem;border:1px solid var(--accent-dark);background:var(--accent-dark);color:#f4ead7;font-family:inherit;font-size:.88rem;font-weight:700;letter-spacing:.025em;text-decoration:none;box-shadow:0 4px 12px rgba(70,20,25,.14)}
 .primary-nav .header-add-record-button:hover,.primary-nav .header-add-record-button[aria-current=page]{background:#63323a;color:#fff8f2;border-color:#63323a}
 @media(max-width:800px){.primary-nav .header-add-record-button{width:100%;justify-content:flex-start;min-height:48px;margin:.25rem 0;padding:.7rem .9rem}}
+
+
+/* 2026-11-20: compact, closely grouped header navigation controls */
+.primary-nav{
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex-wrap:nowrap!important;
+  gap:6px!important;
+}
+.primary-nav>a{
+  padding:5px 7px!important;
+  white-space:nowrap!important;
+}
+.primary-nav .header-add-record-button,
+.primary-nav .owner-sign-in-button{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-height:32px!important;
+  margin:0!important;
+  padding:5px 10px!important;
+  border-radius:2px!important;
+  font-size:.76rem!important;
+  line-height:1.2!important;
+  letter-spacing:.01em!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+.primary-nav .header-add-record-button{background:var(--accent-dark)!important}
+.primary-nav .owner-sign-in-button{background:#741923!important}
+.primary-nav .header-add-record-button:hover,
+.primary-nav .owner-sign-in-button:hover{transform:none!important;filter:brightness(1.12)}
+@media(max-width:800px){
+  .primary-nav.is-open{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:wrap!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:6px!important;
+  }
+  .primary-nav.is-open>a{
+    width:auto!important;
+    border-top:0!important;
+    padding:6px 7px!important;
+  }
+  .primary-nav .header-add-record-button,
+  .primary-nav .owner-sign-in-button{
+    width:auto!important;
+    min-height:32px!important;
+    margin:0!important;
+    justify-content:center!important;
+  }
+}
