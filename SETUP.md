@@ -42,3 +42,10 @@ GitHub Pages should publish the `main` branch from the repository root. After ap
 - Anyone with a public asset URL can access that file. Only upload material intended for public family-history access.
 - Keep untouched master scans backed up separately. Do not overwrite original scans with enhanced or annotated copies.
 - Never commit passwords, service-role keys, or private API tokens to this public repository.
+
+
+## Additional genealogy search features
+
+The Geneteka-style search hub is available at `search.html`. It includes global name/place/year/category search, a parish and place directory generated from saved record locations, an alphabetical surname index, collection statistics, and CSV export. Record detail views remain available from the result links.
+
+To enable visitor correction reports and contributor record submissions, run `supabase/record-correction-reports-migration.sql` in the Supabase SQL Editor. The migration creates the public submission tables and owner-only review permissions. After it is run, the Archive page displays pending correction reports and contributor submissions for the signed-in owner to review.
