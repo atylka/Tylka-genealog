@@ -242,6 +242,25 @@
     showModal("record-detail-modal");
   }
 
+  const correctionForm=$("record-correction-form");
+  correctionForm?.addEventListener("submit",async event=>{
+    event.preventDefault();
+    const record=window.tylkaActiveDetailRecord,status=$("correction-submit-status"),button=correctionForm.querySelector('button[type="submit"]');
+    if(!record){status.textContent="Open a record before submitting a correction.";return;}
+    button.disabled=true;status.textContent="Sending suggestion…";
+    try{const {error}=await client.from("record_correction_reports").insert({record_id:record.id,visitor_name:$("correction-visitor-name").value.trim(),issue_type:$("correction-issue-type").value,message:$("correction-message").value.trim()});if(error)throw error;correctionForm.reset();status.textContent="Thank you. Your correction suggestion has been sent to the archive owner.";}
+    catch(error){status.textContent="Could not send this suggestion. The correction-report database migration may not have been installed yet. "+(error.message||"");}
+    finally{button.disabled=false;}
+  });
+  async function loadCorrectionInbox(){
+    const section=$("correction-inbox"),host=$("correction-inbox-list");if(!section||!host||!currentUser)return;
+    section.hidden=false;host.textContent="Loading suggestions…";
+    const {data,error}=await client.from("record_correction_reports").select("id,record_id,visitor_name,issue_type,message,created_at").eq("status","pending").order("created_at",{ascending:true});
+    host.replaceChildren();
+    if(error){const p=document.createElement("p");p.className="empty-state";p.textContent="Correction inbox unavailable: "+error.message;host.append(p);return;}
+    if(!data?.length){const p=document.createElement("p");p.className="empty-state";p.textContent="There are no pending correction suggestions.";host.append(p);return;}
+    data.forEach(report=>{const card=document.createElement("article");card.className="correction-report-card";const heading=document.createElement("strong");heading.textContent=report.issue_type+" · "+(records.find(r=>r.id===report.record_id)?.title||"Record");const details=document.createElement("p");details.textContent=report.message;const byline=document.createElement("small");byline.textContent=(report.visitor_name||"Visitor")+" · "+new Date(report.created_at).toLocaleString();const actions=document.createElement("div");actions.className="correction-report-actions";const reviewed=document.createElement("button");reviewed.type="button";reviewed.className="small-button";reviewed.textContent="Mark reviewed";reviewed.addEventListener("click",async()=>{reviewed.disabled=true;const {error:updateError}=await client.from("record_correction_reports").update({status:"reviewed",reviewed_at:new Date().toISOString()}).eq("id",report.id);if(updateError){reviewed.disabled=false;return alert(updateError.message);}card.remove();if(!host.children.length){const empty=document.createElement("p");empty.className="empty-state";empty.textContent="There are no pending correction suggestions.";host.append(empty);}});actions.append(reviewed);card.append(heading,details,byline,actions);host.append(card);});
+  }
   $("detail-edit-record")?.addEventListener("click",()=>{const record=window.tylkaActiveDetailRecord;if(record&&currentUser)beginEditRecord(record);});
   if($("save-confidence"))$("save-confidence").addEventListener("click",async()=>{const record=window.tylkaActiveDetailRecord;if(!record||!currentUser)return;const value=$("detail-confidence-select").value;const clean=String(record.description||"").replace(/^Research confidence:\s*(?:confirmed|probable|uncertain|unverified|unassessed)\s*\r?\n?/im,"").replace(/^Person relationship:\s*[^\r\n]*\s*/gim,"").replace(/^Record participant:\s*[^\r\n]*\s*/gim,"");const description="Research confidence: "+value+(clean?"\n\n"+clean:"");const button=$("save-confidence");button.disabled=true;$("confidence-save-status").textContent="Saving…";try{const {error}=await client.from("archive_records").update({description}).eq("id",record.id);if(error)throw error;record.description=description;$("detail-confidence").textContent="Research confidence: "+confidenceLabel(value);$("detail-confidence").className="detail-confidence confidence-"+value;$("confidence-save-status").textContent="Saved ✓";renderRecords();}catch(error){$("confidence-save-status").textContent=error.message||"Could not save assessment.";}finally{button.disabled=false;}});
   async function loadRecords(){
@@ -290,6 +309,7 @@
     if($("archive-status"))$("archive-status").textContent=user?"Owner mode · private attachments unlocked":"Public visitor view";
     if($("confidence-editor"))$("confidence-editor").hidden=!user;
     if(recordsList)renderRecords();
+    if($("correction-inbox")){if(currentUser)loadCorrectionInbox();else $("correction-inbox").hidden=true;}
     // Refresh the portrait action after the asynchronous owner session check completes.
     syncFaceButton();
   }
