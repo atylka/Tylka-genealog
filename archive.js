@@ -3,7 +3,7 @@
   const configured = config.url && config.anonKey && !config.url.includes("YOUR_") && !config.anonKey.includes("YOUR_");
   const $ = id => document.getElementById(id);
   const recordsList = $("records-list"), recordSearch = $("record-search");
-  const categoryNames = {births:"Births & baptisms",deaths:"Deaths & burials",marriages:"Marriages & spouses",immigration:"Immigration & naturalization",photos:"Family photographs",notes:"Sources & research notes"};
+  const categoryNames = {births:"Births",deaths:"Deaths",marriages:"Marriages",immigration:"Immigration",photos:"Photographs",notes:"Sources"};
   let client = null, currentUser = null, records = [], activeFolder = "all", catalogFieldsAvailable = true;
   const canonical = value => { const key=String(value||"").toLowerCase().trim().replace(/[ &-]+/g,"_"); const aliases={research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"}; return aliases[key]||key; };
   const setMessage = (node,text,error=false) => { if(node){node.textContent=text;node.classList.toggle("message-error",error);} };
