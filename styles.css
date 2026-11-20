@@ -9677,3 +9677,22 @@ body:not(.no-site-frame)>.site-footer{
 .geneteka-results-table th,.geneteka-results-table td{overflow-wrap:anywhere!important}
 .geneteka-results-table .archive-result-actions{width:auto!important;white-space:normal!important}
 
+
+/* 2026-11-20: fit compact index rows within the existing archive results area only */
+#records-list{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+#records-list .geneteka-results-wrap{width:100%;max-width:100%;min-width:0;overflow-x:hidden;box-sizing:border-box}
+#records-list .geneteka-results-table{width:100%;min-width:0;max-width:100%;table-layout:fixed;border-collapse:collapse;font-size:.82rem;line-height:1.35;box-sizing:border-box}
+#records-list .geneteka-results-table th,#records-list .geneteka-results-table td{padding:6px 8px;white-space:normal;overflow-wrap:anywhere;word-break:normal;vertical-align:middle}
+#records-list .geneteka-results-table th{white-space:normal}
+#records-list .archive-result-date{white-space:normal}
+#records-list .archive-result-title strong{font-size:.85rem}
+#records-list .archive-result-title small{font-size:.68rem}
+#records-list .archive-result-scan .record-thumbnail{width:44px;height:44px;min-width:44px}
+#records-list .archive-result-actions .small-button{padding:4px 7px;font-size:.72rem;margin:1px}
+#records-list .geneteka-results-table th:nth-child(1),#records-list .geneteka-results-table td:nth-child(1){width:12%}
+#records-list .geneteka-results-table th:nth-child(2),#records-list .geneteka-results-table td:nth-child(2){width:23%}
+#records-list .geneteka-results-table th:nth-child(3),#records-list .geneteka-results-table td:nth-child(3){width:25%}
+#records-list .geneteka-results-table th:nth-child(4),#records-list .geneteka-results-table td:nth-child(4){width:22%}
+#records-list .geneteka-results-table th:nth-child(5),#records-list .geneteka-results-table td:nth-child(5){width:8%}
+#records-list .geneteka-results-table th:nth-child(6),#records-list .geneteka-results-table td:nth-child(6){width:10%}
+@media(max-width:720px){#records-list .geneteka-results-table{font-size:.75rem}#records-list .geneteka-results-table th,#records-list .geneteka-results-table td{padding:5px}}
