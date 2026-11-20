@@ -9757,3 +9757,9 @@ body[data-page="upload"] #add-record-modal.upload-page-form[hidden]{display:none
     justify-content:center!important;
   }
 }
+
+
+/* 2026-11-20: compact archive folder selectors; size each button to its label. */
+#private-archive .archive-folders{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:5px!important}
+#private-archive .archive-folders .archive-folder{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:.38rem .72rem!important;font-size:.78rem!important;line-height:1.2!important;white-space:nowrap!important;text-align:center!important}
+@media(max-width:720px){#private-archive .archive-folders .archive-folder{flex:0 0 auto!important;min-width:0!important;padding:.36rem .62rem!important;font-size:.76rem!important}}
