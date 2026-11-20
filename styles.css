@@ -9763,3 +9763,24 @@ body[data-page="upload"] #add-record-modal.upload-page-form[hidden]{display:none
 #private-archive .archive-folders{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:5px!important}
 #private-archive .archive-folders .archive-folder{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:.38rem .72rem!important;font-size:.78rem!important;line-height:1.2!important;white-space:nowrap!important;text-align:center!important}
 @media(max-width:720px){#private-archive .archive-folders .archive-folder{flex:0 0 auto!important;min-width:0!important;padding:.36rem .62rem!important;font-size:.76rem!important}}
+
+
+/* 20261120-geneteka-area-search-1: Geneteka-style regional search with persistent folder tabs above results. */
+.area-search-page{max-width:1120px!important}
+.area-search-panel{width:100%;box-sizing:border-box}
+.area-search-controls{display:grid;grid-template-columns:1.2fr 1.2fr .65fr;gap:12px;align-items:end;margin:18px 0 14px}
+.area-search-controls label{display:flex;flex-direction:column;gap:5px;font-size:.84rem;font-weight:600;color:#604638}
+.area-search-controls input{width:100%;box-sizing:border-box;min-height:40px;padding:8px 10px;border:1px solid #b9a78e;background:#fffdf7;color:#33251d;border-radius:3px}
+.area-results-section{width:100%;min-width:0}
+.area-folder-bar{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:0 0 12px;padding:8px 0 10px;border-bottom:1px solid #b9a78e}
+.area-folder-button{flex:0 0 auto;width:auto;min-width:0;margin:0;padding:7px 11px;border:1px solid #b9a78e;border-radius:3px;background:#eee5d5;color:#563c30;font:600 .8rem/1.2 Georgia,serif;cursor:pointer}
+.area-folder-button:hover{background:#e4d4bd}
+.area-folder-button.is-active{background:#641f2a;border-color:#641f2a;color:#fff8e9}
+.area-results-section .geneteka-results-wrap{width:100%;overflow-x:auto}
+.area-results-section .geneteka-results-table{width:100%;min-width:760px;border-collapse:collapse;font-size:.84rem}
+.area-results-section .geneteka-results-table th{background:#e8dcc7;color:#49352b;text-align:left;font-weight:700;white-space:nowrap}
+.area-results-section .geneteka-results-table th,.area-results-section .geneteka-results-table td{padding:9px 10px;border:1px solid #d0c1a8;vertical-align:top}
+.area-results-section .geneteka-results-table tbody tr:nth-child(even){background:rgba(222,210,188,.24)}
+.area-results-section .geneteka-results-table tbody tr:hover{background:rgba(169,119,82,.14)}
+.area-results-section .geneteka-results-table a{color:#702630;text-decoration:underline;text-underline-offset:2px;font-weight:600}
+@media(max-width:700px){.area-search-controls{grid-template-columns:1fr 1fr}.area-search-controls label:first-child{grid-column:1/-1}.area-folder-bar{gap:4px}.area-folder-button{padding:7px 9px;font-size:.76rem}}
