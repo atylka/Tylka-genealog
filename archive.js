@@ -33,7 +33,7 @@
   document.querySelectorAll("[data-close-modal]").forEach(btn=>btn.addEventListener("click",closeModals));
   document.querySelectorAll(".site-modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)closeModals();}));
   const addRecordButton=$("open-add-record");
-  if(addRecordButton)addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}editingRecordId=null;uploadForm?.reset();$("record-person-rows")?.replaceChildren();$("record-witness-rows")?.replaceChildren();$("record-source-entries")?.replaceChildren();$("add-record-title").textContent="Add a record";const saveButton=uploadForm?.querySelector("button[type=submit]");if(saveButton)saveButton.textContent="Save record";updateMarriageFields();setMessage($("upload-message"),"");showModal("add-record-modal");});
+  if(addRecordButton&&addRecordButton.tagName==="BUTTON")addRecordButton.addEventListener("click",()=>{if(!currentUser){document.dispatchEvent(new CustomEvent("tylka:open-owner-sign-in"));return;}editingRecordId=null;uploadForm?.reset();$("record-person-rows")?.replaceChildren();$("record-witness-rows")?.replaceChildren();$("record-source-entries")?.replaceChildren();$("add-record-title").textContent="Add a record";const saveButton=uploadForm?.querySelector("button[type=submit]");if(saveButton)saveButton.textContent="Save record";updateMarriageFields();setMessage($("upload-message"),"");showModal("add-record-modal");});
   function renderRecords() {
     recordsList.classList.toggle("all-records-view",activeFolder==="all");
     recordsList.replaceChildren();
