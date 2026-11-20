@@ -9645,3 +9645,12 @@ body:not(.no-site-frame)>.site-footer{
 .archive-folder-content{width:100%!important;min-width:0!important;box-sizing:border-box!important}
 #owner-tools{display:none!important}
 .archive-actions{display:flex!important;justify-content:flex-start!important}
+
+/* 2026-11-19: archive folder selectors horizontally arranged above results */
+.folder-archive-layout{display:flex!important;flex-direction:column!important;gap:12px!important}
+.archive-folders{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;width:100%!important}
+.archive-folders .cabinet-hint{flex-basis:100%!important;margin:0 0 4px!important}
+.archive-folders .eyebrow,.archive-folders h3{margin:0 8px 0 0!important}
+.archive-folder{display:inline-flex!important;flex:0 0 auto!important;width:auto!important;min-width:120px!important;text-align:center!important;margin:0!important}
+.archive-folder-content{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+@media(max-width:720px){.archive-folder{flex:1 1 calc(50% - 8px)!important;min-width:0!important}}
