@@ -9636,3 +9636,12 @@ body:not(.no-site-frame)>.site-footer{
 .archive-result-actions .small-button{margin:2px}
 .archive-scan-label{font-size:.72rem;color:var(--muted)}
 @media(max-width:720px){.geneteka-results-table{font-size:.8rem}.geneteka-results-table td,.geneteka-results-table th{padding:7px}}
+
+/* Archive folders stacked above record listing */
+.folder-archive-layout{display:flex!important;flex-direction:column!important;gap:12px!important}
+.archive-folders{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:none!important;box-sizing:border-box!important}
+.archive-folders .cabinet-hint{margin:0 0 8px!important}
+.archive-folder{display:block!important;width:100%!important;box-sizing:border-box!important;text-align:left!important;margin:3px 0!important}
+.archive-folder-content{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+#owner-tools{display:none!important}
+.archive-actions{display:flex!important;justify-content:flex-start!important}
