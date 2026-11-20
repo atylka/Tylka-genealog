@@ -9689,3 +9689,12 @@ body:not(.no-site-frame)>.site-footer{
 /* 2026-11-20: consistent narrower site frame across every page */
 @media(min-width:801px){body:not(.no-site-frame){width:min(calc(100% - 48px),900px)!important;max-width:900px!important;margin:12px auto 0!important}body.coverage-home{width:min(calc(100% - 48px),900px)!important;max-width:900px!important}body:not(.no-site-frame)>main.archive-page,body:not(.no-site-frame)>main.coverage-home-main,body:not(.no-site-frame)>main.ancestor-page{max-width:100%!important}}
 @media(max-width:800px){body:not(.no-site-frame){width:100%!important;max-width:100%!important;margin:0!important}}
+
+
+/* Dedicated Add Record page: show the existing complete form as page content */
+body[data-page="upload"] #private-archive{margin-top:1rem}
+body[data-page="upload"] .archive-actions,body[data-page="upload"] .folder-archive-layout,body[data-page="upload"] #face-crop-modal{display:none!important}
+body[data-page="upload"] #add-record-modal.upload-page-form{position:static!important;inset:auto!important;z-index:auto!important;display:block!important;overflow:visible!important;padding:0!important;background:transparent!important;backdrop-filter:none!important}
+body[data-page="upload"] #add-record-modal.upload-page-form .modal-card{width:100%!important;max-width:100%!important;max-height:none!important;overflow:visible!important;margin:1rem auto!important;box-shadow:none!important}
+body[data-page="upload"] #add-record-modal.upload-page-form .modal-close{display:none!important}
+body[data-page="upload"] #add-record-modal.upload-page-form[hidden]{display:none!important}
