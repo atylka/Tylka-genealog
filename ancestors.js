@@ -1,5 +1,5 @@
 (() => {
- const grid=document.getElementById("ancestor-grid"),empty=document.getElementById("ancestor-empty"),count=document.getElementById("ancestor-count"),addButton=document.getElementById("ancestor-add-button");
+ const grid=document.getElementById("ancestor-grid"),empty=document.getElementById("ancestor-empty"),count=document.getElementById("ancestor-count"),addButton=document.getElementById("ancestor-add-button"),searchInput=document.getElementById("people-index-search"),sortSelect=document.getElementById("people-index-sort"),filterCount=document.getElementById("people-index-filter-count");
  const OWNER_ID="7a8cd586-c68f-4078-b61d-a87f3842b07e";
  const HIDDEN_FLAG="__tylka_hidden_ancestor_card__";
  const HIDDEN_ROW_PREFIX="__TYLKA_HIDDEN_ANCESTOR__:";
@@ -278,7 +278,7 @@
    const title=document.createElement("h3");title.textContent=person.name;
    const birth=document.createElement("p");birth.className="ancestor-card-date";birth.textContent="Birth: "+(profile.birth||"Not recorded");
    const death=document.createElement("p");death.className="ancestor-card-date";death.textContent="Death: "+(profile.death||"Not recorded");
-   body.append(title,birth,death);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));const viewButton=document.createElement("button");viewButton.type="button";viewButton.className="ancestor-view-button";viewButton.textContent="View ancestor";viewButton.addEventListener("click",()=>openPerson(person));card.append(trigger,viewButton);if(isOwner){const removeButton=document.createElement("button");removeButton.type="button";removeButton.className="ancestor-remove-card";removeButton.textContent="Remove";removeButton.title="Hide this ancestor card";removeButton.setAttribute("aria-label","Remove "+person.name+" from the Ancestors page");removeButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();removeAncestorCard(person,removeButton);});card.append(removeButton);}grid.append(card);
+   const summary=document.createElement("p");summary.className="ancestor-card-summary";summary.textContent=(profile.sources||[]).length+" linked records"+((profile.parents||[]).length?" · "+profile.parents.length+" parent links":"");body.append(title,birth,death,summary);trigger.append(body);trigger.addEventListener("click",()=>openPerson(person));const viewButton=document.createElement("button");viewButton.type="button";viewButton.className="ancestor-view-button";viewButton.textContent="View ancestor";viewButton.addEventListener("click",()=>openPerson(person));card.append(trigger,viewButton);if(isOwner){const removeButton=document.createElement("button");removeButton.type="button";removeButton.className="ancestor-remove-card";removeButton.textContent="Remove";removeButton.title="Hide this ancestor card";removeButton.setAttribute("aria-label","Remove "+person.name+" from the Ancestors page");removeButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();removeAncestorCard(person,removeButton);});card.append(removeButton);}grid.append(card);
    window.TylkaThumbnailTools?.attachPerson(image,person,currentRecords,card,(nextUrl,settings)=>{
     person.thumbnail_settings=settings;
     let target=trigger.querySelector(".ancestor-portrait");
@@ -323,6 +323,6 @@
   const profiles=personProfiles(records,uniquePeople);
   render(uniquePeople,profiles);
  }
- if(addButton)addButton.addEventListener("click",openAddModal);
+ if(addButton)addButton.addEventListener("click",openAddModal);if(searchInput)searchInput.addEventListener("input",()=>render(window.__tylkaAncestorPeople||[],window.__tylkaAncestorProfiles||new Map()));if(sortSelect)sortSelect.addEventListener("change",()=>render(window.__tylkaAncestorPeople||[],window.__tylkaAncestorProfiles||new Map()));
  load().catch(error=>{console.error("Ancestor page failed to load:",error);count.textContent="Could not load ancestor cards.";empty.hidden=false;empty.textContent="The ancestor list encountered an error while loading. Please check the browser console.";});document.addEventListener("tylka:auth-changed",load);
 })();
