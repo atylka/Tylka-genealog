@@ -1,4 +1,4 @@
-const VERSION='tylka-app-20261120-geneteka-area-search-1';
+const VERSION='tylka-app-20261120-remove-archive-nav-1';
 const SHELL=['./','./index.html','./archive.html','./add-record.html','./ancestors.html','./location-registry.html','./styles.css?v=20261120-geneteka-area-search-1','./supabase-config.js','./script.js?v=20261102-main-only-transition-1','./site-accessibility.js?v=20261102-a11y2','./site-ui.js?v=20261119-archive-stack-nav-signout-1','./thumbnail-tools.js?v=20261116-site-audit-cache-1','./coverage-map.js?v=20261120-area-routing','./archive.js?v=20261120-syntax-fix-1','./ancestors.js?v=20261120-person-timeline-1','./location-registry.js?v=20261116-site-audit-cache-1','./pwa-register.js?v=20261102-footer-placement-1','./icon.svg','./brand-seal.svg','./manifest.webmanifest','./area-records.html','./area-records.js?v=20261120-geneteka-area-search-1'];
 const EXTERNAL_SHELL=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'];
 self.addEventListener('install',event=>{
