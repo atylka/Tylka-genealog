@@ -9605,3 +9605,14 @@ body:not(.no-site-frame)>.site-header{margin:0 8px!important;padding:6px 9px!imp
 body:not(.no-site-frame){overflow-x:hidden!important}
 body:not(.no-site-frame)>main.archive-page,body:not(.no-site-frame)>main.coverage-home-main,body:not(.no-site-frame)>main.ancestor-page,body:not(.no-site-frame)>main.chrono-page{box-sizing:border-box!important;max-width:100%!important;overflow-x:hidden!important}
 .coverage-map-frame,.coverage-panel,.coverage-map-column,#coverage-map-canvas,.coverage-detail{box-sizing:border-box!important;max-width:100%!important}
+
+/* Remove the visible left-side vertical frame line across site pages */
+body:not(.no-site-frame)>.site-header,
+body:not(.no-site-frame)>main.archive-page,
+body:not(.no-site-frame)>main.coverage-home-main,
+body:not(.no-site-frame)>main.ancestor-page,
+body:not(.no-site-frame)>main.chrono-page,
+body:not(.no-site-frame)>main.location-page,
+body:not(.no-site-frame)>.site-footer{
+ border-left:0!important;
+}
