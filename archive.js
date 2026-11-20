@@ -377,6 +377,12 @@
     const bride=$("record-bride").value.trim(),groom=$("record-groom").value.trim();
     $("record-title").value=bride&&groom?groom+" + "+bride:"";
   }
+  const areaSelect=$("record-area-select");
+  if(areaSelect){
+    const polandAreas=["Bochnia","Brzesko","Chrzanów","Dąbrowa Tarnowska","Gorlice","Kraków County","Limanowa","Miechów","Myślenice","Nowy Sącz County","Nowy Targ","Olkusz","Oświęcim","Proszowice","Sucha Beskidzka","Tarnów County","Tatra County","Wadowice","Wieliczka","Kraków (city)","Nowy Sącz (city)","Tarnów (city)"],usStates=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+    function fillAreas(){const loc=$("record-location")?.value||"";const isUS=/(?:united states|\\busa\\b|\\bu\\.s\\.?\\b)/i.test(loc);areaSelect.replaceChildren();const blank=document.createElement("option");blank.value="";blank.textContent="Choose an area…";areaSelect.append(blank);const list=isUS?usStates:polandAreas;list.forEach(name=>{const opt=document.createElement("option");opt.value=name+(isUS?", United States":", Małopolskie, Poland");opt.textContent=name;areaSelect.append(opt);});}
+    fillAreas();areaSelect.addEventListener("change",()=>{const chosen=areaSelect.value;if(!chosen)return;const input=$("record-location");const existing=input.value.trim();const place=chosen;input.value=existing?(existing.toLowerCase().includes(place.toLowerCase())?existing:existing+", "+place):place;areaSelect.value="";});
+  }
   function updateMarriageFields(){
     const location=$("record-location")?.value||"",isPoland=/(?:poland|polska|rzeczpospolita)/i.test(location),isUnitedStates=/(?:united states|united states of america|\busa\b|\bu\.s\.a\.?\b)/i.test(location);
     const isPolishBirth=$("record-category")?.value==="births"&&isPoland,isUSBirth=$("record-category")?.value==="births"&&isUnitedStates&&!isPoland,isPolishMarriage=$("record-category")?.value==="marriages"&&isPoland,parishField=$("record-parish-field");if(parishField)parishField.hidden=false;
