@@ -269,7 +269,7 @@
     if(!configured||!window.supabase){recordsList.textContent="Archive connection is not configured.";return;}
     client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}));
     await loadRecords();
-    const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);
+    const {data:{session}}=await client.auth.getSession();setOwner(session?.user||null);if(document.body.dataset.page==="upload"&&currentUser)showModal("add-record-modal");
     const requestedRecordKey=new URLSearchParams(window.location.search).get("record");
     if(requestedRecordKey){
       const separator=requestedRecordKey.lastIndexOf("--");
@@ -278,7 +278,7 @@
       if(requestedRecord)await openRecordDetail(requestedRecord);
       else setMessage(recordsList,"That record could not be found in the public archive.",true);
     }
-    client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);loadRecords();});
+    client.auth.onAuthStateChange((_event,s)=>{setOwner(s?.user||null);if(document.body.dataset.page==="upload"&&currentUser)showModal("add-record-modal");loadRecords();});
     // The Supabase auth listener above already handles sign-in changes.
     // Avoid a second fetch from the shared site-ui auth event.
   }
