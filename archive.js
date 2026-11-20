@@ -40,39 +40,23 @@
     const term=(recordSearch?.value||"").trim().toLowerCase();
     const filtered=records.filter(r=>(activeFolder==="all"||canonical(r.category)===activeFolder)&&[r.title,r.description,r.file_name,r.location,r.persons_mentioned,r.accession_number,r.collection_name,r.record_type,r.source_reference].join(" ").toLowerCase().includes(term));
     if(!filtered.length){const p=document.createElement("p");p.className="empty-state";p.textContent=records.length?"No records match this search.":"No records have been added yet.";recordsList.append(p);return;}
+    const wrap=document.createElement("div");wrap.className="geneteka-results-wrap";
+    const table=document.createElement("table");table.className="geneteka-results-table";
+    const thead=document.createElement("thead"),trh=document.createElement("tr");
+    ["Date","Record / name","People mentioned","Location","Scan"].forEach(label=>{const th=document.createElement("th");th.scope="col";th.textContent=label;trh.append(th);});
+    thead.append(trh);table.append(thead);const tbody=document.createElement("tbody");
     filtered.forEach(record=>{
-      if(activeFolder==="all"){
-        const card=document.createElement("article");card.className="record-card record-card-expanded home-search-record-card";
-        card.tabIndex=0;card.setAttribute("role","link");card.setAttribute("aria-label","Open full record details for "+(record.title||"Untitled record"));
-        const open=()=>openRecordDetail(record);
-        card.addEventListener("click",e=>{if(e.target.closest("a,button"))return;open();});
-        card.addEventListener("keydown",e=>{if(e.target!==card)return;if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
-        const hasScan=!!(record.file_path&&isImage(record));
-        if(hasScan){const thumb=makeThumbnail(record);thumb.classList.add("record-thumbnail");card.classList.add("has-scan");card.append(thumb);}else card.classList.add("no-scan");
-        const details=document.createElement("div");details.className="home-search-record-details";
-        const category=document.createElement("span");category.className="record-category";category.textContent=categoryNames[canonical(record.category)]||record.category; 
-        const title=document.createElement("h3");title.textContent=record.title||"Untitled record";
-        const view=document.createElement("button");view.type="button";view.className="small-button record-view-button";view.textContent="View record details";view.setAttribute("aria-label","View record details: "+(record.title||"Untitled record"));view.addEventListener("click",open);
-        details.append(category,title,view);
-        if(record.location){const place=document.createElement("p");place.className="record-location";place.textContent="Location: "+record.location;details.append(place);}
-        if(record.accession_number){const accession=document.createElement("p");accession.className="record-date";accession.textContent="Accession: "+record.accession_number;details.append(accession);}if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
-        card.append(details);
-        if(currentUser){const actions=document.createElement("div");actions.className="record-actions";const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async()=>{if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(edit,del);card.append(actions);}
-        recordsList.append(card);return;
-      }
-      const card=document.createElement("article");card.className="record-card record-card-expanded";
-      const details=document.createElement("div");
-      card.append(makeThumbnail(record));
-      const category=document.createElement("span");category.className="record-category";category.textContent=categoryNames[canonical(record.category)]||record.category;details.append(category);
-      const title=document.createElement("h3");title.textContent=record.title||"Untitled record";details.append(title);const view=document.createElement("button");view.type="button";view.className="small-button record-view-button";view.textContent="View record details";view.setAttribute("aria-label","View record details: "+(record.title||"Untitled record"));view.addEventListener("click",()=>openRecordDetail(record));details.append(view);
-      if(record.location){const p=document.createElement("p");p.className="record-location";p.append(document.createTextNode("Location: "));const a=document.createElement("a");a.className="record-location-link";a.textContent=record.location;a.href="location-registry.html?place="+encodeURIComponent(record.location);p.append(a);details.append(p);}
-      if(record.accession_number){const accession=document.createElement("p");accession.className="record-date";accession.textContent="Accession: "+record.accession_number;details.append(accession);}if(record.record_date){const date=document.createElement("p");date.className="record-date";date.textContent="Record date: "+record.record_date;details.append(date);}
-      const confidence=readConfidence(record.description);if(confidence!=="unassessed"){const confidenceBadge=document.createElement("span");confidenceBadge.className="confidence-badge confidence-"+confidence;confidenceBadge.textContent="Research: "+confidenceLabel(confidence);details.append(confidenceBadge);}
-      card.append(details);
-      const actions=document.createElement("div");actions.className="record-actions";
-      if(currentUser){const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>beginEditRecord(record));actions.append(edit);const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async()=>{if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(del);}
-      card.append(actions);recordsList.append(card);
+      const tr=document.createElement("tr");tr.className="geneteka-record-row";tr.tabIndex=0;tr.setAttribute("role","button");tr.setAttribute("aria-label","Open record: "+(record.title||"Untitled record"));
+      const open=()=>openRecordDetail(record);tr.addEventListener("click",e=>{if(e.target.closest("button,a"))return;open();});tr.addEventListener("keydown",e=>{if(e.target!==tr)return;if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
+      const date=document.createElement("td");date.className="archive-result-date";date.textContent=record.record_date||record.registration_date||"—";tr.append(date);
+      const title=document.createElement("td");title.className="archive-result-title";const name=document.createElement("strong");name.textContent=record.title||"Untitled record";title.append(name);const cat=document.createElement("small");cat.textContent=categoryNames[canonical(record.category)]||record.category||"";title.append(cat);if(record.accession_number){const accession=document.createElement("small");accession.textContent=record.accession_number;title.append(accession);}tr.append(title);
+      const people=document.createElement("td");let personText=record.persons_mentioned||"";if(Array.isArray(personText))personText=personText.join(", ");if(typeof personText==="object"&&personText!==null)personText=JSON.stringify(personText);personText=String(personText).replace(/\s+/g," ").trim();if(!personText)personText=readFamilyRelationships(record).map(x=>x[1]).join(", ");people.textContent=personText||"—";tr.append(people);
+      const place=document.createElement("td");place.textContent=record.location||"—";tr.append(place);
+      const scan=document.createElement("td");scan.className="archive-result-scan";if(record.file_path&&isImage(record)){scan.append(makeThumbnail(record));}else if(record.file_path){const label=document.createElement("span");label.className="archive-scan-label";label.textContent=(record.mime_type==="application/pdf"?"PDF":"File");scan.append(label);}else scan.textContent="—";tr.append(scan);
+      if(currentUser){const actions=document.createElement("td");actions.className="archive-result-actions";const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",e=>{e.stopPropagation();beginEditRecord(record);});const del=document.createElement("button");del.type="button";del.className="small-button danger-button";del.textContent="Delete";del.addEventListener("click",async e=>{e.stopPropagation();if(!confirm("Delete this record and its uploaded file?"))return;const {error}=await client.from("archive_records").delete().eq("id",record.id);if(error)return alert(error.message);if(record.file_path)await client.storage.from("family-archive").remove([record.file_path]);await loadRecords();});actions.append(edit,del);tr.append(actions);}
+      tbody.append(tr);
     });
+    table.append(tbody);wrap.append(table);recordsList.append(wrap);
   }
   function showAttachment(url,record,mimeType){openRecordDetail(record);}
 
