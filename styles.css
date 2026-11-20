@@ -9662,3 +9662,10 @@ body:not(.no-site-frame)>.site-footer{
 .archive-result-title small{line-height:1.65!important}
 .archive-result-scan .record-thumbnail{width:72px!important;height:72px!important;min-width:72px!important}
 .geneteka-results-wrap{min-height:120px!important}
+
+/* 2026-11-20: archive index rows remain compact but fill the full available width */
+.geneteka-results-wrap{width:100%!important;max-width:none!important;display:block!important}
+.geneteka-results-table{width:100%!important;min-width:0!important;table-layout:auto!important}
+.geneteka-results-table td,.geneteka-results-table th{white-space:normal!important}
+.geneteka-results-table td:first-child,.geneteka-results-table th:first-child{white-space:nowrap!important}
+.geneteka-results-table td:last-child,.geneteka-results-table th:last-child{width:1%!important;white-space:nowrap!important}
