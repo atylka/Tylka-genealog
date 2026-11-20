@@ -1,4 +1,4 @@
-const VERSION='tylka-app-20261120-genealogy-search-hub-1';
+const VERSION='tylka-app-20261120-correction-inbox-1';
 const SHELL=['./','./index.html','./archive.html','./add-record.html','./location-registry.html','./styles.css?v=20261120-add-record-heading-cleanup-1','./supabase-config.js','./script.js?v=20261102-main-only-transition-1','./site-accessibility.js?v=20261102-a11y2','./site-ui.js?v=20261120-record-management-restore-2','./thumbnail-tools.js?v=20261116-site-audit-cache-1','./coverage-map.js?v=20261120-area-alias-match-3','./archive.js?v=20261120-manage-results-table-1','./location-registry.js?v=20261116-site-audit-cache-1','./pwa-register.js?v=20261102-footer-placement-1','./icon.svg','./brand-seal.svg','./manifest.webmanifest','./area-records.html','./search.html','./search.js?v=20261120-genealogy-search-hub-1','./area-records.js?v=20261120-area-alias-match-3'];
 const EXTERNAL_SHELL=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'];
 self.addEventListener('install',event=>{
