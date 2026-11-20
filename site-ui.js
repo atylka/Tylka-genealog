@@ -3,7 +3,11 @@
   if(!config.url||!config.anonKey||!window.supabase)return;
   const client=window.tylkaSupabaseClient||(window.tylkaSupabaseClient=window.supabase.createClient(config.url,config.anonKey,{auth:{persistSession:true,autoRefreshToken:true}}));
   const ownerId="7a8cd586-c68f-4078-b61d-a87f3842b07e";
-  const ownerButton=document.querySelector("[data-owner-sign-in]");let ownerModal=null;
+  const ownerButton=document.querySelector("[data-owner-sign-in]");
+  const primaryNav=document.querySelector(".primary-nav");
+  let addRecordLink=primaryNav?.querySelector("[data-add-record-link]");
+  if(primaryNav&&!addRecordLink){addRecordLink=document.createElement("a");addRecordLink.href="add-record.html";addRecordLink.className="header-add-record-button";addRecordLink.dataset.addRecordLink="";addRecordLink.textContent="Add Record";addRecordLink.hidden=true;primaryNav.insertBefore(addRecordLink,ownerButton||null);}
+  let ownerModal=null;
   function ensureOwnerModal(){
     if(ownerModal)return ownerModal;
     ownerModal=document.createElement("section");ownerModal.className="site-modal";ownerModal.id="owner-sign-in-modal";ownerModal.hidden=true;ownerModal.setAttribute("role","dialog");ownerModal.setAttribute("aria-modal","true");ownerModal.innerHTML='<div class="modal-card owner-sign-in-card"><button class="modal-close" type="button" aria-label="Close sign in">×</button><p class="eyebrow">Private owner workspace</p><h2>Owner Sign In</h2><p class="connection-status" id="owner-auth-status">Sign in to add records and access owner tools. Browsing is open to everyone.</p><form id="owner-sign-in-form"><label for="owner-sign-in-email">Email address</label><input id="owner-sign-in-email" type="email" autocomplete="username" required><label for="owner-sign-in-password">Password</label><input id="owner-sign-in-password" type="password" autocomplete="current-password" required><button class="button button-dark" type="submit">Sign in</button><p id="owner-sign-in-message" class="form-message" role="status"></p></form><button id="owner-sign-out" class="small-button" type="button" hidden>Sign out</button></div>';
@@ -12,7 +16,7 @@
     ownerModal.querySelector("#owner-sign-out").addEventListener("click",async()=>{const {error}=await client.auth.signOut();if(error)ownerModal.querySelector("#owner-sign-in-message").textContent=error.message;document.dispatchEvent(new CustomEvent("tylka:auth-changed"));});return ownerModal;
   }
   async function openOwnerSignIn(){const box=ensureOwnerModal(),form=box.querySelector("#owner-sign-in-form"),status=box.querySelector("#owner-auth-status"),out=box.querySelector("#owner-sign-out");box.hidden=false;const {data:{session}}=await client.auth.getSession();if(session?.user?.id===ownerId){status.textContent="You are signed in. Owner tools are available.";form.hidden=true;out.hidden=false;}else{status.textContent="Sign in to add records and access owner tools. Browsing is open to everyone.";form.hidden=false;out.hidden=true;}}
-  function updateNavOwnerButton(session){if(!ownerButton)return;const signed=session?.user?.id===ownerId;ownerButton.textContent=signed?"Sign Out":"Owner Sign In";ownerButton.setAttribute("aria-label",signed?"Sign out of owner account":"Owner sign in");ownerButton.dataset.ownerState=signed?"signed-in":"signed-out";}
+  function updateNavOwnerButton(session){const signed=session?.user?.id===ownerId;if(addRecordLink){addRecordLink.hidden=!signed;if(document.body.dataset.page==="upload")addRecordLink.setAttribute("aria-current","page");else addRecordLink.removeAttribute("aria-current");}if(!ownerButton)return;ownerButton.textContent=signed?"Sign Out":"Owner Sign In";ownerButton.setAttribute("aria-label",signed?"Sign out of owner account":"Owner sign in");ownerButton.dataset.ownerState=signed?"signed-in":"signed-out";}
 if(ownerButton)ownerButton.addEventListener("click",async()=>{const {data:{session}}=await client.auth.getSession();if(session?.user?.id===ownerId){await client.auth.signOut();document.dispatchEvent(new CustomEvent("tylka:auth-changed"));return;}openOwnerSignIn();});
 document.addEventListener("tylka:open-owner-sign-in",openOwnerSignIn);
   client.auth.getSession().then(({data:{session}})=>updateNavOwnerButton(session));
