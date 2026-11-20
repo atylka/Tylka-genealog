@@ -7,6 +7,8 @@
   const primaryNav=document.querySelector(".primary-nav");
   let addRecordLink=primaryNav?.querySelector("[data-add-record-link]");
   if(primaryNav&&!addRecordLink){addRecordLink=document.createElement("a");addRecordLink.href="add-record.html";addRecordLink.className="header-add-record-button";addRecordLink.dataset.addRecordLink="";addRecordLink.textContent="Add Record";addRecordLink.hidden=true;primaryNav.insertBefore(addRecordLink,ownerButton||null);}
+  let manageRecordsLink=primaryNav?.querySelector("[data-manage-records-link]");
+  if(primaryNav&&!manageRecordsLink){manageRecordsLink=document.createElement("a");manageRecordsLink.href="archive.html";manageRecordsLink.className="header-add-record-button";manageRecordsLink.dataset.manageRecordsLink="";manageRecordsLink.textContent="Manage Records";manageRecordsLink.hidden=true;primaryNav.insertBefore(manageRecordsLink,ownerButton||null);}
   let ownerModal=null;
   function ensureOwnerModal(){
     if(ownerModal)return ownerModal;
@@ -16,7 +18,7 @@
     ownerModal.querySelector("#owner-sign-out").addEventListener("click",async()=>{const {error}=await client.auth.signOut();if(error)ownerModal.querySelector("#owner-sign-in-message").textContent=error.message;document.dispatchEvent(new CustomEvent("tylka:auth-changed"));});return ownerModal;
   }
   async function openOwnerSignIn(){const box=ensureOwnerModal(),form=box.querySelector("#owner-sign-in-form"),status=box.querySelector("#owner-auth-status"),out=box.querySelector("#owner-sign-out");box.hidden=false;const {data:{session}}=await client.auth.getSession();if(session?.user?.id===ownerId){status.textContent="You are signed in. Owner tools are available.";form.hidden=true;out.hidden=false;}else{status.textContent="Sign in to add records and access owner tools. Browsing is open to everyone.";form.hidden=false;out.hidden=true;}}
-  function updateNavOwnerButton(session){const signed=session?.user?.id===ownerId;if(addRecordLink){addRecordLink.hidden=!signed;if(document.body.dataset.page==="upload")addRecordLink.setAttribute("aria-current","page");else addRecordLink.removeAttribute("aria-current");}if(!ownerButton)return;ownerButton.textContent=signed?"Sign Out":"Owner Sign In";ownerButton.setAttribute("aria-label",signed?"Sign out of owner account":"Owner sign in");ownerButton.dataset.ownerState=signed?"signed-in":"signed-out";}
+  function updateNavOwnerButton(session){const signed=session?.user?.id===ownerId;if(addRecordLink){addRecordLink.hidden=!signed;if(document.body.dataset.page==="upload")addRecordLink.setAttribute("aria-current","page");else addRecordLink.removeAttribute("aria-current");}if(manageRecordsLink){manageRecordsLink.hidden=!signed;if(document.body.dataset.page==="all")manageRecordsLink.setAttribute("aria-current","page");else manageRecordsLink.removeAttribute("aria-current");}if(!ownerButton)return;ownerButton.textContent=signed?"Sign Out":"Owner Sign In";ownerButton.setAttribute("aria-label",signed?"Sign out of owner account":"Owner sign in");ownerButton.dataset.ownerState=signed?"signed-in":"signed-out";}
 if(ownerButton)ownerButton.addEventListener("click",async()=>{const {data:{session}}=await client.auth.getSession();if(session?.user?.id===ownerId){await client.auth.signOut();document.dispatchEvent(new CustomEvent("tylka:auth-changed"));return;}openOwnerSignIn();});
 document.addEventListener("tylka:open-owner-sign-in",openOwnerSignIn);
   client.auth.getSession().then(({data:{session}})=>updateNavOwnerButton(session));
