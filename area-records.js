@@ -5,7 +5,11 @@ $("area-country").textContent=country==="US"?"United States · State":"Poland ·
 const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 const canon=value=>{const key=String(value||"").toLowerCase().trim().replace(/[ &-]+/g,"_");const aliases={research_notes:"notes",sources:"notes",source_notes:"notes",family_photos:"photos",photographs:"photos",birth:"births",baptism:"births",burials:"deaths",death:"deaths",marriage:"marriages",naturalization:"immigration"};return aliases[key]||key;};
 let records=[],activeFolder="all";
-function locationMatches(r){const loc=norm(r.location),name=norm(area);return name.length>2&&(loc.includes(name)||loc.split(" ").includes(name));}
+const AREA_ALIAS_GROUPS=[
+["bochnia"],["brzesko"],["chrzanow","dabrowa","dabrowa tarnowska"],["gorlice"],["krakowski","krakow county","powiat krakowski"],["limanowa"],["miechow"],["myslenice"],["nowy sadecki","nowy sacz county"],["nowy targ"],["olkusz"],["oswiecim"],["proszowice"],["sucha beskidzka"],["tarnowski","tarnow county"],["tatrzanski","tatra county"],["wadowice"],["wieliczka"],["krakow city","krakow"],["nowy sacz city"],["tarnow city"]
+];
+function areaTerms(){const key=norm(area);const group=AREA_ALIAS_GROUPS.find(items=>items.some(item=>norm(item)===key));return group||[key];}
+function locationMatches(r){const loc=norm([r.location,r.description].filter(Boolean).join(" "));return areaTerms().some(item=>item.length>2&&(" "+loc+" ").includes(" "+norm(item)+" "));}
 function peopleText(r){let p=r.persons_mentioned||"";if(Array.isArray(p))p=p.join(", ");else if(typeof p==="object"&&p!==null)p=Object.values(p).join(", ");return String(p||"").replace(/\s+/g," ").trim();}
 function recordYear(r){const raw=String(r.record_date||r.registration_date||"");const m=raw.match(/(?:18|19|20)\d{2}/);return m?m[0]:"";}
 function render(){
