@@ -9677,17 +9677,3 @@ body:not(.no-site-frame)>.site-footer{
 .geneteka-results-table th,.geneteka-results-table td{overflow-wrap:anywhere!important}
 .geneteka-results-table .archive-result-actions{width:auto!important;white-space:normal!important}
 
-/* 2026-11-20 archive width repair */
-body:not(.no-site-frame){width:min(calc(100% - 32px),1280px)!important;max-width:1280px!important}
-body:not(.no-site-frame)>main.archive-page{width:100%!important;max-width:none!important}
-.folder-archive-layout{width:100%!important;display:grid!important;grid-template-columns:minmax(180px,240px) minmax(0,1fr)!important;align-items:start!important}
-.archive-folder-content{min-width:0!important;width:100%!important;max-width:none!important}
-#records-list,.geneteka-results-wrap{width:100%!important;min-width:0!important;max-width:none!important;overflow-x:visible!important;box-sizing:border-box!important}
-.geneteka-results-table{width:100%!important;min-width:0!important;max-width:none!important;table-layout:fixed!important;box-sizing:border-box!important}
-.geneteka-results-table th,.geneteka-results-table td{white-space:normal!important;overflow-wrap:anywhere!important}
-.geneteka-results-table td:first-child,.geneteka-results-table th:first-child{width:12%!important}
-.geneteka-results-table td:nth-child(2),.geneteka-results-table th:nth-child(2){width:24%!important}
-.geneteka-results-table td:nth-child(3),.geneteka-results-table th:nth-child(3){width:24%!important}
-.geneteka-results-table td:nth-child(4),.geneteka-results-table th:nth-child(4){width:24%!important}
-.geneteka-results-table td:nth-child(5),.geneteka-results-table th:nth-child(5){width:10%!important}
-@media(max-width:800px){.folder-archive-layout{grid-template-columns:minmax(0,1fr)!important}}
