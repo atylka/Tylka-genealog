@@ -82,8 +82,8 @@ function drawMap(){
   const tip=document.createElementNS("http://www.w3.org/2000/svg","title");
   tip.textContent=featureName(f)+" · "+n+" records";path.append(tip);
   if(enabled){
-   path.addEventListener("click",()=>selectArea(f));
-   path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectArea(f);}});
+   path.addEventListener("click",()=>openArea(f));
+   path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openArea(f);}});
    path.addEventListener("pointerenter",()=>path.classList.add("is-hovered"));
    path.addEventListener("pointerleave",()=>path.classList.remove("is-hovered"));
   }
